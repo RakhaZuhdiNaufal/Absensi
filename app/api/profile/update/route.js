@@ -16,7 +16,7 @@ export async function POST(request) {
         return NextResponse.json(
           {
             success: false,
-            message: 'Profil hanya bisa diubah 1 kali.'
+            message: 'profil hanya bisa dilakukan 1 kali, segera hubungi admin'
           },
           { status: 403 }
         );

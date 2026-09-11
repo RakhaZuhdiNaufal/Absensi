@@ -55,7 +55,7 @@ export default function ProfilPage() {
 
   const handleOpenEditContact = () => {
     if (student?.profile_updated == 1) {
-      alert('Profil hanya bisa diedit 1 kali.');
+      alert('profil hanya bisa dilakukan 1 kali, segera hubungi admin');
       return;
     }
     setTempName(user?.name || '');
@@ -132,7 +132,7 @@ export default function ProfilPage() {
 
   const handleOpenEditBio = () => {
     if (student?.profile_updated == 1) {
-      alert('Profil hanya bisa diedit 1 kali.');
+      alert('profil hanya bisa dilakukan 1 kali, segera hubungi admin');
       return;
     }
     setTempBio(bio);
@@ -143,7 +143,7 @@ export default function ProfilPage() {
   const handleSaveBioModal = async (e) => {
     e?.preventDefault();
     if (student?.profile_updated == 1) {
-      alert('Profil hanya bisa diedit 1 kali.');
+      alert('profil hanya bisa dilakukan 1 kali, segera hubungi admin');
       setIsEditBioOpen(false);
       return;
     }
@@ -211,7 +211,7 @@ export default function ProfilPage() {
   const handleSaveAddress = async (e) => {
     e?.preventDefault();
     if (student?.profile_updated == 1) {
-      alert('Profil hanya bisa diedit 1 kali.');
+      alert('profil hanya bisa dilakukan 1 kali, segera hubungi admin');
       setIsEditingAddress(false);
       return;
     }
@@ -253,7 +253,7 @@ export default function ProfilPage() {
   const handleSaveProfile = async (e) => {
     e?.preventDefault();
     if (student?.profile_updated == 1) {
-      alert('Profil hanya bisa diedit 1 kali.');
+      alert('profil hanya bisa dilakukan 1 kali, segera hubungi admin');
       return;
     }
     setIsSavingProfile(true);
