@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getAuthUser } from '@/lib/auth';
-import { getStudentByUserId, getTodayAttendance, createAttendance, deleteTodayAttendance, bindStudentDevice, calculateDistance } from '@/lib/data-service';
+import { getStudentByUserId, getTodayAttendance, createAttendance, deleteTodayAttendance, bindStudentDevice, calculateDistance, getJakartaDateStr, getJakartaTimeStr } from '@/lib/data-service';
 
 export async function DELETE(request) {
   try {
@@ -97,9 +97,8 @@ export async function POST(request) {
       );
     }
 
-    const now = new Date();
-    const attendance_date = now.toISOString().split('T')[0];
-    const attendance_time = now.toTimeString().split(' ')[0];
+    const attendance_date = getJakartaDateStr();
+    const attendance_time = getJakartaTimeStr();
 
     const result = await createAttendance({
       student_id: student.id,

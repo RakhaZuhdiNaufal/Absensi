@@ -88,7 +88,8 @@ export default function AdminRiwayatPage() {
       'Waktu': item.attendance_time ? `${item.attendance_time} WIB` : '-',
       'Status': (item.status || '-').toUpperCase(),
       'Lokasi': item.location || '-',
-      'Keterangan': item.notes || '-'
+      'Alasan': item.reason || '-',
+      'Keterangan': item.note || '-'
     }));
 
     const wb = XLSX.utils.book_new();
@@ -115,9 +116,14 @@ export default function AdminRiwayatPage() {
   const allAttendance = dashboardData?.allAttendance || dashboardData?.attendanceToday || [];
 
   const filteredAttendance = allAttendance.filter((item) => {
-    const matchesSearch = item.student_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          item.nis.includes(searchQuery) ||
-                          item.attendance_date.includes(searchQuery);
+    const sQuery = (searchQuery || '').toLowerCase();
+    const studentName = (item.student_name || '').toLowerCase();
+    const nis = String(item.nis || '');
+    const attDate = String(item.attendance_date || '');
+
+    const matchesSearch = studentName.includes(sQuery) ||
+                          nis.includes(sQuery) ||
+                          attDate.includes(sQuery);
     const matchesStatus = statusFilter === 'all' || item.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
@@ -279,6 +285,18 @@ export default function AdminRiwayatPage() {
                   {selectedAttendance.work_mode ? selectedAttendance.work_mode.toUpperCase() : selectedAttendance.status}
                 </span>
               </div>
+              {selectedAttendance.reason && (
+                <div className="flex justify-between py-1 border-b border-gray-100">
+                  <span className="text-[#7A7A73]">Alasan / Kategori:</span>
+                  <span className="font-medium text-[#57564F] capitalize">{selectedAttendance.reason}</span>
+                </div>
+              )}
+              {selectedAttendance.note && (
+                <div className="pt-2 border-t border-[#DDDAD0]">
+                  <span className="text-[#7A7A73] block mb-0.5">Catatan / Keterangan:</span>
+                  <span className="font-normal text-[#57564F] block leading-relaxed italic bg-[#f9f8f3] p-2 rounded-lg border border-[#DDDAD0]">{selectedAttendance.note}</span>
+                </div>
+              )}
               {selectedAttendance.latitude && (
                 <div className="flex justify-between py-1 border-b border-gray-100">
                   <span className="text-[#7A7A73]">Koordinat:</span>

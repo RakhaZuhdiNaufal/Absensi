@@ -9,7 +9,8 @@ import {
   Eye,
   ExternalLink,
   X,
-  ChevronDown
+  ChevronDown,
+  RefreshCw
 } from 'lucide-react';
 
 export default function AdminDashboard() {
@@ -25,6 +26,8 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     fetchAdminData();
+    const timer = setInterval(fetchAdminData, 15000);
+    return () => clearInterval(timer);
   }, []);
 
   const fetchAdminData = async () => {
@@ -71,8 +74,10 @@ export default function AdminDashboard() {
   const attendanceToday = dashboardData?.attendanceToday || [];
 
   const filteredAttendance = attendanceToday.filter((item) => {
-    const matchesSearch = item.student_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          item.nis.includes(searchQuery);
+    const sName = item.student_name || '';
+    const sNis = item.nis || '';
+    const matchesSearch = sName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          sNis.includes(searchQuery);
     const matchesStatus =
       statusFilter === 'all' ||
       item.status === statusFilter ||
@@ -116,8 +121,16 @@ export default function AdminDashboard() {
 
         <div className="max-w-4xl mx-auto md:max-w-none p-4 md:p-6 md:pr-8 space-y-4">
           <div className="bg-white rounded-3xl p-5 shadow-sm border border-[#DDDAD0] space-y-4">
-            <div className="text-center">
+            <div className="flex items-center justify-between">
               <h3 className="text-xs font-bold text-[#57564F] uppercase tracking-wider">Daftar Absensi Hari Ini</h3>
+              <button
+                onClick={fetchAdminData}
+                className="px-2.5 py-1 bg-[#f9f8f3] hover:bg-[#57564F] hover:text-[#F8F3CE] border border-[#DDDAD0] rounded-xl text-xs font-medium text-[#57564F] flex items-center gap-1.5 transition-all shadow-2xs"
+                title="Segarkan data presensi"
+              >
+                <RefreshCw className="w-3.5 h-3.5" />
+                <span>Segarkan</span>
+              </button>
             </div>
 
             <div className="relative">
@@ -235,14 +248,30 @@ export default function AdminDashboard() {
                   {selectedAttendance.work_mode ? selectedAttendance.work_mode.toUpperCase() : selectedAttendance.status}
                 </span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-[#7A7A73]">Koordinat:</span>
-                <span className="font-mono text-[11px] font-normal text-[#57564F]">{selectedAttendance.latitude}, {selectedAttendance.longitude}</span>
-              </div>
-              <div className="pt-2 border-t border-[#DDDAD0]">
-                <span className="text-[#7A7A73] block mb-0.5">Alamat Lokasi:</span>
-                <span className="font-normal text-[#57564F] block leading-relaxed">{selectedAttendance.location}</span>
-              </div>
+              {selectedAttendance.reason && (
+                <div className="flex justify-between">
+                  <span className="text-[#7A7A73]">Alasan / Kategori:</span>
+                  <span className="font-medium text-[#57564F] capitalize">{selectedAttendance.reason}</span>
+                </div>
+              )}
+              {selectedAttendance.note && (
+                <div className="pt-2 border-t border-[#DDDAD0]">
+                  <span className="text-[#7A7A73] block mb-0.5">Catatan / Keterangan:</span>
+                  <span className="font-normal text-[#57564F] block leading-relaxed italic bg-white p-2 rounded-lg border border-[#DDDAD0]">{selectedAttendance.note}</span>
+                </div>
+              )}
+              {selectedAttendance.latitude && (
+                <div className="flex justify-between">
+                  <span className="text-[#7A7A73]">Koordinat:</span>
+                  <span className="font-mono text-[11px] font-normal text-[#57564F]">{selectedAttendance.latitude}, {selectedAttendance.longitude}</span>
+                </div>
+              )}
+              {selectedAttendance.location && (
+                <div className="pt-2 border-t border-[#DDDAD0]">
+                  <span className="text-[#7A7A73] block mb-0.5">Alamat Lokasi:</span>
+                  <span className="font-normal text-[#57564F] block leading-relaxed">{selectedAttendance.location}</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
