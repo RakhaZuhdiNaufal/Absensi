@@ -654,94 +654,23 @@ export default function ProfilPage() {
                 </div>
 
                 <div className="col-span-1 sm:col-span-2 pt-3 border-t border-[#DDDAD0]">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="w-12" />
+                  <div className="flex items-center justify-center mb-2">
                     <label className="block text-center text-xs font-semibold text-[#57564F]">Alamat</label>
-                    <div className="w-12 text-right">
-                      {student?.profile_updated != 1 && (
-                        !isEditingAddress ? (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setTempAlamatRumah(alamatRumah);
-                              setTempAlamatPkl(alamatPkl);
-                              setAddressSaveError('');
-                              setIsEditingAddress(true);
-                            }}
-                            className="text-xs text-[#57564F] underline font-normal cursor-pointer hover:opacity-80"
-                          >
-                            Edit
-                          </button>
-                        ) : (
-                          <button
-                            type="button"
-                            onClick={() => setIsEditingAddress(false)}
-                            className="text-xs text-[#7A7A73] underline font-normal cursor-pointer hover:opacity-80"
-                          >
-                            Batal
-                          </button>
-                        )
-                      )}
-                    </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      {isEditingAddress ? (
-                        <textarea
-                          rows={2}
-                          value={tempAlamatRumah}
-                          onChange={(e) => setTempAlamatRumah(e.target.value)}
-                          placeholder="Alamat 1 (Rumah)..."
-                          className="w-full bg-[#f9f8f3] border border-[#DDDAD0] rounded-xl px-3.5 py-2 text-xs text-[#57564F] focus:outline-none focus:border-[#57564F] shadow-sm transition-colors text-left resize-none"
-                        />
-                      ) : (
-                        <div className="w-full bg-white border border-[#DDDAD0] rounded-xl px-3.5 py-2.5 text-xs text-[#57564F] shadow-sm text-left leading-relaxed">
-                          {alamatRumah || 'Belum diatur'}
-                        </div>
-                      )}
+                      <div className="w-full bg-white border border-[#DDDAD0] rounded-xl px-3.5 py-2.5 text-xs text-[#57564F] shadow-sm text-left leading-relaxed">
+                        {alamatRumah || 'Belum diatur'}
+                      </div>
                     </div>
 
                     <div>
-                      {isEditingAddress ? (
-                        <textarea
-                          rows={2}
-                          value={tempAlamatPkl}
-                          onChange={(e) => setTempAlamatPkl(e.target.value)}
-                          placeholder="Alamat 2 (Tempat PKL)..."
-                          className="w-full bg-[#f9f8f3] border border-[#DDDAD0] rounded-xl px-3.5 py-2 text-xs text-[#57564F] focus:outline-none focus:border-[#57564F] shadow-sm transition-colors text-left resize-none"
-                        />
-                      ) : (
-                        <div className="w-full bg-white border border-[#DDDAD0] rounded-xl px-3.5 py-2.5 text-xs text-[#57564F] shadow-sm text-left leading-relaxed">
-                          {alamatPkl || 'Belum diatur'}
-                        </div>
-                      )}
+                      <div className="w-full bg-white border border-[#DDDAD0] rounded-xl px-3.5 py-2.5 text-xs text-[#57564F] shadow-sm text-left leading-relaxed">
+                        {alamatPkl || 'Belum diatur'}
+                      </div>
                     </div>
                   </div>
-
-                  {isEditingAddress && (
-                    <div className="flex justify-center gap-2 mt-3 animate-smooth-in">
-                      <button
-                        type="button"
-                        disabled={isSavingAddress}
-                        onClick={handleSaveAddress}
-                        className="px-6 py-2 bg-white hover:bg-[#f9f8f3] text-[#57564F] border border-[#DDDAD0] rounded-xl text-xs font-normal shadow-sm transition-all duration-200 ease-out active:scale-95 disabled:opacity-50 cursor-pointer"
-                      >
-                        {isSavingAddress ? 'Menyimpan...' : 'Simpan'}
-                      </button>
-                    </div>
-                  )}
-
-                  {addressSaveMsg && (
-                    <div className="text-center text-xs text-emerald-700 mt-2 font-medium">
-                      ✅ {addressSaveMsg}
-                    </div>
-                  )}
-                  {addressSaveError && (
-                    <div className="text-center text-xs text-rose-600 mt-2 font-medium">
-                      ⚠️ {addressSaveError}
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
