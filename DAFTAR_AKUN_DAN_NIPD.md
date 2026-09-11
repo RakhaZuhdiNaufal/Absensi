@@ -28,7 +28,7 @@ Dokumen ini berisi daftar seluruh akun pengguna (Siswa, Pembimbing / Admin, dan 
 | Field | Detail Kredensial Pembimbing |
 | :--- | :--- |
 | **Nama** | Pak Ridwan |
-| **Username** | `Ridwan` |
+| **Username** | `pak ridwan` (atau `pakridwan`) |
 | **Email** | `pembimbing@sekolah.sch.id` |
 | **Jabatan** | Pembimbing PKL Siswa |
 | **Status** | Aktif |

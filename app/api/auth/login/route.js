@@ -22,7 +22,7 @@ export async function POST(request) {
 
     if (user.role === 'admin') {
       user.name = 'Pak Ridwan';
-      user.username = 'Ridwan';
+      user.username = 'pak ridwan';
     }
 
     const tokenPayload = {

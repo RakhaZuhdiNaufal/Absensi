@@ -2,19 +2,24 @@ const mysql = require('mysql2/promise');
 const bcrypt = require('bcryptjs');
 
 async function seedDatabase() {
-  const host = process.env.DB_HOST || 'localhost';
-  const port = parseInt(process.env.DB_PORT || '3306');
-  const user = process.env.DB_USER || 'root';
-  const password = process.env.DB_PASSWORD || '';
-  const database = process.env.DB_NAME || 'absensi_pkl';
-
-  console.log(`Connecting to MySQL at ${host}:${port}...`);
+  const uri = process.env.DATABASE_URL || process.env.MYSQL_URL;
+  const host = process.env.DB_HOST || process.env.MYSQLHOST || 'localhost';
+  const port = parseInt(process.env.DB_PORT || process.env.MYSQLPORT || '3306');
+  const user = process.env.DB_USER || process.env.MYSQLUSER || 'root';
+  const password = process.env.DB_PASSWORD || process.env.MYSQLPASSWORD || '';
+  const database = process.env.DB_NAME || process.env.MYSQLDATABASE || 'absensi_pkl';
 
   try {
-    const connection = await mysql.createConnection({ host, port, user, password });
-
-    await connection.query(`CREATE DATABASE IF NOT EXISTS \`${database}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`);
-    await connection.query(`USE \`${database}\`;`);
+    let connection;
+    if (uri) {
+      console.log(`Connecting to MySQL via connection URI...`);
+      connection = await mysql.createConnection(uri);
+    } else {
+      console.log(`Connecting to MySQL at ${host}:${port}...`);
+      connection = await mysql.createConnection({ host, port, user, password });
+      await connection.query(`CREATE DATABASE IF NOT EXISTS \`${database}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`);
+      await connection.query(`USE \`${database}\`;`);
+    }
 
     console.log('Creating database tables...');
 
@@ -101,10 +106,10 @@ async function seedDatabase() {
     await connection.query(`
       INSERT INTO users (name, username, email, password, role, photo)
       VALUES (?, ?, ?, ?, ?, ?)
-      ON DUPLICATE KEY UPDATE name=VALUES(name);
-    `, ['Pak Ridwan', 'Ridwan', 'pembimbing@sekolah.sch.id', defaultAdminPass, 'admin', '/default-avatar.png']);
+      ON DUPLICATE KEY UPDATE name=VALUES(name), username=VALUES(username);
+    `, ['Pak Ridwan', 'pak ridwan', 'pembimbing@sekolah.sch.id', defaultAdminPass, 'admin', '/default-avatar.png']);
 
-    const [adminRows] = await connection.query(`SELECT id FROM users WHERE username='Ridwan' LIMIT 1`);
+    const [adminRows] = await connection.query(`SELECT id FROM users WHERE role='admin' LIMIT 1`);
     const pembimbingId = adminRows[0]?.id || null;
 
     const studentList = [

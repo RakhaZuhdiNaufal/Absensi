@@ -15,7 +15,7 @@ export async function GET(request) {
 
   if (user.role === 'admin') {
     if (!user.name) user.name = 'Pak Ridwan';
-    if (!user.username) user.username = 'Ridwan';
+    if (!user.username) user.username = 'pak ridwan';
   }
 
   let studentDetails = null;

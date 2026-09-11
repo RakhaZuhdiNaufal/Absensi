@@ -423,7 +423,7 @@ export default function SuperAdminPembimbingPage() {
                     required
                     value={formData.username}
                     onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                    placeholder="Contoh: Ridwan"
+                    placeholder="Contoh: pak ridwan"
                     className="w-full bg-[#f9f8f3] border border-[#DDDAD0] rounded-xl px-3 py-2 text-xs text-[#57564F] focus:outline-none focus:border-[#57564F]"
                   />
                 </div>
