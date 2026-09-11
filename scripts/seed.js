@@ -2,7 +2,7 @@ const mysql = require('mysql2/promise');
 const bcrypt = require('bcryptjs');
 
 async function seedDatabase() {
-  const uri = process.env.DATABASE_URL || process.env.MYSQL_URL;
+  const uri = process.env.DATABASE_URL || process.env.MYSQL_URL || process.env.MYSQL_PUBLIC_URL;
   const host = process.env.DB_HOST || process.env.MYSQLHOST || 'localhost';
   const port = parseInt(process.env.DB_PORT || process.env.MYSQLPORT || '3306');
   const user = process.env.DB_USER || process.env.MYSQLUSER || 'root';
