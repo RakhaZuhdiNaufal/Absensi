@@ -55,7 +55,7 @@ export default function ProfilPage() {
 
   const handleOpenEditContact = () => {
     if (student?.profile_updated == 1) {
-      alert('Profil Anda sudah diperbarui dan terkunci (hanya dapat diubah 1 kali). Hubungi pembimbing atau admin jika ingin mengubah data kembali.');
+      alert('Profil hanya bisa diedit 1 kali.');
       return;
     }
     setTempName(user?.name || '');
@@ -132,7 +132,7 @@ export default function ProfilPage() {
 
   const handleOpenEditBio = () => {
     if (student?.profile_updated == 1) {
-      alert('Profil Anda sudah diperbarui dan terkunci (hanya dapat diubah 1 kali). Hubungi pembimbing atau admin jika ingin mengubah data kembali.');
+      alert('Profil hanya bisa diedit 1 kali.');
       return;
     }
     setTempBio(bio);
@@ -143,7 +143,7 @@ export default function ProfilPage() {
   const handleSaveBioModal = async (e) => {
     e?.preventDefault();
     if (student?.profile_updated == 1) {
-      alert('Profil Anda sudah diperbarui dan terkunci (hanya dapat diubah 1 kali). Hubungi pembimbing atau admin jika ingin mengubah data kembali.');
+      alert('Profil hanya bisa diedit 1 kali.');
       setIsEditBioOpen(false);
       return;
     }
@@ -211,7 +211,7 @@ export default function ProfilPage() {
   const handleSaveAddress = async (e) => {
     e?.preventDefault();
     if (student?.profile_updated == 1) {
-      alert('Profil Anda sudah diperbarui dan terkunci (hanya dapat diubah 1 kali). Hubungi pembimbing atau admin jika ingin mengubah data kembali.');
+      alert('Profil hanya bisa diedit 1 kali.');
       setIsEditingAddress(false);
       return;
     }
@@ -253,7 +253,7 @@ export default function ProfilPage() {
   const handleSaveProfile = async (e) => {
     e?.preventDefault();
     if (student?.profile_updated == 1) {
-      alert('Profil Anda sudah diperbarui dan terkunci (hanya dapat diubah 1 kali). Hubungi pembimbing atau admin jika ingin mengubah data kembali.');
+      alert('Profil hanya bisa diedit 1 kali.');
       return;
     }
     setIsSavingProfile(true);
@@ -790,7 +790,7 @@ export default function ProfilPage() {
             <div className="pt-2">
               {student?.profile_updated == 1 ? (
                 <div className="inline-block py-2 px-4 bg-[#f9f8f3] border border-[#DDDAD0] rounded-xl text-xs text-[#7A7A73] italic">
-                  Profil Terkunci (Perubahan Hanya Dapat Dilakukan 1 Kali)
+                  Profil Terkunci
                 </div>
               ) : (
                 <button
@@ -898,12 +898,8 @@ export default function ProfilPage() {
               </button>
             </div>
 
-            <div className="p-3 bg-amber-50 border border-amber-200 rounded-2xl text-[11px] text-amber-800 flex items-start gap-2">
-              <span className="text-base leading-none">⚠️</span>
-              <div>
-                <span className="font-bold block">Pemberitahuan Penting:</span>
-                Profil hanya dapat diubah <strong>1 kali</strong>. Pastikan seluruh data diri, tempat PKL, dan alamat sudah benar sebelum menekan tombol Simpan.
-              </div>
+            <div className="p-2.5 bg-amber-50 border border-amber-200 rounded-xl text-[11px] text-amber-800 text-center font-medium">
+              Profil hanya bisa diedit 1 kali.
             </div>
 
             <form onSubmit={handleSaveContactModal} className="space-y-4 text-xs overflow-y-auto pr-1">
@@ -1036,7 +1032,7 @@ export default function ProfilPage() {
 
               {contactSaveError && (
                 <div className="p-2.5 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 text-xs font-normal">
-                  ⚠️ {contactSaveError}
+                  {contactSaveError}
                 </div>
               )}
 
