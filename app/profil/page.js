@@ -192,15 +192,17 @@ export default function ProfilPage() {
         router.push('/admin/profil');
         return;
       }
-      setUser(meData.user);
-      setStudent(meData.student);
-      setContactEmail(meData.user?.email || `${meData.user?.username}@sekolah.sch.id`);
-      setContactStatus(meData.student?.status || 'Aktif PKL');
-      setContactPerusahaan(meData.student?.tempat_pkl || 'PT Cyber Media Solusindo');
-      setContactPembimbing(meData.student?.pembimbing_name || '');
-      setBio(meData.student?.bio || '');
-      setAlamatRumah(meData.student?.alamat_rumah || 'Cipanas 1 no 18 RT 01 RT 01 kelurahan bakti jaya, kecamatan Sukmajaya, kota Depok - 16418');
-      setAlamatPkl(meData.student?.alamat_pkl || 'SMK Taruna Bhakti, Jalan Kampung Baru, Curug, Depok, Jawa Barat, 16416, Indonesia');
+      const s = meData.student || {};
+      const u = meData.user || {};
+      setUser(u);
+      setStudent(s);
+      setContactEmail(u.email || (u.username ? `${u.username}@sekolah.sch.id` : ''));
+      setContactStatus(s.status || 'Aktif PKL');
+      setContactPerusahaan(s.tempat_pkl || '');
+      setContactPembimbing(s.pembimbing_name || '');
+      setBio(s.bio || '');
+      setAlamatRumah(s.alamat_rumah || '');
+      setAlamatPkl(s.alamat_pkl || '');
       setLoading(false);
     } catch (err) {
       console.error(err);
@@ -446,7 +448,7 @@ export default function ProfilPage() {
 
             <div className="flex justify-between items-center pb-2 border-b border-[#DDDAD0]">
               <span className="text-[#7A7A73]">Perusahaan</span>
-              <span className="font-normal text-[#57564F]">{student?.tempat_pkl || 'PT Naikmarketing'}</span>
+              <span className="font-normal text-[#57564F]">{student?.tempat_pkl || contactPerusahaan || 'Belum diatur'}</span>
             </div>
 
             <div className="flex justify-between items-center pb-2 border-b border-[#DDDAD0]">
