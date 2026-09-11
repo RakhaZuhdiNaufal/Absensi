@@ -54,6 +54,10 @@ export default function ProfilPage() {
   const [pwdSubmitting, setPwdSubmitting] = useState(false);
 
   const handleOpenEditContact = () => {
+    if (student?.profile_updated == 1) {
+      alert('Profil Anda sudah diperbarui dan terkunci (hanya dapat diubah 1 kali). Hubungi pembimbing atau admin jika ingin mengubah data kembali.');
+      return;
+    }
     setTempName(user?.name || '');
     setTempClass(student?.class || 'XII RPL 1');
     setTempNis(student?.nis || user?.username || '');
@@ -106,7 +110,8 @@ export default function ProfilPage() {
           pembimbing_name: tempContactPembimbing,
           alamat_rumah: tempAlamatRumah,
           alamat_pkl: tempAlamatPkl,
-          bio: tempBio
+          bio: tempBio,
+          profile_updated: 1
         }));
         setContactEmail(tempContactEmail);
         setContactStatus(tempContactStatus);
@@ -196,6 +201,11 @@ export default function ProfilPage() {
 
   const handleSaveAddress = async (e) => {
     e?.preventDefault();
+    if (student?.profile_updated == 1) {
+      alert('Profil Anda sudah diperbarui dan terkunci (hanya dapat diubah 1 kali). Hubungi pembimbing atau admin jika ingin mengubah data kembali.');
+      setIsEditingAddress(false);
+      return;
+    }
     setIsSavingAddress(true);
     setAddressSaveMsg('');
     setAddressSaveError('');
@@ -216,7 +226,8 @@ export default function ProfilPage() {
         setStudent(prev => ({
           ...prev,
           alamat_rumah: tempAlamatRumah,
-          alamat_pkl: tempAlamatPkl
+          alamat_pkl: tempAlamatPkl,
+          profile_updated: 1
         }));
         setIsEditingAddress(false);
         setAddressSaveMsg('Alamat berhasil diperbarui!');
@@ -436,13 +447,19 @@ export default function ProfilPage() {
           </div>
 
           <div className="flex justify-center pt-0.5 -mt-1">
-            <button
-              type="button"
-              onClick={handleOpenEditContact}
-              className="text-xs font-normal text-[#57564F] hover:underline cursor-pointer"
-            >
-              Edit
-            </button>
+            {student?.profile_updated == 1 ? (
+              <span className="text-[11px] text-[#7A7A73] italic">
+                Profil Terkunci (Sudah Diedit)
+              </span>
+            ) : (
+              <button
+                type="button"
+                onClick={handleOpenEditContact}
+                className="text-xs font-normal text-[#57564F] hover:underline cursor-pointer"
+              >
+                Edit
+              </button>
+            )}
           </div>
         </div>
 
@@ -630,8 +647,10 @@ export default function ProfilPage() {
                   <div className="flex items-center justify-between mb-2">
                     <div className="w-12" />
                     <label className="block text-center text-xs font-semibold text-[#57564F]">Alamat</label>
-                    <div className="w-12 text-right">
-                      {!isEditingAddress ? (
+                    <div className="w-auto text-right">
+                      {student?.profile_updated == 1 ? (
+                        <span className="text-[11px] text-[#7A7A73] italic">Terkunci</span>
+                      ) : !isEditingAddress ? (
                         <button
                           type="button"
                           onClick={() => {
@@ -755,13 +774,19 @@ export default function ProfilPage() {
             </div>
 
             <div className="pt-2">
-              <button
-                type="button"
-                onClick={handleOpenEditContact}
-                className="py-2.5 px-6 bg-white hover:bg-[#57564F] hover:text-[#F8F3CE] border border-[#DDDAD0] rounded-xl text-xs font-semibold text-[#57564F] transition-all shadow-sm active:scale-98 cursor-pointer flex items-center gap-2"
-              >
-                Edit
-              </button>
+              {student?.profile_updated == 1 ? (
+                <div className="inline-block py-2 px-4 bg-[#f9f8f3] border border-[#DDDAD0] rounded-xl text-xs text-[#7A7A73] italic">
+                  Profil Terkunci (Perubahan Hanya Dapat Dilakukan 1 Kali)
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleOpenEditContact}
+                  className="py-2.5 px-6 bg-white hover:bg-[#57564F] hover:text-[#F8F3CE] border border-[#DDDAD0] rounded-xl text-xs font-semibold text-[#57564F] transition-all shadow-sm active:scale-98 cursor-pointer flex items-center gap-2"
+                >
+                  Edit
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -857,6 +882,14 @@ export default function ProfilPage() {
               >
                 <X className="w-5 h-5" />
               </button>
+            </div>
+
+            <div className="p-3 bg-amber-50 border border-amber-200 rounded-2xl text-[11px] text-amber-800 flex items-start gap-2">
+              <span className="text-base leading-none">⚠️</span>
+              <div>
+                <span className="font-bold block">Pemberitahuan Penting:</span>
+                Profil hanya dapat diubah <strong>1 kali</strong>. Pastikan seluruh data diri, tempat PKL, dan alamat sudah benar sebelum menekan tombol Simpan.
+              </div>
             </div>
 
             <form onSubmit={handleSaveContactModal} className="space-y-4 text-xs overflow-y-auto pr-1">

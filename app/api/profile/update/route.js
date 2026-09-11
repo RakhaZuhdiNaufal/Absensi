@@ -1,12 +1,26 @@
 import { NextResponse } from 'next/server';
 import { getAuthUser } from '@/lib/auth';
-import { updateStudentProfile } from '@/lib/data-service';
+import { updateStudentProfile, getStudentByUserId } from '@/lib/data-service';
 
 export async function POST(request) {
   try {
     const user = getAuthUser(request);
     if (!user) {
       return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Cek pembatasan edit profil khusus siswa: hanya bisa 1 kali
+    if (user.role === 'siswa') {
+      const currentStudent = await getStudentByUserId(user.id);
+      if (currentStudent && Number(currentStudent.profile_updated) === 1) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: 'Profil siswa hanya dapat diubah 1 kali. Hubungi pembimbing atau admin jika membutuhkan perubahan lanjutan.'
+          },
+          { status: 403 }
+        );
+      }
     }
 
     const body = await request.json();
