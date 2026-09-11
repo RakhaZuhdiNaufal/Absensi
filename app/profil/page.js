@@ -131,6 +131,10 @@ export default function ProfilPage() {
   };
 
   const handleOpenEditBio = () => {
+    if (student?.profile_updated == 1) {
+      alert('Profil Anda sudah diperbarui dan terkunci (hanya dapat diubah 1 kali). Hubungi pembimbing atau admin jika ingin mengubah data kembali.');
+      return;
+    }
     setTempBio(bio);
     setBioSaveError('');
     setIsEditBioOpen(true);
@@ -138,6 +142,11 @@ export default function ProfilPage() {
 
   const handleSaveBioModal = async (e) => {
     e?.preventDefault();
+    if (student?.profile_updated == 1) {
+      alert('Profil Anda sudah diperbarui dan terkunci (hanya dapat diubah 1 kali). Hubungi pembimbing atau admin jika ingin mengubah data kembali.');
+      setIsEditBioOpen(false);
+      return;
+    }
     setIsSavingProfile(true);
     setBioSaveError('');
     try {
@@ -156,7 +165,7 @@ export default function ProfilPage() {
       setIsSavingProfile(false);
       if (res.ok && data.success) {
         setBio(tempBio);
-        setStudent(prev => ({ ...prev, bio: tempBio }));
+        setStudent(prev => ({ ...prev, bio: tempBio, profile_updated: 1 }));
         setIsEditBioOpen(false);
       } else {
         setBioSaveError(data.message || 'Gagal menyimpan biografi');
@@ -243,6 +252,10 @@ export default function ProfilPage() {
 
   const handleSaveProfile = async (e) => {
     e?.preventDefault();
+    if (student?.profile_updated == 1) {
+      alert('Profil Anda sudah diperbarui dan terkunci (hanya dapat diubah 1 kali). Hubungi pembimbing atau admin jika ingin mengubah data kembali.');
+      return;
+    }
     setIsSavingProfile(true);
     setProfileSaveMsg('');
     setProfileSaveError('');
@@ -268,7 +281,8 @@ export default function ProfilPage() {
           status: contactStatus,
           tempat_pkl: contactPerusahaan,
           pembimbing_name: contactPembimbing,
-          bio
+          bio,
+          profile_updated: 1
         }));
         setTimeout(() => setProfileSaveMsg(''), 2500);
       } else {
