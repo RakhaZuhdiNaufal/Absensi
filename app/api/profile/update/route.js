@@ -16,7 +16,7 @@ export async function POST(request) {
         return NextResponse.json(
           {
             success: false,
-            message: 'Profil hanya bisa diedit 1 kali'
+            message: 'Profil siswa hanya dapat diubah 1 kali. Hubungi pembimbing atau admin jika membutuhkan perubahan lanjutan.'
           },
           { status: 403 }
         );

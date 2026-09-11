@@ -790,7 +790,7 @@ export default function ProfilPage() {
             <div className="pt-2">
               {student?.profile_updated == 1 ? (
                 <div className="inline-block py-2 px-4 bg-[#f9f8f3] border border-[#DDDAD0] rounded-xl text-xs text-[#7A7A73] italic">
-                  Profil Terkunci
+                  Profil Terkunci (Perubahan Hanya Dapat Dilakukan 1 Kali)
                 </div>
               ) : (
                 <button
