@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import BottomNav from '@/components/BottomNav';
 import TopNavbar from '@/components/TopNavbar';
-import { User, Camera, X, ChevronLeft } from 'lucide-react';
+import { User, Camera, X, ChevronLeft, Eye, EyeOff } from 'lucide-react';
 
 export default function ProfilPage() {
   const router = useRouter();
@@ -49,6 +49,8 @@ export default function ProfilPage() {
   const [isEditPasswordOpen, setIsEditPasswordOpen] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [pwdMsg, setPwdMsg] = useState('');
   const [pwdError, setPwdError] = useState('');
   const [pwdSubmitting, setPwdSubmitting] = useState(false);
@@ -561,28 +563,46 @@ export default function ProfilPage() {
                     <label className="block text-xs font-semibold text-[#57564F] mb-2">
                       Password Baru
                     </label>
-                    <input
-                      type="password"
-                      required
-                      placeholder="••••••••"
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      className="w-full bg-white border border-[#DDDAD0] rounded-xl px-3.5 py-2.5 text-xs text-[#57564F] focus:outline-none focus:border-[#57564F] shadow-sm"
-                    />
+                    <div className="relative">
+                      <input
+                        type={showNewPassword ? 'text' : 'password'}
+                        required
+                        placeholder="••••••••"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        className="w-full bg-white border border-[#DDDAD0] rounded-xl px-3.5 py-2.5 pr-10 text-xs text-[#57564F] focus:outline-none focus:border-[#57564F] shadow-sm"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowNewPassword(!showNewPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-[#7A7A73] hover:text-[#57564F]"
+                      >
+                        {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
                   </div>
 
                   <div>
                     <label className="block text-xs font-semibold text-[#57564F] mb-1.5">
                       Konfirmasi Password
                     </label>
-                    <input
-                      type="password"
-                      required
-                      placeholder="••••••••"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="w-full bg-white border border-[#DDDAD0] rounded-xl px-3.5 py-2.5 text-xs text-[#57564F] focus:outline-none focus:border-[#57564F] shadow-sm"
-                    />
+                    <div className="relative">
+                      <input
+                        type={showConfirmPassword ? 'text' : 'password'}
+                        required
+                        placeholder="••••••••"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        className="w-full bg-white border border-[#DDDAD0] rounded-xl px-3.5 py-2.5 pr-10 text-xs text-[#57564F] focus:outline-none focus:border-[#57564F] shadow-sm"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-[#7A7A73] hover:text-[#57564F]"
+                      >
+                        {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
                   </div>
 
                   {pwdError && (
@@ -745,26 +765,44 @@ export default function ProfilPage() {
             <form onSubmit={handleChangePassword} className="space-y-3 text-xs">
               <div>
                 <label className="block text-xs font-normal text-[#57564F] mb-1">Password Baru</label>
-                <input
-                  type="password"
-                  required
-                  placeholder="Masukkan password baru..."
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  className="w-full bg-[#f9f8f3] border border-[#DDDAD0] rounded-xl px-3 py-2.5 text-xs text-[#57564F] focus:outline-none focus:border-[#57564F]"
-                />
+                <div className="relative">
+                  <input
+                    type={showNewPassword ? 'text' : 'password'}
+                    required
+                    placeholder="Masukkan password baru..."
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    className="w-full bg-[#f9f8f3] border border-[#DDDAD0] rounded-xl px-3 py-2.5 pr-10 text-xs text-[#57564F] focus:outline-none focus:border-[#57564F]"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#7A7A73] hover:text-[#57564F]"
+                  >
+                    {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
               </div>
 
               <div>
                 <label className="block text-xs font-normal text-[#57564F] mb-1">Konfirmasi Password Baru</label>
-                <input
-                  type="password"
-                  required
-                  placeholder="Ketik ulang password baru..."
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full bg-[#f9f8f3] border border-[#DDDAD0] rounded-xl px-3 py-2.5 text-xs text-[#57564F] focus:outline-none focus:border-[#57564F]"
-                />
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    required
+                    placeholder="Ketik ulang password baru..."
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="w-full bg-[#f9f8f3] border border-[#DDDAD0] rounded-xl px-3 py-2.5 pr-10 text-xs text-[#57564F] focus:outline-none focus:border-[#57564F]"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#7A7A73] hover:text-[#57564F]"
+                  >
+                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
               </div>
 
               {pwdError && (
