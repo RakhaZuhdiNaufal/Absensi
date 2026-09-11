@@ -461,19 +461,13 @@ export default function ProfilPage() {
           </div>
 
           <div className="flex justify-center pt-0.5 -mt-1">
-            {student?.profile_updated == 1 ? (
-              <span className="text-[11px] text-[#7A7A73] italic">
-                Profil Terkunci (Sudah Diedit)
-              </span>
-            ) : (
-              <button
-                type="button"
-                onClick={handleOpenEditContact}
-                className="text-xs font-normal text-[#57564F] hover:underline cursor-pointer"
-              >
-                Edit
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={handleOpenEditContact}
+              className="text-xs font-normal text-[#57564F] hover:underline cursor-pointer"
+            >
+              Edit
+            </button>
           </div>
         </div>
 
@@ -661,10 +655,8 @@ export default function ProfilPage() {
                   <div className="flex items-center justify-between mb-2">
                     <div className="w-12" />
                     <label className="block text-center text-xs font-semibold text-[#57564F]">Alamat</label>
-                    <div className="w-auto text-right">
-                      {student?.profile_updated == 1 ? (
-                        <span className="text-[11px] text-[#7A7A73] italic">Terkunci</span>
-                      ) : !isEditingAddress ? (
+                    <div className="w-12 text-right">
+                      {!isEditingAddress ? (
                         <button
                           type="button"
                           onClick={() => {
@@ -788,19 +780,13 @@ export default function ProfilPage() {
             </div>
 
             <div className="pt-2">
-              {student?.profile_updated == 1 ? (
-                <div className="inline-block py-2 px-4 bg-[#f9f8f3] border border-[#DDDAD0] rounded-xl text-xs text-[#7A7A73] italic">
-                  Profil Terkunci (Perubahan Hanya Dapat Dilakukan 1 Kali)
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleOpenEditContact}
-                  className="py-2.5 px-6 bg-white hover:bg-[#57564F] hover:text-[#F8F3CE] border border-[#DDDAD0] rounded-xl text-xs font-semibold text-[#57564F] transition-all shadow-sm active:scale-98 cursor-pointer flex items-center gap-2"
-                >
-                  Edit
-                </button>
-              )}
+              <button
+                type="button"
+                onClick={handleOpenEditContact}
+                className="py-2.5 px-6 bg-white hover:bg-[#57564F] hover:text-[#F8F3CE] border border-[#DDDAD0] rounded-xl text-xs font-semibold text-[#57564F] transition-all shadow-sm active:scale-98 cursor-pointer flex items-center gap-2"
+              >
+                Edit
+              </button>
             </div>
           </div>
         </div>
@@ -896,10 +882,6 @@ export default function ProfilPage() {
               >
                 <X className="w-5 h-5" />
               </button>
-            </div>
-
-            <div className="p-2.5 bg-amber-50 border border-amber-200 rounded-xl text-[11px] text-amber-800 text-center font-medium">
-              Profil hanya bisa diedit 1 kali.
             </div>
 
             <form onSubmit={handleSaveContactModal} className="space-y-4 text-xs overflow-y-auto pr-1">
