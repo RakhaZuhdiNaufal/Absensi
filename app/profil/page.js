@@ -460,15 +460,17 @@ export default function ProfilPage() {
             </div>
           </div>
 
-          <div className="flex justify-center pt-0.5 -mt-1">
-            <button
-              type="button"
-              onClick={handleOpenEditContact}
-              className="text-xs font-normal text-[#57564F] hover:underline cursor-pointer"
-            >
-              Edit
-            </button>
-          </div>
+          {student?.profile_updated != 1 && (
+            <div className="flex justify-center pt-0.5 -mt-1">
+              <button
+                type="button"
+                onClick={handleOpenEditContact}
+                className="text-xs font-normal text-[#57564F] hover:underline cursor-pointer"
+              >
+                Edit
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="bg-white rounded-3xl p-5 pb-3 shadow-sm border border-[#DDDAD0] space-y-2.5 text-xs">
@@ -656,27 +658,29 @@ export default function ProfilPage() {
                     <div className="w-12" />
                     <label className="block text-center text-xs font-semibold text-[#57564F]">Alamat</label>
                     <div className="w-12 text-right">
-                      {!isEditingAddress ? (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setTempAlamatRumah(alamatRumah);
-                            setTempAlamatPkl(alamatPkl);
-                            setAddressSaveError('');
-                            setIsEditingAddress(true);
-                          }}
-                          className="text-xs text-[#57564F] underline font-normal cursor-pointer hover:opacity-80"
-                        >
-                          Edit
-                        </button>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => setIsEditingAddress(false)}
-                          className="text-xs text-[#7A7A73] underline font-normal cursor-pointer hover:opacity-80"
-                        >
-                          Batal
-                        </button>
+                      {student?.profile_updated != 1 && (
+                        !isEditingAddress ? (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setTempAlamatRumah(alamatRumah);
+                              setTempAlamatPkl(alamatPkl);
+                              setAddressSaveError('');
+                              setIsEditingAddress(true);
+                            }}
+                            className="text-xs text-[#57564F] underline font-normal cursor-pointer hover:opacity-80"
+                          >
+                            Edit
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => setIsEditingAddress(false)}
+                            className="text-xs text-[#7A7A73] underline font-normal cursor-pointer hover:opacity-80"
+                          >
+                            Batal
+                          </button>
+                        )
                       )}
                     </div>
                   </div>
@@ -779,15 +783,17 @@ export default function ProfilPage() {
               </div>
             </div>
 
-            <div className="pt-2">
-              <button
-                type="button"
-                onClick={handleOpenEditContact}
-                className="py-2.5 px-6 bg-white hover:bg-[#57564F] hover:text-[#F8F3CE] border border-[#DDDAD0] rounded-xl text-xs font-semibold text-[#57564F] transition-all shadow-sm active:scale-98 cursor-pointer flex items-center gap-2"
-              >
-                Edit
-              </button>
-            </div>
+            {student?.profile_updated != 1 && (
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={handleOpenEditContact}
+                  className="py-2.5 px-6 bg-white hover:bg-[#57564F] hover:text-[#F8F3CE] border border-[#DDDAD0] rounded-xl text-xs font-semibold text-[#57564F] transition-all shadow-sm active:scale-98 cursor-pointer flex items-center gap-2"
+                >
+                  Edit
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
