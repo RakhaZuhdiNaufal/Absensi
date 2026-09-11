@@ -460,17 +460,15 @@ export default function ProfilPage() {
             </div>
           </div>
 
-          {student?.profile_updated != 1 && (
-            <div className="flex justify-center pt-0.5 -mt-1">
-              <button
-                type="button"
-                onClick={handleOpenEditContact}
-                className="text-xs font-normal text-[#57564F] hover:underline cursor-pointer"
-              >
-                Edit
-              </button>
-            </div>
-          )}
+          <div className="flex justify-center pt-0.5 -mt-1">
+            <button
+              type="button"
+              onClick={handleOpenEditContact}
+              className="text-xs font-normal text-[#57564F] hover:underline cursor-pointer"
+            >
+              Edit
+            </button>
+          </div>
         </div>
 
         <div className="bg-white rounded-3xl p-5 pb-3 shadow-sm border border-[#DDDAD0] space-y-2.5 text-xs">
@@ -712,17 +710,15 @@ export default function ProfilPage() {
               </div>
             </div>
 
-            {student?.profile_updated != 1 && (
-              <div className="pt-2">
-                <button
-                  type="button"
-                  onClick={handleOpenEditContact}
-                  className="py-2.5 px-6 bg-white hover:bg-[#57564F] hover:text-[#F8F3CE] border border-[#DDDAD0] rounded-xl text-xs font-semibold text-[#57564F] transition-all shadow-sm active:scale-98 cursor-pointer flex items-center gap-2"
-                >
-                  Edit
-                </button>
-              </div>
-            )}
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={handleOpenEditContact}
+                className="py-2.5 px-6 bg-white hover:bg-[#57564F] hover:text-[#F8F3CE] border border-[#DDDAD0] rounded-xl text-xs font-semibold text-[#57564F] transition-all shadow-sm active:scale-98 cursor-pointer flex items-center gap-2"
+              >
+                Edit
+              </button>
+            </div>
           </div>
         </div>
       </div>
