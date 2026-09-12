@@ -33,7 +33,7 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (!res.ok || !data.success) {
-        setErrorMsg(data.message || 'Login gagal. Silakan periksa kembali NIPD atau password Anda.');
+        alert('Password atau nama anda salah');
         setIsLoading(false);
         return;
       }
@@ -47,7 +47,7 @@ export default function LoginPage() {
         window.location.href = '/dashboard';
       }
     } catch (err) {
-      setErrorMsg('Koneksi bermasalah. Silakan coba beberapa saat lagi.');
+      alert('Password atau nama anda salah');
       setIsLoading(false);
     }
   };
@@ -66,12 +66,6 @@ export default function LoginPage() {
       <div className="w-full max-w-md mx-auto bg-white border-2 border-[#DDDAD0] rounded-3xl p-6 sm:p-8 shadow-xl my-6">
         <h2 className="text-lg font-bold text-[#57564F] text-center mb-1">Masuk ke Akun Anda</h2>
         <p className="text-[#7A7A73] text-xs text-center mb-6">Gunakan NIPD dan password Anda</p>
-
-        {errorMsg && (
-          <div className="mb-5 p-3.5 bg-[#f9f8f3] border border-[#DDDAD0] rounded-2xl text-[#57564F] text-xs font-medium leading-relaxed">
-            {errorMsg}
-          </div>
-        )}
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>

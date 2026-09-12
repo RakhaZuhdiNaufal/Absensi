@@ -17,7 +17,7 @@ export async function POST(request) {
     let user = await findUserByCredential(credential);
     if (!user) {
       return NextResponse.json(
-        { success: false, message: 'NIPD / Username atau Password salah' },
+        { success: false, message: 'Password atau nama anda salah' },
         { status: 401 }
       );
     }
@@ -25,7 +25,7 @@ export async function POST(request) {
     const isPasswordValid = await comparePassword(password, user.password);
     if (!isPasswordValid) {
       return NextResponse.json(
-        { success: false, message: 'NIPD / Username atau Password salah' },
+        { success: false, message: 'Password atau nama anda salah' },
         { status: 401 }
       );
     }
