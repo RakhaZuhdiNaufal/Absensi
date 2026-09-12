@@ -317,16 +317,8 @@ export default function AktivitasPage() {
                               )}
                             </div>
 
-                            {/* Tombol Edit (teks biasa/tidak bold) & Hapus (icon) */}
-                            <div className="flex items-center gap-2 shrink-0 select-none">
-                              <button
-                                type="button"
-                                onClick={() => openEditModal(act)}
-                                className="text-[11px] font-normal text-[#57564F] hover:text-black hover:underline px-1 py-0.5 transition-colors cursor-pointer"
-                                title="Edit catatan kegiatan"
-                              >
-                                Edit
-                              </button>
+                            {/* Tombol Hapus (icon) */}
+                            <div className="flex items-center shrink-0 select-none">
                               <button
                                 type="button"
                                 onClick={() => handleDeleteActivity(act.id)}
@@ -342,9 +334,14 @@ export default function AktivitasPage() {
                           <p className="text-xs text-[#7A7A73] leading-relaxed whitespace-pre-line">{act.description}</p>
 
                           <div className="pt-2 border-t border-[#DDDAD0] flex flex-wrap items-center justify-between text-[11px] text-[#7A7A73]">
-                            <span className="text-[11px] font-normal text-[#7A7A73] ml-2">
-                              Catatan
-                            </span>
+                            <button
+                              type="button"
+                              onClick={() => openEditModal(act)}
+                              className="text-[11px] font-normal text-[#57564F] hover:text-black hover:underline transition-colors cursor-pointer"
+                              title="Edit kegiatan"
+                            >
+                              Edit
+                            </button>
                             {act.start_time && act.end_time && (
                               <span className="text-[11px] font-normal text-[#7A7A73]">
                                 Waktu: {act.start_time} - {act.end_time}
