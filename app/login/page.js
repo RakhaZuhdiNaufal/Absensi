@@ -52,45 +52,45 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#f4f3ef] flex items-center justify-center p-3 sm:p-6 md:p-10 selection:bg-[#ff7e5f] selection:text-white">
+    <div className="min-h-screen w-full bg-[#f9f8f3] text-[#57564F] flex items-center justify-center p-3 sm:p-6 md:p-10 selection:bg-[#57564F] selection:text-[#F8F3CE]">
       {/* Container Utama Berbentuk Card Besar dengan Split View */}
-      <div className="w-full max-w-4xl min-h-[580px] bg-white rounded-3xl sm:rounded-[36px] shadow-2xl shadow-black/10 border border-[#DDDAD0]/70 overflow-hidden flex flex-col md:flex-row relative">
+      <div className="w-full max-w-4xl min-h-[580px] bg-white rounded-3xl sm:rounded-[36px] shadow-2xl shadow-[#57564F]/10 border border-[#DDDAD0] overflow-hidden flex flex-col md:flex-row relative">
 
-        {/* Kolom Kiri: Visual Artistik Lengkungan Gradient Orange-Peach */}
-        <div className="relative w-full md:w-1/2 min-h-[220px] md:min-h-[580px] bg-gradient-to-br from-[#ff9a44] via-[#ff7744] to-[#f45342] overflow-hidden flex flex-col justify-between p-7 sm:p-10 text-white select-none">
+        {/* Kolom Kiri: Visual Artistik Lengkungan dengan Tema Aplikasi (#57564F / #474640 / #F8F3CE) */}
+        <div className="relative w-full md:w-1/2 min-h-[220px] md:min-h-[580px] bg-gradient-to-br from-[#57564F] via-[#4d4c45] to-[#3a3934] overflow-hidden flex flex-col justify-between p-7 sm:p-10 text-[#F8F3CE] select-none">
           
           {/* Efek Lingkaran/Kurva Latar Artistik */}
-          <div className="absolute -top-16 -left-16 w-72 h-72 rounded-full bg-white/10 blur-xl pointer-events-none" />
-          <div className="absolute -bottom-24 -right-20 w-80 h-80 rounded-full bg-black/10 blur-2xl pointer-events-none" />
+          <div className="absolute -top-16 -left-16 w-72 h-72 rounded-full bg-white/5 blur-xl pointer-events-none" />
+          <div className="absolute -bottom-24 -right-20 w-80 h-80 rounded-full bg-black/20 blur-2xl pointer-events-none" />
 
           {/* Lengkungan Sisi Kanan Khusus Desktop (Curved divider) */}
           <div 
-            className="hidden md:block absolute -top-12 -bottom-12 -right-24 w-52 bg-white rounded-[100%] shadow-[-10px_0_25px_rgba(0,0,0,0.06)] pointer-events-none z-10" 
+            className="hidden md:block absolute -top-12 -bottom-12 -right-24 w-52 bg-white rounded-[100%] shadow-[-10px_0_25px_rgba(0,0,0,0.08)] pointer-events-none z-10" 
           />
 
           {/* Logo & Brand Header Kiri */}
           <div className="relative z-20 flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30 shadow-sm">
-              <Building2 className="w-5 h-5 text-white" />
+            <div className="w-9 h-9 rounded-2xl bg-[#F8F3CE]/15 backdrop-blur-md flex items-center justify-center border border-[#F8F3CE]/30 shadow-sm">
+              <Building2 className="w-5 h-5 text-[#F8F3CE]" />
             </div>
-            <span className="font-extrabold text-base tracking-wide text-white drop-shadow-sm">
+            <span className="font-bold text-base tracking-wide text-[#F8F3CE] drop-shadow-sm">
               Absensi PKL
             </span>
           </div>
 
           {/* Headline Sambutan Kiri */}
           <div className="relative z-20 my-auto py-6 md:py-0 pr-0 md:pr-6">
-            <h1 className="text-2xl sm:text-3xl md:text-[34px] font-black leading-tight tracking-tight text-white drop-shadow-sm">
+            <h1 className="text-2xl sm:text-3xl md:text-[34px] font-black leading-tight tracking-tight text-[#F8F3CE] drop-shadow-sm">
               Welcome to the <br />
-              <span className="text-[#ffe0c4]">Student Portal!</span>
+              <span className="text-white">Student Portal!</span>
             </h1>
-            <p className="text-white/85 text-xs sm:text-sm mt-3 font-normal leading-relaxed max-w-xs">
+            <p className="text-[#DDDAD0] text-xs sm:text-sm mt-3 font-normal leading-relaxed max-w-xs">
               Sistem presensi kehadiran & pencatatan aktivitas Praktik Kerja Lapangan secara realtime.
             </p>
           </div>
 
           {/* Footer Kiri */}
-          <div className="relative z-20 text-[11px] text-white/70 font-medium">
+          <div className="relative z-20 text-[11px] text-[#DDDAD0]/70 font-medium">
             &copy; {new Date().getFullYear()} PKL Presence App
           </div>
         </div>
@@ -100,10 +100,10 @@ export default function LoginPage() {
           
           {/* Avatar Icon di bagian atas form */}
           <div className="flex flex-col items-center text-center mb-7">
-            <div className="w-16 h-16 rounded-full bg-[#f4f3ef] border border-[#DDDAD0] flex items-center justify-center text-[#9b998e] shadow-inner mb-3">
+            <div className="w-16 h-16 rounded-full bg-[#f9f8f3] border border-[#DDDAD0] flex items-center justify-center text-[#7A7A73] shadow-inner mb-3">
               <User className="w-8 h-8" />
             </div>
-            <p className="text-xs text-[#8c8a81] font-medium">
+            <p className="text-xs text-[#7A7A73] font-normal">
               Login below to get started.
             </p>
           </div>
@@ -113,7 +113,7 @@ export default function LoginPage() {
             
             {/* Input NIPD / Username / Email */}
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#a6a49a]">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#7A7A73]">
                 <User className="w-4 h-4" />
               </div>
               <input
@@ -122,13 +122,13 @@ export default function LoginPage() {
                 value={credential}
                 onChange={(e) => setCredential(e.target.value)}
                 placeholder="E-mail Address / NIPD"
-                className="w-full bg-[#f8f7f4] border border-[#e5e3dc] rounded-2xl pl-11 pr-4 py-3.5 text-xs text-[#57564F] placeholder-[#a6a49a] focus:bg-white focus:outline-none focus:border-[#ff8356] focus:ring-2 focus:ring-[#ff8356]/20 transition-all shadow-xs"
+                className="w-full bg-[#f9f8f3] border border-[#DDDAD0] rounded-2xl pl-11 pr-4 py-3.5 text-xs text-[#57564F] placeholder-[#7A7A73]/70 focus:bg-white focus:outline-none focus:border-[#57564F] focus:ring-2 focus:ring-[#57564F]/20 transition-all shadow-xs"
               />
             </div>
 
             {/* Input Password */}
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#a6a49a]">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#7A7A73]">
                 <Lock className="w-4 h-4" />
               </div>
               <input
@@ -137,12 +137,12 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Your Password"
-                className="w-full bg-[#f8f7f4] border border-[#e5e3dc] rounded-2xl pl-11 pr-11 py-3.5 text-xs text-[#57564F] placeholder-[#a6a49a] focus:bg-white focus:outline-none focus:border-[#ff8356] focus:ring-2 focus:ring-[#ff8356]/20 transition-all shadow-xs"
+                className="w-full bg-[#f9f8f3] border border-[#DDDAD0] rounded-2xl pl-11 pr-11 py-3.5 text-xs text-[#57564F] placeholder-[#7A7A73]/70 focus:bg-white focus:outline-none focus:border-[#57564F] focus:ring-2 focus:ring-[#57564F]/20 transition-all shadow-xs"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-4 flex items-center text-[#a6a49a] hover:text-[#57564F] transition-colors cursor-pointer"
+                className="absolute inset-y-0 right-0 pr-4 flex items-center text-[#7A7A73] hover:text-[#57564F] transition-colors cursor-pointer"
                 title={showPassword ? 'Sembunyikan password' : 'Lihat password'}
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -151,26 +151,26 @@ export default function LoginPage() {
 
             {/* Checkbox Keep me logged in */}
             <div className="flex items-center justify-between pt-1 pb-2">
-              <label className="flex items-center gap-2 cursor-pointer select-none text-[11px] text-[#8c8a81]">
+              <label className="flex items-center gap-2 cursor-pointer select-none text-[11px] text-[#7A7A73]">
                 <input
                   type="checkbox"
                   checked={keepLoggedIn}
                   onChange={(e) => setKeepLoggedIn(e.target.checked)}
-                  className="w-4 h-4 rounded-md border-[#DDDAD0] text-[#ff7744] focus:ring-[#ff7744] accent-[#ff7744]"
+                  className="w-4 h-4 rounded-md border-[#DDDAD0] text-[#57564F] focus:ring-[#57564F] accent-[#57564F]"
                 />
                 <span>Keep me logged in</span>
               </label>
             </div>
 
-            {/* Tombol Login Pill-Gradient */}
+            {/* Tombol Login Pill dengan tema aplikasi */}
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3.5 rounded-full bg-gradient-to-r from-[#ff6b4a] via-[#ff7c43] to-[#ff9843] hover:from-[#f45a37] hover:to-[#f78831] text-white font-bold text-xs shadow-lg shadow-[#ff7744]/35 hover:shadow-xl hover:shadow-[#ff7744]/45 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full py-3.5 rounded-full bg-[#57564F] hover:bg-[#474640] text-[#F8F3CE] font-bold text-xs shadow-lg shadow-[#57564F]/25 hover:shadow-xl hover:shadow-[#57564F]/35 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                  <div className="w-4 h-4 border-2 border-[#DDDAD0] border-t-[#F8F3CE] rounded-full animate-spin" />
                   <span>Memverifikasi...</span>
                 </>
               ) : (
@@ -180,8 +180,8 @@ export default function LoginPage() {
           </form>
 
           {/* Footer Bawah Form */}
-          <div className="mt-8 text-center text-xs text-[#8c8a81]">
-            Butuh bantuan akun? <span className="text-[#ff6b4a] font-semibold">Hubungi Admin</span>
+          <div className="mt-8 text-center text-xs text-[#7A7A73]">
+            Butuh bantuan akun? <span className="text-[#57564F] font-bold hover:underline cursor-pointer">Hubungi Admin</span>
           </div>
 
         </div>
