@@ -86,7 +86,7 @@ export default function LoginPage() {
 
           {/* Footer Kiri */}
           <div className="relative z-20 text-[11px] text-[#DDDAD0]/70 font-medium">
-            &copy; {new Date().getFullYear()} PKL Presence App
+            &copy; {new Date().getFullYear()} Website Absensi PKL.
           </div>
         </div>
 
