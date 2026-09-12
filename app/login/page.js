@@ -70,8 +70,9 @@ export default function LoginPage() {
 
           {/* Logo & Brand Header Kiri */}
           <div className="relative z-20 flex items-center">
-            <span className="font-bold text-base tracking-wide text-[#F8F3CE] drop-shadow-sm">
+            <span className="group font-bold text-base tracking-wide text-[#F8F3CE] drop-shadow-sm cursor-pointer relative py-1">
               Absensi PKL
+              <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#F8F3CE] rounded-full transition-all duration-300 ease-out group-hover:w-full shadow-sm" />
             </span>
           </div>
 
