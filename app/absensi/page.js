@@ -414,35 +414,11 @@ export default function AbsensiPage() {
                     className="hidden"
                   />
 
-                  {/* Header Foto + Pilihan Mode Normal/Mirror */}
+                  {/* Header Foto */}
                   <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#DDDAD0]">
                     <h3 className="text-xs font-normal text-[#57564F]">
                       Foto
                     </h3>
-                    <div className="bg-[#f4f2eb] p-1 rounded-xl border border-[#DDDAD0] flex items-center gap-1 text-xs select-none">
-                      <button
-                        type="button"
-                        onClick={() => setIsMirrored(false)}
-                        className={`px-3 py-1 rounded-lg font-medium transition-all text-xs cursor-pointer ${
-                          !isMirrored
-                            ? 'bg-[#57564F] text-[#F8F3CE] shadow-sm'
-                            : 'bg-transparent text-[#7A7A73] hover:text-[#57564F]'
-                        }`}
-                      >
-                        Normal
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setIsMirrored(true)}
-                        className={`px-3 py-1 rounded-lg font-medium transition-all text-xs cursor-pointer ${
-                          isMirrored
-                            ? 'bg-[#57564F] text-[#F8F3CE] shadow-sm'
-                            : 'bg-transparent text-[#7A7A73] hover:text-[#57564F]'
-                        }`}
-                      >
-                        Mirror
-                      </button>
-                    </div>
                   </div>
 
                   <div className="relative w-full aspect-[4/3] sm:aspect-square md:aspect-[4/3] rounded-2xl overflow-hidden bg-black border border-[#DDDAD0] shadow-inner flex items-center justify-center">
@@ -486,19 +462,45 @@ export default function AbsensiPage() {
 
                   <div className="mt-3 pt-3 border-t border-[#DDDAD0]">
                     {!capturedPhoto ? (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (isCameraActive) {
-                            capturePhoto();
-                          } else {
-                            startCamera();
-                          }
-                        }}
-                        className="w-full bg-[#57564F] hover:bg-[#474640] active:scale-95 text-[#F8F3CE] font-bold py-3 px-4 rounded-xl shadow-sm text-xs transition-all text-center cursor-pointer"
-                      >
-                        Foto
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (isCameraActive) {
+                              capturePhoto();
+                            } else {
+                              startCamera();
+                            }
+                          }}
+                          className="flex-1 bg-[#57564F] hover:bg-[#474640] active:scale-95 text-[#F8F3CE] font-bold py-3 px-4 rounded-xl shadow-sm text-xs transition-all text-center cursor-pointer"
+                        >
+                          Foto
+                        </button>
+                        <div className="bg-[#f4f2eb] p-1 rounded-xl border border-[#DDDAD0] flex items-center gap-1 text-xs select-none shrink-0">
+                          <button
+                            type="button"
+                            onClick={() => setIsMirrored(false)}
+                            className={`px-3 py-2 rounded-lg font-medium transition-all text-xs cursor-pointer ${
+                              !isMirrored
+                                ? 'bg-[#57564F] text-[#F8F3CE] shadow-sm'
+                                : 'bg-transparent text-[#7A7A73] hover:text-[#57564F]'
+                            }`}
+                          >
+                            Normal
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setIsMirrored(true)}
+                            className={`px-3 py-2 rounded-lg font-medium transition-all text-xs cursor-pointer ${
+                              isMirrored
+                                ? 'bg-[#57564F] text-[#F8F3CE] shadow-sm'
+                                : 'bg-transparent text-[#7A7A73] hover:text-[#57564F]'
+                            }`}
+                          >
+                            Mirror
+                          </button>
+                        </div>
+                      </div>
                     ) : (
                       <div className="space-y-2.5 w-full">
                         <div className="flex gap-2.5 w-full">
