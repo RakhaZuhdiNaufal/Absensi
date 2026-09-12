@@ -78,9 +78,9 @@ export default function LoginPage() {
 
           {/* Headline Sambutan Kiri */}
           <div className="relative z-20 my-auto py-6 md:py-0 pr-0 md:pr-6">
-            <h1 className="text-2xl sm:text-3xl md:text-[34px] font-black leading-tight tracking-tight text-[#F8F3CE] drop-shadow-sm">
-              Welcome to the <br />
-              <span className="text-white">Student Portal!</span>
+            <h1 className="text-2xl sm:text-3xl md:text-[32px] font-black leading-tight tracking-tight text-[#F8F3CE] drop-shadow-sm">
+              Selamat datang di <br />
+              <span className="text-white">portal absensi</span>
             </h1>
             <p className="text-[#DDDAD0] text-xs sm:text-sm mt-3 font-normal leading-relaxed max-w-xs">
               Sistem presensi PKL realtime.
