@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getAuthUser } from '@/lib/auth';
-import { getStudentByUserId, getStudentActivities, createActivity, clearStudentActivities } from '@/lib/data-service';
+import { getStudentByUserId, getStudentActivities, createActivity, updateActivity, deleteActivityById, clearStudentActivities } from '@/lib/data-service';
 
 export async function GET(request) {
   try {
@@ -76,11 +76,57 @@ export async function POST(request) {
   }
 }
 
+export async function PUT(request) {
+  try {
+    const user = getAuthUser(request);
+    if (!user || user.role !== 'siswa') {
+      return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+    }
+
+    const body = await request.json();
+    const { id, title, description, activity_date, start_time, end_time } = body;
+
+    if (!id || !title || !description) {
+      return NextResponse.json(
+        { success: false, message: 'ID, judul, dan deskripsi wajib diisi!' },
+        { status: 400 }
+      );
+    }
+
+    const updated = await updateActivity(id, {
+      title,
+      description,
+      activity_date: activity_date || new Date().toISOString().split('T')[0],
+      start_time,
+      end_time
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: 'Aktivitas berhasil diperbarui!',
+      activity: updated
+    });
+  } catch (error) {
+    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+  }
+}
+
 export async function DELETE(request) {
   try {
     const user = getAuthUser(request);
     if (!user) {
       return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { searchParams } = new URL(request.url);
+    const activityId = searchParams.get('id');
+
+    if (activityId) {
+      await deleteActivityById(activityId);
+      return NextResponse.json({
+        success: true,
+        message: 'Aktivitas berhasil dihapus'
+      });
     }
 
     let studentId = null;

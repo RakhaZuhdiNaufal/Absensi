@@ -10,7 +10,8 @@ import {
   Calendar,
   Plus,
   Clock,
-  X
+  X,
+  Trash2
 } from 'lucide-react';
 
 export default function AktivitasPage() {
@@ -21,6 +22,7 @@ export default function AktivitasPage() {
   const [loading, setLoading] = useState(true);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingActivityId, setEditingActivityId] = useState(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [activityDate, setActivityDate] = useState(new Date().toISOString().split('T')[0]);
@@ -122,7 +124,47 @@ export default function AktivitasPage() {
     }
   };
 
-  const handleAddActivity = async (e) => {
+  const openCreateModal = () => {
+    setEditingActivityId(null);
+    setTitle('');
+    setDescription('');
+    setActivityDate(new Date().toISOString().split('T')[0]);
+    setStartTime('08:00');
+    setEndTime('16:00');
+    setErrorMsg('');
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = (act) => {
+    setEditingActivityId(act.id);
+    setTitle(act.title || '');
+    setDescription(act.description || '');
+    const dateFormatted = act.activity_date ? new Date(act.activity_date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
+    setActivityDate(dateFormatted);
+    setStartTime(act.start_time ? act.start_time.slice(0, 5) : '08:00');
+    setEndTime(act.end_time ? act.end_time.slice(0, 5) : '16:00');
+    setErrorMsg('');
+    setIsModalOpen(true);
+  };
+
+  const handleDeleteActivity = async (activityId) => {
+    if (!window.confirm('Yakin ingin menghapus catatan kegiatan ini?')) return;
+    try {
+      const res = await fetch(`/api/activities?id=${activityId}`, {
+        method: 'DELETE'
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setActivities(prev => prev.filter(a => a.id !== activityId));
+      } else {
+        alert(data.message || 'Gagal menghapus kegiatan.');
+      }
+    } catch (err) {
+      alert('Terjadi kesalahan koneksi.');
+    }
+  };
+
+  const handleSaveActivity = async (e) => {
     e.preventDefault();
     setErrorMsg('');
     if (!title || !description) {
@@ -132,16 +174,22 @@ export default function AktivitasPage() {
 
     setSubmitting(true);
     try {
-      const res = await fetch('/api/activities', {
-        method: 'POST',
+      const isEditing = Boolean(editingActivityId);
+      const url = '/api/activities';
+      const method = isEditing ? 'PUT' : 'POST';
+      const payload = {
+        title,
+        description,
+        activity_date: activityDate,
+        start_time: startTime,
+        end_time: endTime,
+        ...(isEditing ? { id: editingActivityId } : {})
+      };
+
+      const res = await fetch(url, {
+        method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title,
-          description,
-          activity_date: activityDate,
-          start_time: startTime,
-          end_time: endTime
-        })
+        body: JSON.stringify(payload)
       });
 
       const data = await res.json();
@@ -151,10 +199,8 @@ export default function AktivitasPage() {
         return;
       }
 
-      if (data.activity) {
-        setActivities(prev => [data.activity, ...prev]);
-      }
       setIsModalOpen(false);
+      setEditingActivityId(null);
       setTitle('');
       setDescription('');
       setSubmitting(false);
@@ -201,8 +247,8 @@ export default function AktivitasPage() {
 
           <div className="flex justify-end shrink-0">
             <button
-              onClick={() => setIsModalOpen(true)}
-              className="bg-[#57564F] hover:bg-[#474640] text-[#F8F3CE] font-bold py-2.5 px-4 rounded-xl shadow-sm flex items-center gap-1.5 text-xs transition-transform active:scale-95"
+              onClick={openCreateModal}
+              className="bg-[#57564F] hover:bg-[#474640] text-[#F8F3CE] font-bold py-2.5 px-4 rounded-xl shadow-sm flex items-center gap-1.5 text-xs transition-transform active:scale-95 cursor-pointer"
             >
               <Plus className="w-4 h-4" /> Tambah Catatan
             </button>
@@ -254,19 +300,42 @@ export default function AktivitasPage() {
                           isRight ? 'md:ml-auto' : 'md:mr-auto'
                         }`}
                       >
-                        <div className="bg-white p-4 rounded-2xl border border-[#DDDAD0] shadow-sm space-y-2.5 hover:shadow-md transition-shadow">
-                          <div className="flex flex-wrap items-center justify-center gap-2">
-                            <span className="text-[10px] font-normal text-[#57564F] bg-[#f9f8f3] px-2.5 py-0.5 rounded-full border border-[#DDDAD0] flex items-center gap-1 shrink-0 whitespace-nowrap">
-                              <Calendar className="w-3 h-3 text-[#7A7A73]" />
-                              {new Date(act.activity_date).toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}
-                            </span>
-
-                            {(act.start_time || act.end_time) && (
+                        <div className="bg-white p-4 rounded-2xl border border-[#DDDAD0] shadow-sm space-y-2.5 hover:shadow-md transition-shadow relative group">
+                          {/* Header Baris Atas: Tanggal/Waktu dan Aksi Edit (teks tidak bold) & Hapus (icon) */}
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex flex-wrap items-center gap-1.5">
                               <span className="text-[10px] font-normal text-[#57564F] bg-[#f9f8f3] px-2.5 py-0.5 rounded-full border border-[#DDDAD0] flex items-center gap-1 shrink-0 whitespace-nowrap">
-                                <Clock className="w-3 h-3 text-[#7A7A73]" />
-                                {(act.start_time || '').slice(0, 5)} - {(act.end_time || '').slice(0, 5)} WIB
+                                <Calendar className="w-3 h-3 text-[#7A7A73]" />
+                                {new Date(act.activity_date).toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}
                               </span>
-                            )}
+
+                              {(act.start_time || act.end_time) && (
+                                <span className="text-[10px] font-normal text-[#57564F] bg-[#f9f8f3] px-2.5 py-0.5 rounded-full border border-[#DDDAD0] flex items-center gap-1 shrink-0 whitespace-nowrap">
+                                  <Clock className="w-3 h-3 text-[#7A7A73]" />
+                                  {(act.start_time || '').slice(0, 5)} - {(act.end_time || '').slice(0, 5)} WIB
+                                </span>
+                              )}
+                            </div>
+
+                            {/* Tombol Edit (teks biasa/tidak bold) & Hapus (icon) */}
+                            <div className="flex items-center gap-2 shrink-0 select-none">
+                              <button
+                                type="button"
+                                onClick={() => openEditModal(act)}
+                                className="text-[11px] font-normal text-[#57564F] hover:text-black hover:underline px-1 py-0.5 transition-colors cursor-pointer"
+                                title="Edit catatan kegiatan"
+                              >
+                                Edit
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteActivity(act.id)}
+                                className="p-1 text-[#7A7A73] hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                                title="Hapus catatan kegiatan"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
                           </div>
 
                           <h4 className="text-sm font-bold text-[#57564F] leading-snug">{act.title}</h4>
@@ -297,7 +366,9 @@ export default function AktivitasPage() {
         <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
           <div className="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto pb-10 sm:pb-5">
             <div className="flex items-center justify-between pb-3 border-b border-[#DDDAD0] sticky top-0 bg-white z-10">
-              <h3 className="text-sm font-normal text-[#57564F]">Catat Kegiatan PKL Baru</h3>
+              <h3 className="text-sm font-normal text-[#57564F]">
+                {editingActivityId ? 'Edit Kegiatan PKL' : 'Catat Kegiatan PKL Baru'}
+              </h3>
               <button onClick={() => setIsModalOpen(false)} className="p-1 rounded-lg hover:bg-[#f9f8f3] text-[#7A7A73]">
                 <X className="w-5 h-5" />
               </button>
@@ -309,7 +380,7 @@ export default function AktivitasPage() {
               </div>
             )}
 
-            <form onSubmit={handleAddActivity} className="space-y-3 pb-4">
+            <form onSubmit={handleSaveActivity} className="space-y-3 pb-4">
               <div>
                 <label className="block text-xs font-normal text-[#57564F] mb-1">Tanggal Kegiatan</label>
                 <ThemedDatePicker
