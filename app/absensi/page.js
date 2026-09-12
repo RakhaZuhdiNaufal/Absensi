@@ -184,6 +184,25 @@ export default function AbsensiPage() {
     setIsPhotoConfirmed(false);
   };
 
+  const flipCapturedPhoto = () => {
+    if (!capturedPhoto) return;
+    const img = new Image();
+    img.onload = () => {
+      const canvas = canvasRef.current || document.createElement('canvas');
+      canvas.width = img.naturalWidth || img.width;
+      canvas.height = img.naturalHeight || img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.save();
+      ctx.translate(canvas.width, 0);
+      ctx.scale(-1, 1);
+      ctx.drawImage(img, 0, 0);
+      ctx.restore();
+      const flipped = canvas.toDataURL('image/jpeg', 0.85);
+      setCapturedPhoto(flipped);
+    };
+    img.src = capturedPhoto;
+  };
+
   const handleFileUpload = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -513,27 +532,40 @@ export default function AbsensiPage() {
                         Foto
                       </button>
                     ) : (
-                      <div className="flex gap-2.5 w-full">
-                        <button
-                          type="button"
-                          onClick={retakePhoto}
-                          className="flex-1 bg-[#f9f8f3] hover:bg-[#DDDAD0]/40 active:scale-95 text-[#57564F] font-bold py-3 rounded-xl border border-[#DDDAD0] text-xs flex items-center justify-center transition-all"
-                        >
-                          Ambil Ulang
-                        </button>
-                        {!isPhotoConfirmed ? (
+                      <div className="space-y-2.5 w-full">
+                        <div className="flex gap-2.5 w-full">
                           <button
                             type="button"
-                            onClick={confirmPhoto}
-                            className="flex-1 bg-[#57564F] hover:bg-[#474640] active:scale-95 text-[#F8F3CE] font-bold py-3 rounded-xl shadow-sm text-xs flex items-center justify-center transition-all"
+                            onClick={retakePhoto}
+                            className="flex-1 bg-[#f9f8f3] hover:bg-[#DDDAD0]/40 active:scale-95 text-[#57564F] font-bold py-3 rounded-xl border border-[#DDDAD0] text-xs flex items-center justify-center transition-all cursor-pointer"
                           >
-                            Gunakan Foto
+                            Ambil Ulang
                           </button>
-                        ) : (
-                          <span className="flex-1 bg-[#57564F] text-[#F8F3CE] font-bold py-3 rounded-xl border border-[#57564F] text-xs flex items-center justify-center shadow-sm">
-                            Foto Disetujui
-                          </span>
-                        )}
+                          {!isPhotoConfirmed ? (
+                            <button
+                              type="button"
+                              onClick={confirmPhoto}
+                              className="flex-1 bg-[#57564F] hover:bg-[#474640] active:scale-95 text-[#F8F3CE] font-bold py-3 rounded-xl shadow-sm text-xs flex items-center justify-center transition-all cursor-pointer"
+                            >
+                              Gunakan Foto
+                            </button>
+                          ) : (
+                            <span className="flex-1 bg-[#57564F] text-[#F8F3CE] font-bold py-3 rounded-xl border border-[#57564F] text-xs flex items-center justify-center shadow-sm">
+                              Foto Disetujui
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Tombol Balik / Flip Orientasi Foto yang sudah dijepret */}
+                        <button
+                          type="button"
+                          onClick={flipCapturedPhoto}
+                          className="w-full py-2 bg-[#f4f2eb] hover:bg-[#DDDAD0]/50 active:scale-98 text-[#57564F] border border-[#DDDAD0] rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all shadow-xs cursor-pointer"
+                          title="Balik / Mirror foto ini secara horizontal"
+                        >
+                          <FlipHorizontal className="w-3.5 h-3.5" />
+                          <span>Balik Orientasi Foto (Flip Horizontal)</span>
+                        </button>
                       </div>
                     )}
                   </div>
