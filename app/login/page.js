@@ -2,14 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Building2, User, Lock, LogIn, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { Building2, User, Lock, Eye, EyeOff, Sparkles } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
   const [credential, setCredential] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
+  const [keepLoggedIn, setKeepLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -20,7 +20,6 @@ export default function LoginPage() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setErrorMsg('');
     setIsLoading(true);
 
     try {
@@ -53,81 +52,140 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f9f8f3] text-[#57564F] flex flex-col justify-between p-4 sm:p-8 relative">
+    <div className="min-h-screen w-full bg-[#f4f3ef] flex items-center justify-center p-3 sm:p-6 md:p-10 selection:bg-[#ff7e5f] selection:text-white">
+      {/* Container Utama Berbentuk Card Besar dengan Split View */}
+      <div className="w-full max-w-4xl min-h-[580px] bg-white rounded-3xl sm:rounded-[36px] shadow-2xl shadow-black/10 border border-[#DDDAD0]/70 overflow-hidden flex flex-col md:flex-row relative">
 
-      <div className="max-w-md w-full mx-auto text-center pt-6">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#57564F] text-[#F8F3CE] shadow-lg mb-3 ring-4 ring-[#DDDAD0]">
-          <Building2 className="w-9 h-9" />
+        {/* Kolom Kiri: Visual Artistik Lengkungan Gradient Orange-Peach */}
+        <div className="relative w-full md:w-1/2 min-h-[220px] md:min-h-[580px] bg-gradient-to-br from-[#ff9a44] via-[#ff7744] to-[#f45342] overflow-hidden flex flex-col justify-between p-7 sm:p-10 text-white select-none">
+          
+          {/* Efek Lingkaran/Kurva Latar Artistik */}
+          <div className="absolute -top-16 -left-16 w-72 h-72 rounded-full bg-white/10 blur-xl pointer-events-none" />
+          <div className="absolute -bottom-24 -right-20 w-80 h-80 rounded-full bg-black/10 blur-2xl pointer-events-none" />
+
+          {/* Lengkungan Sisi Kanan Khusus Desktop (Curved divider) */}
+          <div 
+            className="hidden md:block absolute -top-12 -bottom-12 -right-24 w-52 bg-white rounded-[100%] shadow-[-10px_0_25px_rgba(0,0,0,0.06)] pointer-events-none z-10" 
+          />
+
+          {/* Logo & Brand Header Kiri */}
+          <div className="relative z-20 flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30 shadow-sm">
+              <Building2 className="w-5 h-5 text-white" />
+            </div>
+            <span className="font-extrabold text-base tracking-wide text-white drop-shadow-sm">
+              Absensi PKL
+            </span>
+          </div>
+
+          {/* Headline Sambutan Kiri */}
+          <div className="relative z-20 my-auto py-6 md:py-0 pr-0 md:pr-6">
+            <h1 className="text-2xl sm:text-3xl md:text-[34px] font-black leading-tight tracking-tight text-white drop-shadow-sm">
+              Welcome to the <br />
+              <span className="text-[#ffe0c4]">Student Portal!</span>
+            </h1>
+            <p className="text-white/85 text-xs sm:text-sm mt-3 font-normal leading-relaxed max-w-xs">
+              Sistem presensi kehadiran & pencatatan aktivitas Praktik Kerja Lapangan secara realtime.
+            </p>
+          </div>
+
+          {/* Footer Kiri */}
+          <div className="relative z-20 text-[11px] text-white/70 font-medium">
+            &copy; {new Date().getFullYear()} PKL Presence App
+          </div>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[#57564F]">ABSENSI SISWA PKL</h1>
-        <p className="text-[#7A7A73] text-xs sm:text-sm font-medium mt-1">Sistem Kehadiran & Aktivitas Praktik Kerja Lapangan</p>
-      </div>
 
-      <div className="w-full max-w-md mx-auto bg-white border-2 border-[#DDDAD0] rounded-3xl p-6 sm:p-8 shadow-xl my-6">
-        <h2 className="text-lg font-bold text-[#57564F] text-center mb-1">Masuk ke Akun Anda</h2>
-        <p className="text-[#7A7A73] text-xs text-center mb-6">Gunakan NIPD dan password Anda</p>
+        {/* Kolom Kanan: Form Login */}
+        <div className="w-full md:w-1/2 bg-white p-7 sm:p-12 md:pl-16 flex flex-col justify-center relative z-20">
+          
+          {/* Avatar Icon di bagian atas form */}
+          <div className="flex flex-col items-center text-center mb-7">
+            <div className="w-16 h-16 rounded-full bg-[#f4f3ef] border border-[#DDDAD0] flex items-center justify-center text-[#9b998e] shadow-inner mb-3">
+              <User className="w-8 h-8" />
+            </div>
+            <p className="text-xs text-[#8c8a81] font-medium">
+              Login below to get started.
+            </p>
+          </div>
 
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div>
-            <label className="block text-xs font-bold text-[#57564F] mb-1.5">NIPD / Username</label>
+          {/* Form Pengisian */}
+          <form onSubmit={handleLogin} className="space-y-4">
+            
+            {/* Input NIPD / Username / Email */}
             <div className="relative">
-              <User className="w-4 h-4 text-[#7A7A73] absolute left-3.5 top-3.5" />
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#a6a49a]">
+                <User className="w-4 h-4" />
+              </div>
               <input
                 type="text"
                 required
                 value={credential}
                 onChange={(e) => setCredential(e.target.value)}
-                placeholder="Masukkan NIPD / Username"
-                className="w-full bg-[#f9f8f3] border border-[#DDDAD0] rounded-xl pl-10 pr-4 py-3 text-sm text-[#57564F] placeholder-[#7A7A73]/70 focus:outline-none focus:border-[#57564F] focus:ring-1 focus:ring-[#57564F] transition-colors"
+                placeholder="E-mail Address / NIPD"
+                className="w-full bg-[#f8f7f4] border border-[#e5e3dc] rounded-2xl pl-11 pr-4 py-3.5 text-xs text-[#57564F] placeholder-[#a6a49a] focus:bg-white focus:outline-none focus:border-[#ff8356] focus:ring-2 focus:ring-[#ff8356]/20 transition-all shadow-xs"
               />
             </div>
-          </div>
 
-          <div>
-            <label className="block text-xs font-bold text-[#57564F] mb-1.5">Password</label>
+            {/* Input Password */}
             <div className="relative">
-              <Lock className="w-4 h-4 text-[#7A7A73] absolute left-3.5 top-3.5" />
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#a6a49a]">
+                <Lock className="w-4 h-4" />
+              </div>
               <input
                 type={showPassword ? 'text' : 'password'}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Masukkan password"
-                className="w-full bg-[#f9f8f3] border border-[#DDDAD0] rounded-xl pl-10 pr-11 py-3 text-sm text-[#57564F] placeholder-[#7A7A73]/70 focus:outline-none focus:border-[#57564F] focus:ring-1 focus:ring-[#57564F] transition-colors"
+                placeholder="Your Password"
+                className="w-full bg-[#f8f7f4] border border-[#e5e3dc] rounded-2xl pl-11 pr-11 py-3.5 text-xs text-[#57564F] placeholder-[#a6a49a] focus:bg-white focus:outline-none focus:border-[#ff8356] focus:ring-2 focus:ring-[#ff8356]/20 transition-all shadow-xs"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-3 p-0.5 text-[#7A7A73] hover:text-[#57564F] transition-colors"
+                className="absolute inset-y-0 right-0 pr-4 flex items-center text-[#a6a49a] hover:text-[#57564F] transition-colors cursor-pointer"
                 title={showPassword ? 'Sembunyikan password' : 'Lihat password'}
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
+
+            {/* Checkbox Keep me logged in */}
+            <div className="flex items-center justify-between pt-1 pb-2">
+              <label className="flex items-center gap-2 cursor-pointer select-none text-[11px] text-[#8c8a81]">
+                <input
+                  type="checkbox"
+                  checked={keepLoggedIn}
+                  onChange={(e) => setKeepLoggedIn(e.target.checked)}
+                  className="w-4 h-4 rounded-md border-[#DDDAD0] text-[#ff7744] focus:ring-[#ff7744] accent-[#ff7744]"
+                />
+                <span>Keep me logged in</span>
+              </label>
+            </div>
+
+            {/* Tombol Login Pill-Gradient */}
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full py-3.5 rounded-full bg-gradient-to-r from-[#ff6b4a] via-[#ff7c43] to-[#ff9843] hover:from-[#f45a37] hover:to-[#f78831] text-white font-bold text-xs shadow-lg shadow-[#ff7744]/35 hover:shadow-xl hover:shadow-[#ff7744]/45 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              {isLoading ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                  <span>Memverifikasi...</span>
+                </>
+              ) : (
+                <span>Login</span>
+              )}
+            </button>
+          </form>
+
+          {/* Footer Bawah Form */}
+          <div className="mt-8 text-center text-xs text-[#8c8a81]">
+            Butuh bantuan akun? <span className="text-[#ff6b4a] font-semibold">Hubungi Admin</span>
           </div>
 
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full bg-[#57564F] hover:bg-[#474640] text-[#F8F3CE] font-bold py-3.5 px-4 rounded-xl shadow-md flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed mt-2 text-sm"
-          >
-            {isLoading ? (
-              <>
-                <div className="w-5 h-5 border-2 border-[#DDDAD0] border-t-[#F8F3CE] rounded-full animate-spin" />
-                <span>Memverifikasi...</span>
-              </>
-            ) : (
-              <>
-                <LogIn className="w-5 h-5" />
-                <span>Masuk Sekarang</span>
-              </>
-            )}
-          </button>
-        </form>
-      </div>
+        </div>
 
-      <div className="pb-4 text-center text-[#7A7A73] text-xs">
-        &copy; {new Date().getFullYear()} Aplikasi Absensi Siswa PKL Sekolah
       </div>
     </div>
   );
