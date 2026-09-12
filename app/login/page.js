@@ -82,9 +82,6 @@ export default function LoginPage() {
               Selamat datang di <br />
               <span className="text-white">portal absensi</span>
             </h1>
-            <p className="text-[#DDDAD0] text-xs sm:text-sm mt-3 font-normal leading-relaxed max-w-xs">
-              Sistem presensi PKL realtime.
-            </p>
           </div>
 
           {/* Footer Kiri */}
