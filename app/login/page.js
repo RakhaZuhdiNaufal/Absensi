@@ -159,7 +159,8 @@ export default function LoginPage() {
               ) : (
                 <span>Login</span>
               )}
-            </button>
+              </button>
+            </div>
           </form>
 
           {/* Footer Bawah Form */}
