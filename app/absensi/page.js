@@ -525,17 +525,6 @@ export default function AbsensiPage() {
                             </span>
                           )}
                         </div>
-
-                        {/* Tombol Balik / Flip Orientasi Foto yang sudah dijepret */}
-                        <button
-                          type="button"
-                          onClick={flipCapturedPhoto}
-                          className="w-full py-2 bg-[#f4f2eb] hover:bg-[#DDDAD0]/50 active:scale-98 text-[#57564F] border border-[#DDDAD0] rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all shadow-xs cursor-pointer"
-                          title="Balik / Mirror foto ini secara horizontal"
-                        >
-                          <FlipHorizontal className="w-3.5 h-3.5" />
-                          <span>Balik Orientasi Foto (Flip Horizontal)</span>
-                        </button>
                       </div>
                     )}
                   </div>
