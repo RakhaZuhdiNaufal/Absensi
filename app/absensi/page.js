@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import BottomNav from '@/components/BottomNav';
 import TopNavbar from '@/components/TopNavbar';
-import { Camera, FlipHorizontal } from 'lucide-react';
+import { Camera } from 'lucide-react';
 import { getDeviceInfo } from '@/lib/device';
 
 const RadiusMap = dynamic(() => import('@/components/RadiusMap'), {
@@ -40,7 +40,6 @@ export default function AbsensiPage() {
   const [cameraError, setCameraError] = useState('');
   const [capturedPhoto, setCapturedPhoto] = useState(null);
   const [isPhotoConfirmed, setIsPhotoConfirmed] = useState(false);
-  const [isMirrored, setIsMirrored] = useState(false);
 
   const [locationState, setLocationState] = useState({
     loading: true,
@@ -171,13 +170,7 @@ export default function AbsensiPage() {
     canvas.width = video.videoWidth || 480;
     canvas.height = video.videoHeight || 480;
 
-    context.save();
-    if (isMirrored) {
-      context.translate(canvas.width, 0);
-      context.scale(-1, 1);
-    }
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    context.restore();
 
     const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
     setCapturedPhoto(dataUrl);
@@ -399,32 +392,21 @@ export default function AbsensiPage() {
                     {capturedPhoto ? (
                       <img src={capturedPhoto} alt="Hasil Swafoto" className="w-full h-full object-cover" />
                     ) : isCameraActive ? (
-                      <>
-                        <video
-                          ref={(node) => {
-                            videoRef.current = node;
-                            if (node && stream) {
-                              if (node.srcObject !== stream) {
-                                node.srcObject = stream;
-                              }
-                              node.play().catch(e => console.warn('Play error:', e));
+                      <video
+                        ref={(node) => {
+                          videoRef.current = node;
+                          if (node && stream) {
+                            if (node.srcObject !== stream) {
+                              node.srcObject = stream;
                             }
-                          }}
-                          autoPlay
-                          playsInline
-                          muted
-                          className={`w-full h-full object-cover transition-transform duration-200 ${isMirrored ? 'scale-x-[-1]' : ''}`}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setIsMirrored(!isMirrored)}
-                          title={isMirrored ? 'Matikan Mirror' : 'Aktifkan Mirror'}
-                          className="absolute top-3 right-3 z-20 bg-black/60 hover:bg-black/80 backdrop-blur-sm text-[#F8F3CE] px-2.5 py-1.5 rounded-xl text-[11px] font-medium flex items-center gap-1.5 transition-all active:scale-95 border border-white/20 shadow-md cursor-pointer"
-                        >
-                          <FlipHorizontal className="w-3.5 h-3.5" />
-                          <span>{isMirrored ? 'Mirror: On' : 'Mirror: Off'}</span>
-                        </button>
-                      </>
+                            node.play().catch(e => console.warn('Play error:', e));
+                          }
+                        }}
+                        autoPlay
+                        playsInline
+                        muted
+                        className="w-full h-full object-cover"
+                      />
                     ) : (
                       <div className="p-4 text-[#7A7A73] flex flex-col items-center gap-2">
                         <Camera className="w-12 h-12 stroke-1 text-[#DDDAD0]" />
