@@ -144,25 +144,13 @@ export default function LoginPage() {
               </button>
             </div>
 
-            {/* Checkbox Keep me logged in */}
-            <div className="flex items-center justify-between pt-1 pb-2">
-              <label className="flex items-center gap-2 cursor-pointer select-none text-[11px] text-[#7A7A73]">
-                <input
-                  type="checkbox"
-                  checked={keepLoggedIn}
-                  onChange={(e) => setKeepLoggedIn(e.target.checked)}
-                  className="w-4 h-4 rounded-md border-[#DDDAD0] text-[#57564F] focus:ring-[#57564F] accent-[#57564F]"
-                />
-                <span>Keep me logged in</span>
-              </label>
-            </div>
-
             {/* Tombol Login Pill dengan tema aplikasi */}
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full py-3.5 rounded-full bg-[#57564F] hover:bg-[#474640] text-[#F8F3CE] font-bold text-xs shadow-lg shadow-[#57564F]/25 hover:shadow-xl hover:shadow-[#57564F]/35 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
-            >
+            <div className="pt-2">
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full py-3.5 rounded-full bg-[#57564F] hover:bg-[#474640] text-[#F8F3CE] font-bold text-xs shadow-lg shadow-[#57564F]/25 hover:shadow-xl hover:shadow-[#57564F]/35 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+              >
               {isLoading ? (
                 <>
                   <div className="w-4 h-4 border-2 border-[#DDDAD0] border-t-[#F8F3CE] rounded-full animate-spin" />
