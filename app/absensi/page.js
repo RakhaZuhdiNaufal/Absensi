@@ -432,16 +432,16 @@ export default function AbsensiPage() {
                       </div>
                     )}
 
-                    {/* Mode Orientasi Mirror / Normal */}
-                    {!capturedPhoto && isCameraActive && (
-                      <div className="absolute top-3 right-3 z-20 bg-black/60 backdrop-blur-md p-1 rounded-xl border border-white/20 shadow-md flex select-none text-[11px]">
+                    {/* Mode Orientasi Mirror / Normal di dalam kotak kamera */}
+                    {!capturedPhoto && (
+                      <div className="absolute top-3 right-3 z-30 bg-[#57564F]/85 backdrop-blur-md p-1 rounded-xl border border-white/20 shadow-lg flex select-none text-[11px]">
                         <button
                           type="button"
                           onClick={() => setIsMirrored(false)}
-                          className={`px-2.5 py-1 rounded-lg transition-all font-medium cursor-pointer ${
+                          className={`px-3 py-1 rounded-lg transition-all font-semibold cursor-pointer ${
                             !isMirrored
-                              ? 'bg-[#57564F] text-[#F8F3CE] shadow-sm'
-                              : 'text-[#DDDAD0] hover:text-white'
+                              ? 'bg-[#F8F3CE] text-[#57564F] shadow-sm'
+                              : 'text-white/80 hover:text-white'
                           }`}
                         >
                           Normal
@@ -449,13 +449,13 @@ export default function AbsensiPage() {
                         <button
                           type="button"
                           onClick={() => setIsMirrored(true)}
-                          className={`px-2.5 py-1 rounded-lg transition-all font-medium flex items-center gap-1 cursor-pointer ${
+                          className={`px-3 py-1 rounded-lg transition-all font-semibold flex items-center gap-1.5 cursor-pointer ${
                             isMirrored
-                              ? 'bg-[#57564F] text-[#F8F3CE] shadow-sm'
-                              : 'text-[#DDDAD0] hover:text-white'
+                              ? 'bg-[#F8F3CE] text-[#57564F] shadow-sm'
+                              : 'text-white/80 hover:text-white'
                           }`}
                         >
-                          <FlipHorizontal className="w-3 h-3" />
+                          <FlipHorizontal className="w-3.5 h-3.5" />
                           <span>Mirror</span>
                         </button>
                       </div>
@@ -463,7 +463,41 @@ export default function AbsensiPage() {
 
                   </div>
 
-                  <div className="mt-4 pt-4 border-t border-[#DDDAD0]">
+                  {/* Kontrol Opsi Mirror / Normal di bawah kamera agar selalu jelas terlihat */}
+                  {!capturedPhoto && (
+                    <div className="mt-3 bg-[#f4f2eb] p-1.5 rounded-2xl border border-[#DDDAD0] flex items-center justify-between text-xs">
+                      <span className="text-[11px] font-medium text-[#7A7A73] pl-2 flex items-center gap-1.5">
+                        <FlipHorizontal className="w-3.5 h-3.5 text-[#57564F]" />
+                        Mode Kamera:
+                      </span>
+                      <div className="flex gap-1">
+                        <button
+                          type="button"
+                          onClick={() => setIsMirrored(false)}
+                          className={`px-3 py-1.5 rounded-xl font-medium transition-all text-xs cursor-pointer ${
+                            !isMirrored
+                              ? 'bg-[#57564F] text-[#F8F3CE] shadow-sm'
+                              : 'bg-transparent text-[#7A7A73] hover:text-[#57564F]'
+                          }`}
+                        >
+                          Normal
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setIsMirrored(true)}
+                          className={`px-3 py-1.5 rounded-xl font-medium transition-all text-xs cursor-pointer ${
+                            isMirrored
+                              ? 'bg-[#57564F] text-[#F8F3CE] shadow-sm'
+                              : 'bg-transparent text-[#7A7A73] hover:text-[#57564F]'
+                          }`}
+                        >
+                          Mirror
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="mt-3 pt-3 border-t border-[#DDDAD0]">
                     {!capturedPhoto ? (
                       <button
                         type="button"
@@ -474,7 +508,7 @@ export default function AbsensiPage() {
                             startCamera();
                           }
                         }}
-                        className="w-full bg-[#57564F] hover:bg-[#474640] active:scale-95 text-[#F8F3CE] font-bold py-3 px-4 rounded-xl shadow-sm text-xs transition-all text-center"
+                        className="w-full bg-[#57564F] hover:bg-[#474640] active:scale-95 text-[#F8F3CE] font-bold py-3 px-4 rounded-xl shadow-sm text-xs transition-all text-center cursor-pointer"
                       >
                         Foto
                       </button>
