@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import BottomNav from '@/components/BottomNav';
 import TopNavbar from '@/components/TopNavbar';
-import { Camera } from 'lucide-react';
+import { Camera, FlipHorizontal } from 'lucide-react';
 import { getDeviceInfo } from '@/lib/device';
 
 const RadiusMap = dynamic(() => import('@/components/RadiusMap'), {
@@ -40,6 +40,7 @@ export default function AbsensiPage() {
   const [cameraError, setCameraError] = useState('');
   const [capturedPhoto, setCapturedPhoto] = useState(null);
   const [isPhotoConfirmed, setIsPhotoConfirmed] = useState(false);
+  const [isMirrored, setIsMirrored] = useState(false);
 
   const [locationState, setLocationState] = useState({
     loading: true,
@@ -170,7 +171,13 @@ export default function AbsensiPage() {
     canvas.width = video.videoWidth || 480;
     canvas.height = video.videoHeight || 480;
 
+    context.save();
+    if (isMirrored) {
+      context.translate(canvas.width, 0);
+      context.scale(-1, 1);
+    }
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    context.restore();
 
     const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
     setCapturedPhoto(dataUrl);
@@ -390,7 +397,11 @@ export default function AbsensiPage() {
 
                   <div className="relative w-full aspect-[4/3] sm:aspect-square md:aspect-[4/3] rounded-2xl overflow-hidden bg-black border border-[#DDDAD0] shadow-inner flex items-center justify-center">
                     {capturedPhoto ? (
-                      <img src={capturedPhoto} alt="Hasil Swafoto" className="w-full h-full object-cover" />
+                      <img
+                        src={capturedPhoto}
+                        alt="Hasil Swafoto"
+                        className="w-full h-full object-cover"
+                      />
                     ) : isCameraActive ? (
                       <video
                         ref={(node) => {
@@ -405,7 +416,7 @@ export default function AbsensiPage() {
                         autoPlay
                         playsInline
                         muted
-                        className="w-full h-full object-cover"
+                        className={`w-full h-full object-cover transition-transform duration-200 ${isMirrored ? 'scale-x-[-1]' : ''}`}
                       />
                     ) : (
                       <div className="p-4 text-[#7A7A73] flex flex-col items-center gap-2">
@@ -417,6 +428,35 @@ export default function AbsensiPage() {
                           className="mt-2 bg-[#57564F] hover:bg-[#474640] text-[#F8F3CE] text-xs font-bold px-4 py-2 rounded-xl shadow-sm transition-all active:scale-95"
                         >
                           Aktifkan Kamera Live
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Mode Orientasi Mirror / Normal */}
+                    {!capturedPhoto && isCameraActive && (
+                      <div className="absolute top-3 right-3 z-20 bg-black/60 backdrop-blur-md p-1 rounded-xl border border-white/20 shadow-md flex select-none text-[11px]">
+                        <button
+                          type="button"
+                          onClick={() => setIsMirrored(false)}
+                          className={`px-2.5 py-1 rounded-lg transition-all font-medium cursor-pointer ${
+                            !isMirrored
+                              ? 'bg-[#57564F] text-[#F8F3CE] shadow-sm'
+                              : 'text-[#DDDAD0] hover:text-white'
+                          }`}
+                        >
+                          Normal
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setIsMirrored(true)}
+                          className={`px-2.5 py-1 rounded-lg transition-all font-medium flex items-center gap-1 cursor-pointer ${
+                            isMirrored
+                              ? 'bg-[#57564F] text-[#F8F3CE] shadow-sm'
+                              : 'text-[#DDDAD0] hover:text-white'
+                          }`}
+                        >
+                          <FlipHorizontal className="w-3 h-3" />
+                          <span>Mirror</span>
                         </button>
                       </div>
                     )}
