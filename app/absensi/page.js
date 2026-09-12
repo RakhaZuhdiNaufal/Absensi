@@ -451,35 +451,6 @@ export default function AbsensiPage() {
                       </div>
                     )}
 
-                    {/* Mode Orientasi Mirror / Normal di dalam kotak kamera */}
-                    {!capturedPhoto && (
-                      <div className="absolute top-3 right-3 z-30 bg-[#57564F]/85 backdrop-blur-md p-1 rounded-xl border border-white/20 shadow-lg flex select-none text-[11px]">
-                        <button
-                          type="button"
-                          onClick={() => setIsMirrored(false)}
-                          className={`px-3 py-1 rounded-lg transition-all font-semibold cursor-pointer ${
-                            !isMirrored
-                              ? 'bg-[#F8F3CE] text-[#57564F] shadow-sm'
-                              : 'text-white/80 hover:text-white'
-                          }`}
-                        >
-                          Normal
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setIsMirrored(true)}
-                          className={`px-3 py-1 rounded-lg transition-all font-semibold flex items-center gap-1.5 cursor-pointer ${
-                            isMirrored
-                              ? 'bg-[#F8F3CE] text-[#57564F] shadow-sm'
-                              : 'text-white/80 hover:text-white'
-                          }`}
-                        >
-                          <FlipHorizontal className="w-3.5 h-3.5" />
-                          <span>Mirror</span>
-                        </button>
-                      </div>
-                    )}
-
                   </div>
 
                   {/* Kontrol Opsi Mirror / Normal di bawah kamera agar selalu jelas terlihat */}
