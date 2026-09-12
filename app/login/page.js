@@ -69,10 +69,7 @@ export default function LoginPage() {
           />
 
           {/* Logo & Brand Header Kiri */}
-          <div className="relative z-20 flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-2xl bg-[#F8F3CE]/15 backdrop-blur-md flex items-center justify-center border border-[#F8F3CE]/30 shadow-sm">
-              <Building2 className="w-5 h-5 text-[#F8F3CE]" />
-            </div>
+          <div className="relative z-20 flex items-center">
             <span className="font-bold text-base tracking-wide text-[#F8F3CE] drop-shadow-sm">
               Absensi PKL
             </span>
@@ -85,7 +82,7 @@ export default function LoginPage() {
               <span className="text-white">Student Portal!</span>
             </h1>
             <p className="text-[#DDDAD0] text-xs sm:text-sm mt-3 font-normal leading-relaxed max-w-xs">
-              Sistem presensi kehadiran & pencatatan aktivitas Praktik Kerja Lapangan secara realtime.
+              Sistem presensi PKL realtime.
             </p>
           </div>
 
