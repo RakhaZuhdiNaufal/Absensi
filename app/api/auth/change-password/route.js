@@ -1,15 +1,15 @@
 import { NextResponse } from 'next/server';
-import { getAuthUser } from '@/lib/auth';
-import { updateUserPassword } from '@/lib/data-service';
+import { getAuthUser, comparePassword } from '@/lib/auth';
+import { updateUserPassword, findUserById } from '@/lib/data-service';
 
 export async function POST(request) {
   try {
-    const user = getAuthUser(request);
-    if (!user) {
+    const authUser = getAuthUser(request);
+    if (!authUser) {
       return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
 
-    const { newPassword } = await request.json();
+    const { currentPassword, newPassword } = await request.json();
 
     if (!newPassword || newPassword.length < 4) {
       return NextResponse.json(
@@ -18,7 +18,22 @@ export async function POST(request) {
       );
     }
 
-    await updateUserPassword(user.id, newPassword);
+    const currentUser = await findUserById(authUser.id);
+    if (!currentUser) {
+      return NextResponse.json({ success: false, message: 'User tidak ditemukan' }, { status: 404 });
+    }
+
+    if (currentPassword) {
+      const isMatch = await comparePassword(currentPassword, currentUser.password);
+      if (!isMatch) {
+        return NextResponse.json(
+          { success: false, message: 'Password saat ini salah' },
+          { status: 400 }
+        );
+      }
+    }
+
+    await updateUserPassword(authUser.id, newPassword);
 
     return NextResponse.json({
       success: true,

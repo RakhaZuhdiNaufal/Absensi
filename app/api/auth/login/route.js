@@ -16,8 +16,18 @@ export async function POST(request) {
 
     let user = await findUserByCredential(credential);
     if (!user) {
+      return NextResponse.json(
+        { success: false, message: 'NIPD / Username atau Password salah' },
+        { status: 401 }
+      );
+    }
 
-      user = await createDynamicUserForNipd(credential);
+    const isPasswordValid = await comparePassword(password, user.password);
+    if (!isPasswordValid) {
+      return NextResponse.json(
+        { success: false, message: 'NIPD / Username atau Password salah' },
+        { status: 401 }
+      );
     }
 
     if (user.role === 'admin') {

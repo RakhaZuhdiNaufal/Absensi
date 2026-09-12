@@ -5,14 +5,7 @@ import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import BottomNav from '@/components/BottomNav';
 import TopNavbar from '@/components/TopNavbar';
-import {
-  Camera,
-  RefreshCw,
-  Check,
-  Clock,
-  CheckCircle2,
-  Upload
-} from 'lucide-react';
+import { Camera } from 'lucide-react';
 import { getDeviceInfo } from '@/lib/device';
 
 const RadiusMap = dynamic(() => import('@/components/RadiusMap'), {
@@ -411,7 +404,7 @@ export default function AbsensiPage() {
                         autoPlay
                         playsInline
                         muted
-                        className="w-full h-full object-cover scale-x-[-1]"
+                        className="w-full h-full object-cover"
                       />
                     ) : (
                       <div className="p-4 text-[#7A7A73] flex flex-col items-center gap-2">
