@@ -611,13 +611,13 @@ export default function ProfilPage() {
 
                   {pwdError && (
                     <div className="p-2.5 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 text-xs font-normal">
-                      ⚠️ {pwdError}
+                      {pwdError}
                     </div>
                   )}
 
                   {pwdMsg && (
                     <div className="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-xs font-normal">
-                      ✅ {pwdMsg}
+                      {pwdMsg}
                     </div>
                   )}
 
@@ -809,13 +809,13 @@ export default function ProfilPage() {
 
               {pwdError && (
                 <div className="p-2.5 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 text-xs font-normal">
-                  ⚠️ {pwdError}
+                  {pwdError}
                 </div>
               )}
 
               {pwdMsg && (
                 <div className="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-xs font-normal">
-                  ✅ {pwdMsg}
+                  {pwdMsg}
                 </div>
               )}
 
@@ -1050,7 +1050,7 @@ export default function ProfilPage() {
 
               {bioSaveError && (
                 <div className="p-2.5 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 text-xs font-normal">
-                  ⚠️ {bioSaveError}
+                  {bioSaveError}
                 </div>
               )}
 

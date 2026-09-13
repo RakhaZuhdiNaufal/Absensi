@@ -272,7 +272,7 @@ export default function RadiusMap({
         </div>
         {locationText && (
           <p className="text-[11px] text-[#57564F] font-normal leading-relaxed truncate" title={locationText}>
-            📍 {locationText}
+            {locationText}
           </p>
         )}
       </div>

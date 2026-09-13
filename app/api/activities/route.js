@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getAuthUser } from '@/lib/auth';
-import { getStudentByUserId, getStudentActivities, createActivity, updateActivity, deleteActivityById, clearStudentActivities } from '@/lib/data-service';
+import { getStudentByUserId, getStudentActivities, createActivity, updateActivity, deleteActivityById, clearStudentActivities, getJakartaDateStr } from '@/lib/data-service';
 
 export async function GET(request) {
   try {
@@ -55,7 +55,7 @@ export async function POST(request) {
       );
     }
 
-    const date = activity_date || new Date().toISOString().split('T')[0];
+    const date = activity_date || getJakartaDateStr();
 
     const activity = await createActivity({
       student_id: student.id,
@@ -96,7 +96,7 @@ export async function PUT(request) {
     const updated = await updateActivity(id, {
       title,
       description,
-      activity_date: activity_date || new Date().toISOString().split('T')[0],
+      activity_date: activity_date || getJakartaDateStr(),
       start_time,
       end_time
     });

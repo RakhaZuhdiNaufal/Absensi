@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { findUserByCredential, createDynamicUserForNipd } from '@/lib/data-service';
+import { findUserByCredential } from '@/lib/data-service';
 import { comparePassword, signToken } from '@/lib/auth';
 
 export async function POST(request) {

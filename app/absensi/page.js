@@ -325,8 +325,12 @@ export default function AbsensiPage() {
       return;
     }
 
-    if (isWfh && !isValidLocation) {
-      setSubmitErrorMsg('Lokasi Anda berada di luar area absensi. Silakan berada di lokasi WFH atau Sekolah yang terdaftar pada profil.');
+    if (status === 'hadir' && !isValidLocation) {
+      setSubmitErrorMsg(
+        workMode === 'wfo'
+          ? `Lokasi Anda berada di luar area kantor WFO. Silakan berada di area kantor PT Naikmarketing (radius ${radius1}m).`
+          : `Lokasi Anda berada di luar area WFH. Silakan berada di lokasi rumah yang terdaftar pada profil (radius ${radius2}m).`
+      );
       return;
     }
 
@@ -787,7 +791,7 @@ export default function AbsensiPage() {
                       />
                       {pdfName && (
                         <p className="text-[11px] text-[#57564F] mt-1 flex items-center gap-1 font-normal">
-                          📄 Surat terpilih: {pdfName}
+                          Surat terpilih: {pdfName}
                         </p>
                       )}
                     </div>
@@ -811,7 +815,7 @@ export default function AbsensiPage() {
 
                   {submitSuccessMsg && (
                     <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-xs font-semibold">
-                      ✅ {submitSuccessMsg}
+                      {submitSuccessMsg}
                     </div>
                   )}
 

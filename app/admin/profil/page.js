@@ -548,7 +548,7 @@ export default function AdminProfilPage() {
                       ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
                       : 'bg-rose-50 border-rose-200 text-rose-800'
                   }`}>
-                    {passwordMsg.type === 'success' ? '✅' : '⚠️'} {passwordMsg.text}
+                    {passwordMsg.text}
                   </div>
                 )}
 
@@ -742,7 +742,7 @@ export default function AdminProfilPage() {
 
               {bioSaveError && (
                 <div className="p-2.5 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 text-xs font-normal">
-                  ⚠️ {bioSaveError}
+                  {bioSaveError}
                 </div>
               )}
 
@@ -844,7 +844,7 @@ export default function AdminProfilPage() {
 
               {contactSaveError && (
                 <div className="p-2.5 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 text-xs font-normal">
-                  ⚠️ {contactSaveError}
+                  {contactSaveError}
                 </div>
               )}
 
@@ -920,7 +920,7 @@ export default function AdminProfilPage() {
 
               {profileInfoSaveError && (
                 <div className="p-2.5 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 text-xs font-normal">
-                  ⚠️ {profileInfoSaveError}
+                  {profileInfoSaveError}
                 </div>
               )}
 
