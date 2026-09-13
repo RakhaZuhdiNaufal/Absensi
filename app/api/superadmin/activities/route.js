@@ -5,8 +5,8 @@ import { getAllActivitiesDetailed } from '@/lib/data-service';
 export async function GET(request) {
   try {
     const user = getAuthUser(request);
-    if (!user || user.role !== 'super_admin') {
-      return NextResponse.json({ success: false, message: 'Akses khusus Super Admin' }, { status: 403 });
+    if (!user || (user.role !== 'super_admin' && user.role !== 'admin')) {
+      return NextResponse.json({ success: false, message: 'Akses khusus Admin' }, { status: 403 });
     }
 
     const { searchParams } = new URL(request.url);

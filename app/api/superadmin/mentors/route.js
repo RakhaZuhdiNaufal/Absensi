@@ -10,8 +10,8 @@ import {
 export async function GET(request) {
   try {
     const user = getAuthUser(request);
-    if (!user || user.role !== 'super_admin') {
-      return NextResponse.json({ success: false, message: 'Akses khusus Super Admin' }, { status: 403 });
+    if (!user || (user.role !== 'super_admin' && user.role !== 'admin')) {
+      return NextResponse.json({ success: false, message: 'Akses khusus Admin' }, { status: 403 });
     }
 
     const { searchParams } = new URL(request.url);
@@ -31,8 +31,8 @@ export async function GET(request) {
 export async function POST(request) {
   try {
     const user = getAuthUser(request);
-    if (!user || user.role !== 'super_admin') {
-      return NextResponse.json({ success: false, message: 'Akses khusus Super Admin' }, { status: 403 });
+    if (!user || (user.role !== 'super_admin' && user.role !== 'admin')) {
+      return NextResponse.json({ success: false, message: 'Akses khusus Admin' }, { status: 403 });
     }
 
     const body = await request.json();
@@ -65,8 +65,8 @@ export async function POST(request) {
 export async function PUT(request) {
   try {
     const user = getAuthUser(request);
-    if (!user || user.role !== 'super_admin') {
-      return NextResponse.json({ success: false, message: 'Akses khusus Super Admin' }, { status: 403 });
+    if (!user || (user.role !== 'super_admin' && user.role !== 'admin')) {
+      return NextResponse.json({ success: false, message: 'Akses khusus Admin' }, { status: 403 });
     }
 
     const body = await request.json();
@@ -98,8 +98,8 @@ export async function PUT(request) {
 export async function DELETE(request) {
   try {
     const user = getAuthUser(request);
-    if (!user || user.role !== 'super_admin') {
-      return NextResponse.json({ success: false, message: 'Akses khusus Super Admin' }, { status: 403 });
+    if (!user || (user.role !== 'super_admin' && user.role !== 'admin')) {
+      return NextResponse.json({ success: false, message: 'Akses khusus Admin' }, { status: 403 });
     }
 
     const { searchParams } = new URL(request.url);

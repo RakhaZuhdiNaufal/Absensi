@@ -32,8 +32,8 @@ export default function Sidebar() {
   const [mounted, setMounted] = useState(false);
   const [prevIndex] = useState(clientActiveIndexCache);
 
-  const isSuperAdmin = pathname.startsWith('/superadmin') || user?.role === 'super_admin';
-  const isAdmin = !isSuperAdmin && pathname.startsWith('/admin');
+  const isSuperAdmin = pathname.startsWith('/superadmin');
+  const isAdmin = pathname.startsWith('/admin') || ((user?.role === 'admin' || user?.role === 'super_admin') && !pathname.startsWith('/dashboard') && !pathname.startsWith('/aktivitas') && !pathname.startsWith('/absensi'));
 
   useEffect(() => {
     setMounted(true);
@@ -99,6 +99,7 @@ export default function Sidebar() {
 
   const adminNavItems = [
     { label: 'BERANDA', href: '/admin', icon: Home },
+    { label: 'DATA SISWA', href: '/admin/siswa', icon: Users },
     { label: 'ANALISIS', href: '/admin/analyst', icon: BarChart3 },
     { label: 'RIWAYAT', href: '/admin/riwayat', icon: ClipboardList },
     { label: 'PROFIL', href: '/admin/profil', icon: User },
@@ -150,15 +151,11 @@ export default function Sidebar() {
         {!isCollapsed && (
           <div className="transition-opacity duration-200">
             <h2 className="text-sm font-bold text-[#F8F3CE] uppercase tracking-wider line-clamp-1">
-              {user?.name || (isSuperAdmin ? 'Super Admin' : 'User Presensi')}
+              {user?.name || (isAdmin || isSuperAdmin ? 'Administrator' : 'User Presensi')}
             </h2>
-            {isSuperAdmin ? (
-              <p className="text-[10px] text-[#F8F3CE] bg-white/15 px-2.5 py-0.5 rounded-full inline-block mt-1 font-semibold tracking-wide border border-white/20">
-                Super Administrator
-              </p>
-            ) : isAdmin ? (
+            {isAdmin || isSuperAdmin ? (
               <p className="text-[11px] text-[#DDDAD0] opacity-80 mt-0.5 truncate max-w-[200px]">
-                Pembimbing PKL
+                {user?.role === 'admin' ? 'Pembimbing PKL' : 'Administrator'}
               </p>
             ) : null}
           </div>

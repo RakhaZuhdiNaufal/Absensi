@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import TopNavbar from '@/components/TopNavbar';
 import BottomNav from '@/components/BottomNav';
 import {
@@ -10,7 +11,8 @@ import {
   ExternalLink,
   X,
   ChevronDown,
-  RefreshCw
+  RefreshCw,
+  Users
 } from 'lucide-react';
 
 export default function AdminDashboard() {
@@ -93,9 +95,18 @@ export default function AdminDashboard() {
           <div className="bg-[#57564F] text-[#F8F3CE] p-6 rounded-b-3xl shadow-md">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <span className="text-xs text-[#DDDAD0] block font-medium">Pembimbing PKL</span>
+                <span className="text-xs text-[#DDDAD0] block font-medium">
+                  {user?.role === 'admin' ? 'Pembimbing PKL' : 'Administrator'}
+                </span>
                 <h2 className="text-xl font-bold text-[#F8F3CE] leading-tight">{user?.name}</h2>
               </div>
+              <Link
+                href="/admin/siswa"
+                className="flex items-center gap-1.5 text-xs font-bold bg-[#F8F3CE] hover:bg-white text-[#57564F] px-3.5 py-2 rounded-xl shadow-xs transition-all active:scale-95 cursor-pointer shrink-0"
+              >
+                <Users className="w-3.5 h-3.5" />
+                <span>Kelola Data Siswa</span>
+              </Link>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">

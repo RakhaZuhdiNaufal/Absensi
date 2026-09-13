@@ -20,6 +20,7 @@ export default function BottomNav() {
 
   const adminNavItems = [
     { label: 'Beranda', href: '/admin', icon: Home },
+    { label: 'Siswa', href: '/admin/siswa', icon: Users },
     { label: 'Analyst', href: '/admin/analyst', icon: BarChart3 },
     { label: 'Riwayat', href: '/admin/riwayat', icon: ClipboardList },
     { label: 'Profil', href: '/admin/profil', icon: User },
