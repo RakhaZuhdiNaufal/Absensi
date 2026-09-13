@@ -4,6 +4,9 @@
 -- ============================================================
 
 SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS `password_resets`;
+DROP TABLE IF EXISTS `profile_updates`;
+DROP TABLE IF EXISTS `user_photos`;
 DROP TABLE IF EXISTS `pkl_activities`;
 DROP TABLE IF EXISTS `attendance`;
 DROP TABLE IF EXISTS `students`;
@@ -81,22 +84,29 @@ CREATE TABLE `pkl_activities` (
   CONSTRAINT `fk_activities_student` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 5. TABEL PROFILE_UPDATES (Upload Foto Profil & Edit Profil)
+-- 5. TABEL USER_PHOTOS (Khusus Upload Foto Profil)
+CREATE TABLE `user_photos` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `user_id` INT NOT NULL,
+  `photo` LONGTEXT NOT NULL,
+  `uploaded_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_user_photos_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 6. TABEL PROFILE_UPDATES (Khusus Edit Data Profil)
 CREATE TABLE `profile_updates` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `user_id` INT NOT NULL,
-  `action_type` ENUM('edit_profile', 'upload_photo') NOT NULL DEFAULT 'edit_profile',
-  `photo` LONGTEXT DEFAULT NULL,
   `name` VARCHAR(100) DEFAULT NULL,
   `email` VARCHAR(100) DEFAULT NULL,
   `bio` TEXT DEFAULT NULL,
   `alamat_rumah` TEXT DEFAULT NULL,
   `alamat_pkl` TEXT DEFAULT NULL,
-  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT `fk_profile_updates_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 6. TABEL PASSWORD_RESETS (Log & Riwayat Ganti Password)
+-- 7. TABEL PASSWORD_RESETS (Khusus Log & Riwayat Ganti Password)
 CREATE TABLE `password_resets` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `user_id` INT NOT NULL,

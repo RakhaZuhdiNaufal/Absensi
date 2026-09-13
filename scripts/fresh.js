@@ -48,6 +48,9 @@ async function freshDatabase() {
 
     console.log('🗑️  Menghapus tabel-tabel lama (DROP TABLES)...');
     await connection.query('SET FOREIGN_KEY_CHECKS = 0;');
+    await connection.query('DROP TABLE IF EXISTS `password_resets`;');
+    await connection.query('DROP TABLE IF EXISTS `profile_updates`;');
+    await connection.query('DROP TABLE IF EXISTS `user_photos`;');
     await connection.query('DROP TABLE IF EXISTS `pkl_activities`;');
     await connection.query('DROP TABLE IF EXISTS `attendance`;');
     await connection.query('DROP TABLE IF EXISTS `students`;');
@@ -133,17 +136,25 @@ async function freshDatabase() {
     `);
 
     await connection.query(`
+      CREATE TABLE \`user_photos\` (
+        \`id\` INT AUTO_INCREMENT PRIMARY KEY,
+        \`user_id\` INT NOT NULL,
+        \`photo\` LONGTEXT NOT NULL,
+        \`uploaded_at\` DATETIME DEFAULT CURRENT_TIMESTAMP,
+        CONSTRAINT \`fk_user_photos_user\` FOREIGN KEY (\`user_id\`) REFERENCES \`users\` (\`id\`) ON DELETE CASCADE
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    `);
+
+    await connection.query(`
       CREATE TABLE \`profile_updates\` (
         \`id\` INT AUTO_INCREMENT PRIMARY KEY,
         \`user_id\` INT NOT NULL,
-        \`action_type\` ENUM('edit_profile', 'upload_photo') NOT NULL DEFAULT 'edit_profile',
-        \`photo\` LONGTEXT DEFAULT NULL,
         \`name\` VARCHAR(100) DEFAULT NULL,
         \`email\` VARCHAR(100) DEFAULT NULL,
         \`bio\` TEXT DEFAULT NULL,
         \`alamat_rumah\` TEXT DEFAULT NULL,
         \`alamat_pkl\` TEXT DEFAULT NULL,
-        \`created_at\` DATETIME DEFAULT CURRENT_TIMESTAMP,
+        \`updated_at\` DATETIME DEFAULT CURRENT_TIMESTAMP,
         CONSTRAINT \`fk_profile_updates_user\` FOREIGN KEY (\`user_id\`) REFERENCES \`users\` (\`id\`) ON DELETE CASCADE
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     `);
@@ -158,7 +169,7 @@ async function freshDatabase() {
         CONSTRAINT \`fk_password_resets_user\` FOREIGN KEY (\`user_id\`) REFERENCES \`users\` (\`id\`) ON DELETE CASCADE
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     `);
-    console.log('✅ 6 Tabel berhasil dibuat.');
+    console.log('✅ 7 Tabel berhasil dibuat.');
 
     console.log('🌱 Melakukan seeding data awal akun...');
     const defaultAdminPass = await bcrypt.hash('password123', 10);
