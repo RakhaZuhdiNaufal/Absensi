@@ -311,6 +311,9 @@ export default function AdminProfilPage() {
           username: tempUsername.trim(),
           name: tempName.trim()
         }));
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new Event('profilePhotoUpdated'));
+        }
         setIsEditProfileInfoOpen(false);
       } else {
         setProfileInfoSaveError(data.message || 'Gagal menyimpan data profil');

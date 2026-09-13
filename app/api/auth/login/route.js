@@ -30,11 +30,6 @@ export async function POST(request) {
       );
     }
 
-    if (user.role === 'admin') {
-      user.name = 'Pak Ridwan';
-      user.username = 'pak ridwan';
-    }
-
     const tokenPayload = {
       id: user.id,
       name: user.name,
