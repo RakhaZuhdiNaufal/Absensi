@@ -67,7 +67,7 @@ async function freshDatabase() {
         \`username\` VARCHAR(50) NOT NULL UNIQUE,
         \`email\` VARCHAR(100) NOT NULL UNIQUE,
         \`password\` VARCHAR(255) NOT NULL,
-        \`role\` ENUM('super_admin', 'admin', 'siswa') NOT NULL DEFAULT 'siswa',
+        \`role\` ENUM('admin', 'siswa') NOT NULL DEFAULT 'siswa',
         \`photo\` TEXT DEFAULT NULL,
         \`created_at\` DATETIME DEFAULT CURRENT_TIMESTAMP,
         \`updated_at\` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -174,12 +174,6 @@ async function freshDatabase() {
     console.log('🌱 Melakukan seeding data awal akun...');
     const defaultAdminPass = await bcrypt.hash('password123', 10);
     const defaultSiswaPass = await bcrypt.hash('123456', 10);
-
-    // Super Admin
-    await connection.query(`
-      INSERT INTO users (name, username, email, password, role, photo)
-      VALUES (?, ?, ?, ?, ?, ?)
-    `, ['Super Administrator', 'superadmin', 'superadmin@sekolah.sch.id', defaultAdminPass, 'super_admin', '/default-avatar.png']);
 
     // Admin / Pembimbing
     await connection.query(`

@@ -58,7 +58,7 @@ export default function AdminProfilPage() {
     try {
       const res = await fetch('/api/auth/me');
       const data = await res.json();
-      if (!res.ok || !data.success || (data.user.role !== 'admin' && data.user.role !== 'super_admin')) {
+      if (!res.ok || !data.success || data.user.role !== 'admin') {
         router.push('/login');
         return;
       }

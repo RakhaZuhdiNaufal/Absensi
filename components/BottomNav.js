@@ -7,8 +7,7 @@ import { Home, Calendar, Camera, History, User, BarChart3, ClipboardList, Users,
 export default function BottomNav() {
   const pathname = usePathname();
 
-  const isSuperAdmin = pathname.startsWith('/superadmin');
-  const isAdmin = !isSuperAdmin && pathname.startsWith('/admin');
+  const isAdmin = pathname.startsWith('/admin');
 
   const siswaNavItems = [
     { label: 'Beranda', href: '/dashboard', icon: Home },
@@ -26,16 +25,7 @@ export default function BottomNav() {
     { label: 'Profil', href: '/admin/profil', icon: User },
   ];
 
-  const superadminNavItems = [
-    { label: 'Beranda', href: '/superadmin', icon: Home },
-    { label: 'Siswa', href: '/superadmin/siswa', icon: Users },
-    { label: 'Pembimbing', href: '/superadmin/pembimbing', icon: UserCog },
-    { label: 'Jurnal', href: '/superadmin/jurnal', icon: BookOpen },
-    { label: 'Riwayat', href: '/superadmin/riwayat', icon: History },
-    { label: 'Profil', href: '/superadmin/profil', icon: User },
-  ];
-
-  const navItems = isSuperAdmin ? superadminNavItems : (isAdmin ? adminNavItems : siswaNavItems);
+  const navItems = isAdmin ? adminNavItems : siswaNavItems;
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center md:hidden">

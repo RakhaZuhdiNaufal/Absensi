@@ -38,19 +38,6 @@ Dokumen ini berisi daftar seluruh akun pengguna (Siswa, Pembimbing / Admin, dan 
 
 ---
 
-## 👑 3. Akun Super Admin
-
-> **Password Default Super Admin:** `password123`
-
-| Field | Detail Kredensial Super Admin |
-| :--- | :--- |
-| **Nama** | Super Administrator |
-| **Username** | `superadmin` |
-| **Email** | `superadmin@sekolah.sch.id` |
-| **Role** | `super_admin` |
-
----
-
 ### 💡 Catatan Tambahan:
 - Pengguna dapat mengganti password kapan saja melalui menu **Profil** di masing-masing akun.
 - Seluruh foto profil default akun baru menggunakan aset avatar tunggal konsisten (`/default-avatar.png`).

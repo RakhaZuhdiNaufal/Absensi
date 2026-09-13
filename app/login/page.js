@@ -38,7 +38,7 @@ export default function LoginPage() {
       }
 
       const role = data.user.role;
-      if (role === 'super_admin' || role === 'admin') {
+      if (role === 'admin') {
         window.location.href = '/admin';
       } else {
         window.location.href = '/dashboard';

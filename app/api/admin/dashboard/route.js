@@ -5,7 +5,7 @@ import { getAdminDashboard } from '@/lib/data-service';
 export async function GET(request) {
   try {
     const user = getAuthUser(request);
-    if (!user || (user.role !== 'admin' && user.role !== 'super_admin')) {
+    if (!user || user.role !== 'admin') {
       return NextResponse.json({ success: false, message: 'Akses khusus Admin / Pembimbing' }, { status: 403 });
     }
 

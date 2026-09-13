@@ -10,7 +10,7 @@ import {
 export async function GET(request) {
   try {
     const user = getAuthUser(request);
-    if (!user || (user.role !== 'super_admin' && user.role !== 'admin')) {
+    if (!user || user.role !== 'admin') {
       return NextResponse.json({ success: false, message: 'Akses khusus Admin' }, { status: 403 });
     }
 
@@ -31,7 +31,7 @@ export async function GET(request) {
 export async function POST(request) {
   try {
     const user = getAuthUser(request);
-    if (!user || (user.role !== 'super_admin' && user.role !== 'admin')) {
+    if (!user || user.role !== 'admin') {
       return NextResponse.json({ success: false, message: 'Akses khusus Admin' }, { status: 403 });
     }
 
@@ -65,7 +65,7 @@ export async function POST(request) {
 export async function PUT(request) {
   try {
     const user = getAuthUser(request);
-    if (!user || (user.role !== 'super_admin' && user.role !== 'admin')) {
+    if (!user || user.role !== 'admin') {
       return NextResponse.json({ success: false, message: 'Akses khusus Admin' }, { status: 403 });
     }
 
@@ -98,7 +98,7 @@ export async function PUT(request) {
 export async function DELETE(request) {
   try {
     const user = getAuthUser(request);
-    if (!user || (user.role !== 'super_admin' && user.role !== 'admin')) {
+    if (!user || user.role !== 'admin') {
       return NextResponse.json({ success: false, message: 'Akses khusus Admin' }, { status: 403 });
     }
 

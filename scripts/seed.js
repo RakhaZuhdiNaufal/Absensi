@@ -30,7 +30,7 @@ async function seedDatabase() {
         \`username\` VARCHAR(50) NOT NULL UNIQUE,
         \`email\` VARCHAR(100) NOT NULL UNIQUE,
         \`password\` VARCHAR(255) NOT NULL,
-        \`role\` ENUM('super_admin', 'admin', 'siswa') NOT NULL DEFAULT 'siswa',
+        \`role\` ENUM('admin', 'siswa') NOT NULL DEFAULT 'siswa',
         \`photo\` TEXT DEFAULT NULL,
         \`created_at\` DATETIME DEFAULT CURRENT_TIMESTAMP,
         \`updated_at\` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -97,12 +97,6 @@ async function seedDatabase() {
 
     const defaultAdminPass = await bcrypt.hash('password123', 10);
     const defaultSiswaPass = await bcrypt.hash('123456', 10);
-
-    await connection.query(`
-      INSERT INTO users (name, username, email, password, role, photo)
-      VALUES (?, ?, ?, ?, ?, ?)
-      ON DUPLICATE KEY UPDATE name=VALUES(name);
-    `, ['Super Administrator', 'superadmin', 'superadmin@sekolah.sch.id', defaultAdminPass, 'super_admin', '/default-avatar.png']);
 
     await connection.query(`
       INSERT INTO users (name, username, email, password, role, photo)

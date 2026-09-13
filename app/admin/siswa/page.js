@@ -78,7 +78,7 @@ export default function AdminSiswaPage() {
     try {
       const meRes = await fetch('/api/auth/me');
       const meData = await meRes.json();
-      if (!meRes.ok || !meData.success || (meData.user.role !== 'admin' && meData.user.role !== 'super_admin')) {
+      if (!meRes.ok || !meData.success || meData.user.role !== 'admin') {
         router.push('/login');
         return;
       }
@@ -86,7 +86,7 @@ export default function AdminSiswaPage() {
 
       await reloadStudents();
 
-      const mRes = await fetch('/api/superadmin/mentors');
+      const mRes = await fetch('/api/admin/mentors');
       const mData = await mRes.json();
       if (mData.success) {
         setMentors(mData.mentors || []);
@@ -100,7 +100,7 @@ export default function AdminSiswaPage() {
   };
 
   const reloadStudents = async () => {
-    const res = await fetch('/api/superadmin/students');
+    const res = await fetch('/api/admin/students');
     const data = await res.json();
     if (data.success) {
       setStudents(data.students || []);
@@ -167,7 +167,7 @@ export default function AdminSiswaPage() {
     setIsHistoryModalOpen(true);
     setLoadingHistory(true);
     try {
-      const res = await fetch(`/api/superadmin/students?studentId=${student.id}`);
+      const res = await fetch(`/api/admin/students?studentId=${student.id}`);
       const data = await res.json();
       if (data.success) {
         setStudentHistory(data);
@@ -184,7 +184,7 @@ export default function AdminSiswaPage() {
     setFormError('');
     setIsSubmitting(true);
     try {
-      const res = await fetch('/api/superadmin/students', {
+      const res = await fetch('/api/admin/students', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
@@ -213,7 +213,7 @@ export default function AdminSiswaPage() {
     setFormError('');
     setIsSubmitting(true);
     try {
-      const res = await fetch('/api/superadmin/students', {
+      const res = await fetch('/api/admin/students', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
@@ -241,7 +241,7 @@ export default function AdminSiswaPage() {
     if (!selectedStudent) return;
     setIsSubmitting(true);
     try {
-      const res = await fetch(`/api/superadmin/students?studentId=${selectedStudent.id}`, {
+      const res = await fetch(`/api/admin/students?studentId=${selectedStudent.id}`, {
         method: 'DELETE'
       });
       const data = await res.json();

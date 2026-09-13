@@ -12,7 +12,7 @@ export async function POST(request) {
     let targetStudentId = null;
     let deviceType = null;
 
-    if (user.role === 'admin' || user.role === 'super_admin') {
+    if (user.role === 'admin') {
       const body = await request.json().catch(() => ({}));
       targetStudentId = body.student_id;
       deviceType = body.device_type || null;

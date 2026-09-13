@@ -36,7 +36,7 @@ export default function AdminDashboard() {
     try {
       const meRes = await fetch('/api/auth/me');
       const meData = await meRes.json();
-      if (!meRes.ok || !meData.success || (meData.user.role !== 'admin' && meData.user.role !== 'super_admin')) {
+      if (!meRes.ok || !meData.success || meData.user.role !== 'admin') {
         router.push('/login');
         return;
       }
@@ -95,9 +95,7 @@ export default function AdminDashboard() {
           <div className="bg-[#57564F] text-[#F8F3CE] p-6 rounded-b-3xl shadow-md">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <span className="text-xs text-[#DDDAD0] block font-medium">
-                  {user?.role === 'admin' ? 'Pembimbing PKL' : 'Administrator'}
-                </span>
+                <span className="text-xs text-[#DDDAD0] block font-medium">Pembimbing PKL</span>
                 <h2 className="text-xl font-bold text-[#F8F3CE] leading-tight">{user?.name}</h2>
               </div>
               <Link

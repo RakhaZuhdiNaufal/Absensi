@@ -32,8 +32,7 @@ export default function Sidebar() {
   const [mounted, setMounted] = useState(false);
   const [prevIndex] = useState(clientActiveIndexCache);
 
-  const isSuperAdmin = pathname.startsWith('/superadmin');
-  const isAdmin = pathname.startsWith('/admin') || ((user?.role === 'admin' || user?.role === 'super_admin') && !pathname.startsWith('/dashboard') && !pathname.startsWith('/aktivitas') && !pathname.startsWith('/absensi'));
+  const isAdmin = pathname.startsWith('/admin') || (user?.role === 'admin' && !pathname.startsWith('/dashboard') && !pathname.startsWith('/aktivitas') && !pathname.startsWith('/absensi'));
 
   useEffect(() => {
     setMounted(true);
@@ -105,20 +104,11 @@ export default function Sidebar() {
     { label: 'PROFIL', href: '/admin/profil', icon: User },
   ];
 
-  const superadminNavItems = [
-    { label: 'BERANDA', href: '/superadmin', icon: Home },
-    { label: 'DATA SISWA', href: '/superadmin/siswa', icon: Users },
-    { label: 'PEMBIMBING', href: '/superadmin/pembimbing', icon: UserCog },
-    { label: 'JURNAL PKL', href: '/superadmin/jurnal', icon: BookOpen },
-    { label: 'RIWAYAT ABSEN', href: '/superadmin/riwayat', icon: History },
-    { label: 'PROFIL', href: '/superadmin/profil', icon: User },
-  ];
-
-  const navItems = isSuperAdmin ? superadminNavItems : (isAdmin ? adminNavItems : siswaNavItems);
+  const navItems = isAdmin ? adminNavItems : siswaNavItems;
 
   useEffect(() => {
     const idx = navItems.findIndex(item => {
-      const isExact = item.href === '/dashboard' || item.href === '/admin' || item.href === '/superadmin';
+      const isExact = item.href === '/dashboard' || item.href === '/admin';
       if (isExact) {
         return pathname === item.href;
       }
@@ -151,11 +141,11 @@ export default function Sidebar() {
         {!isCollapsed && (
           <div className="transition-opacity duration-200">
             <h2 className="text-sm font-bold text-[#F8F3CE] uppercase tracking-wider line-clamp-1">
-              {user?.name || (isAdmin || isSuperAdmin ? 'Administrator' : 'User Presensi')}
+              {user?.name || (isAdmin ? 'Administrator' : 'User Presensi')}
             </h2>
-            {isAdmin || isSuperAdmin ? (
+            {isAdmin ? (
               <p className="text-[11px] text-[#DDDAD0] opacity-80 mt-0.5 truncate max-w-[200px]">
-                {user?.role === 'admin' ? 'Pembimbing PKL' : 'Administrator'}
+                Pembimbing PKL
               </p>
             ) : null}
           </div>
@@ -167,7 +157,7 @@ export default function Sidebar() {
 
           {(() => {
             const activeIndex = navItems.findIndex(item => {
-              const isExact = item.href === '/dashboard' || item.href === '/admin' || item.href === '/superadmin';
+              const isExact = item.href === '/dashboard' || item.href === '/admin';
               if (isExact) {
                 return pathname === item.href;
               }

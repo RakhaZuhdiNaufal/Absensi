@@ -34,7 +34,7 @@ export default function AdminRiwayatPage() {
     try {
       const meRes = await fetch('/api/auth/me');
       const meData = await meRes.json();
-      if (!meRes.ok || !meData.success || (meData.user.role !== 'admin' && meData.user.role !== 'super_admin')) {
+      if (!meRes.ok || !meData.success || meData.user.role !== 'admin') {
         router.push('/login');
         return;
       }
