@@ -81,6 +81,32 @@ CREATE TABLE `pkl_activities` (
   CONSTRAINT `fk_activities_student` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- 5. TABEL PROFILE_UPDATES (Upload Foto Profil & Edit Profil)
+CREATE TABLE `profile_updates` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `user_id` INT NOT NULL,
+  `action_type` ENUM('edit_profile', 'upload_photo') NOT NULL DEFAULT 'edit_profile',
+  `photo` LONGTEXT DEFAULT NULL,
+  `name` VARCHAR(100) DEFAULT NULL,
+  `email` VARCHAR(100) DEFAULT NULL,
+  `bio` TEXT DEFAULT NULL,
+  `alamat_rumah` TEXT DEFAULT NULL,
+  `alamat_pkl` TEXT DEFAULT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_profile_updates_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 6. TABEL PASSWORD_RESETS (Log & Riwayat Ganti Password)
+CREATE TABLE `password_resets` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `user_id` INT NOT NULL,
+  `action` VARCHAR(50) NOT NULL DEFAULT 'change_password',
+  `status` VARCHAR(50) NOT NULL DEFAULT 'success',
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_password_resets_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
 -- ============================================================
 -- SEED DATA AWAL (USERS & STUDENTS)
 -- Password Admin/SuperAdmin: password123

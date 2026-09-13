@@ -131,7 +131,34 @@ async function freshDatabase() {
         CONSTRAINT \`fk_activities_student\` FOREIGN KEY (\`student_id\`) REFERENCES \`students\` (\`id\`) ON DELETE CASCADE
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     `);
-    console.log('✅ 4 Tabel berhasil dibuat.');
+
+    await connection.query(`
+      CREATE TABLE \`profile_updates\` (
+        \`id\` INT AUTO_INCREMENT PRIMARY KEY,
+        \`user_id\` INT NOT NULL,
+        \`action_type\` ENUM('edit_profile', 'upload_photo') NOT NULL DEFAULT 'edit_profile',
+        \`photo\` LONGTEXT DEFAULT NULL,
+        \`name\` VARCHAR(100) DEFAULT NULL,
+        \`email\` VARCHAR(100) DEFAULT NULL,
+        \`bio\` TEXT DEFAULT NULL,
+        \`alamat_rumah\` TEXT DEFAULT NULL,
+        \`alamat_pkl\` TEXT DEFAULT NULL,
+        \`created_at\` DATETIME DEFAULT CURRENT_TIMESTAMP,
+        CONSTRAINT \`fk_profile_updates_user\` FOREIGN KEY (\`user_id\`) REFERENCES \`users\` (\`id\`) ON DELETE CASCADE
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    `);
+
+    await connection.query(`
+      CREATE TABLE \`password_resets\` (
+        \`id\` INT AUTO_INCREMENT PRIMARY KEY,
+        \`user_id\` INT NOT NULL,
+        \`action\` VARCHAR(50) NOT NULL DEFAULT 'change_password',
+        \`status\` VARCHAR(50) NOT NULL DEFAULT 'success',
+        \`created_at\` DATETIME DEFAULT CURRENT_TIMESTAMP,
+        CONSTRAINT \`fk_password_resets_user\` FOREIGN KEY (\`user_id\`) REFERENCES \`users\` (\`id\`) ON DELETE CASCADE
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    `);
+    console.log('✅ 6 Tabel berhasil dibuat.');
 
     console.log('🌱 Melakukan seeding data awal akun...');
     const defaultAdminPass = await bcrypt.hash('password123', 10);
