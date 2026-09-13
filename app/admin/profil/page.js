@@ -71,34 +71,75 @@ export default function AdminProfilPage() {
     }
   };
 
+  const compressImage = (file) => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          const maxDim = 800;
+          if (width > height) {
+            if (width > maxDim) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            }
+          } else {
+            if (height > maxDim) {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/jpeg', 0.85));
+        };
+        img.onerror = () => resolve(event.target.result);
+      };
+      reader.onerror = () => resolve(null);
+    });
+  };
+
   const handlePhotoUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setIsUploadingPhoto(true);
     try {
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        const base64Photo = reader.result;
-        const res = await fetch('/api/profile/photo', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ photo: base64Photo })
-        });
-        const data = await res.json();
-        if (res.ok && data.success) {
-          setUser(prev => ({ ...prev, photo: base64Photo }));
-          alert('Foto profil Pembimbing berhasil diperbarui!');
-        } else {
-          alert(data.message || 'Gagal memperbarui foto profil.');
-        }
+      const base64Photo = await compressImage(file);
+      if (!base64Photo) {
+        alert('Gagal membaca gambar');
         setIsUploadingPhoto(false);
-      };
-      reader.readAsDataURL(file);
+        return;
+      }
+      const res = await fetch('/api/profile/photo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ photo: base64Photo })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setUser(prev => ({ ...prev, photo: base64Photo }));
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new Event('profilePhotoUpdated'));
+        }
+        alert('Foto profil Pembimbing berhasil diperbarui!');
+      } else {
+        alert(data.message || 'Gagal memperbarui foto profil.');
+      }
+      setIsUploadingPhoto(false);
     } catch (err) {
       console.error(err);
       alert('Terjadi kesalahan saat mengunggah foto.');
       setIsUploadingPhoto(false);
+    } finally {
+      if (e.target) e.target.value = '';
     }
   };
 

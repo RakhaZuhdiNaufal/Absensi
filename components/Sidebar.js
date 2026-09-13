@@ -47,6 +47,12 @@ export default function Sidebar() {
       document.body.classList.remove('sidebar-collapsed');
     }
     fetchUserData();
+
+    const handlePhotoUpdated = () => {
+      fetchUserData();
+    };
+    window.addEventListener('profilePhotoUpdated', handlePhotoUpdated);
+    return () => window.removeEventListener('profilePhotoUpdated', handlePhotoUpdated);
   }, []);
 
   const toggleCollapse = () => {
