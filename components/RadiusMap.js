@@ -57,24 +57,23 @@ export default function RadiusMap({
       const createUserIcon = () => L.divIcon({
         className: 'custom-user-marker',
         html: `
-          <div style="position: relative; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;">
-            <div style="position: absolute; width: 22px; height: 22px; border-radius: 9999px; background-color: #3b82f6; opacity: 0.35; animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;"></div>
-            <div style="width: 14px; height: 14px; border-radius: 9999px; background-color: #2563eb; border: 2.5px solid #ffffff; box-shadow: 0 2px 6px rgba(0,0,0,0.35); position: relative; z-index: 2;"></div>
+          <div style="position: relative; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center;">
+            <div style="width: 13px; height: 13px; border-radius: 9999px; background-color: #2563eb; border: 2.5px solid #ffffff; box-shadow: 0 1px 4px rgba(0,0,0,0.35);"></div>
           </div>
         `,
-        iconSize: [22, 22],
-        iconAnchor: [11, 11]
+        iconSize: [18, 18],
+        iconAnchor: [9, 9]
       });
 
-      const createTargetIcon = (color, label) => L.divIcon({
+      const createTargetIcon = (label) => L.divIcon({
         className: 'custom-target-marker',
         html: `
-          <div style="background-color: ${color}; color: #ffffff; padding: 2px 6px; border-radius: 6px; font-size: 10px; font-weight: bold; border: 1.5px solid #ffffff; box-shadow: 0 1px 4px rgba(0,0,0,0.3); white-space: nowrap;">
+          <div style="background-color: #57564F; color: #ffffff; padding: 2px 6px; border-radius: 6px; font-size: 10px; font-weight: 600; border: 1px solid rgba(255,255,255,0.7); box-shadow: 0 1px 3px rgba(0,0,0,0.2); white-space: nowrap;">
             ${label}
           </div>
         `,
-        iconSize: [60, 20],
-        iconAnchor: [30, 24]
+        iconSize: [50, 18],
+        iconAnchor: [25, 22]
       });
 
       // Initialize map once if not created
@@ -100,20 +99,13 @@ export default function RadiusMap({
       const map = mapInstanceRef.current;
       const boundsPoints = [[uLat, uLng]];
 
-      // 1. User Radius Circle & Marker (Lingkaran Bulet Biru Posisi Anda)
+      // Clean up extra userCircle if previously created
       if (layersRef.current.userCircle) {
-        layersRef.current.userCircle.setLatLng([uLat, uLng]);
-      } else {
-        layersRef.current.userCircle = L.circle([uLat, uLng], {
-          radius: 15,
-          stroke: true,
-          color: '#2563eb',
-          weight: 1.5,
-          fillColor: '#3b82f6',
-          fillOpacity: 0.22,
-        }).addTo(map);
+        map.removeLayer(layersRef.current.userCircle);
+        layersRef.current.userCircle = null;
       }
 
+      // 1. User Marker (Titik Biru Bersih)
       if (layersRef.current.userMarker) {
         layersRef.current.userMarker.setLatLng([uLat, uLng]);
         layersRef.current.userMarker.setIcon(createUserIcon());
@@ -125,37 +117,29 @@ export default function RadiusMap({
         layersRef.current.userMarker.bindPopup(`<b>Lokasi Anda</b><br/>${Number(uLat).toFixed(6)}, ${Number(uLng).toFixed(6)}`);
       }
 
-      // 2. Lokasi PKL (Hanya digambar saat mode WFH / showHome)
+      // 2. Lokasi PKL / Sekolah (Hanya digambar saat mode WFH / showHome)
       if (showHome && tLat !== null && tLng !== null && !isNaN(tLat) && !isNaN(tLng)) {
         boundsPoints.push([tLat, tLng]);
-        const color1 = isInside1 ? '#10b981' : '#57564F';
-        const fill1 = isInside1 ? '#10b981' : '#7A7A73';
 
         if (layersRef.current.circle1) {
           layersRef.current.circle1.setLatLng([tLat, tLng]);
           layersRef.current.circle1.setRadius(tRad);
-          layersRef.current.circle1.setStyle({
-            color: color1,
-            fillColor: fill1,
-            fillOpacity: isInside1 ? 0.35 : 0.2
-          });
         } else {
           layersRef.current.circle1 = L.circle([tLat, tLng], {
             radius: tRad,
-            color: color1,
-            weight: 2,
-            fillColor: fill1,
-            fillOpacity: isInside1 ? 0.35 : 0.2
+            stroke: false,
+            fillColor: '#2563eb',
+            fillOpacity: 0.18,
           }).addTo(map);
           layersRef.current.circle1.bindPopup(`<b>${targetLabel}</b><br/>Radius: ${tRad} meter`);
         }
 
         if (layersRef.current.marker1) {
           layersRef.current.marker1.setLatLng([tLat, tLng]);
-          layersRef.current.marker1.setIcon(createTargetIcon(color1, 'Sekolah'));
+          layersRef.current.marker1.setIcon(createTargetIcon('Sekolah'));
         } else {
           layersRef.current.marker1 = L.marker([tLat, tLng], {
-            icon: createTargetIcon(color1, 'Sekolah')
+            icon: createTargetIcon('Sekolah')
           }).addTo(map);
         }
       } else {
@@ -169,37 +153,29 @@ export default function RadiusMap({
         }
       }
 
-      // 3. Alamat 2 (Alternatif / Rumah) - Hanya jika showHome aktif (WFH)
+      // 3. Alamat 2 (Rumah / WFH) - Hanya jika showHome aktif (WFH)
       if (showHome && hLat !== null && hLng !== null && !isNaN(hLat) && !isNaN(hLng)) {
         boundsPoints.push([hLat, hLng]);
-        const color2 = isInside2 ? '#10b981' : '#d97706';
-        const fill2 = isInside2 ? '#10b981' : '#f59e0b';
 
         if (layersRef.current.circle2) {
           layersRef.current.circle2.setLatLng([hLat, hLng]);
           layersRef.current.circle2.setRadius(hRad);
-          layersRef.current.circle2.setStyle({
-            color: color2,
-            fillColor: fill2,
-            fillOpacity: isInside2 ? 0.35 : 0.2
-          });
         } else {
           layersRef.current.circle2 = L.circle([hLat, hLng], {
             radius: hRad,
-            color: color2,
-            weight: 2,
-            fillColor: fill2,
-            fillOpacity: isInside2 ? 0.35 : 0.2
+            stroke: false,
+            fillColor: '#2563eb',
+            fillOpacity: 0.18,
           }).addTo(map);
           layersRef.current.circle2.bindPopup(`<b>${homeLabel}</b><br/>Radius: ${hRad} meter`);
         }
 
         if (layersRef.current.marker2) {
           layersRef.current.marker2.setLatLng([hLat, hLng]);
-          layersRef.current.marker2.setIcon(createTargetIcon(color2, 'WFH'));
+          layersRef.current.marker2.setIcon(createTargetIcon('WFH'));
         } else {
           layersRef.current.marker2 = L.marker([hLat, hLng], {
-            icon: createTargetIcon(color2, 'WFH')
+            icon: createTargetIcon('WFH')
           }).addTo(map);
         }
       } else {
@@ -283,18 +259,10 @@ export default function RadiusMap({
             <span className="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
             <span>Anda</span>
           </div>
-          {showHome && (
-            <>
-              <div className="flex items-center gap-1">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#57564F]"></span>
-                <span>Sekolah</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
-                <span>WFH</span>
-              </div>
-            </>
-          )}
+          <div className="flex items-center gap-1">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#2563eb]/40"></span>
+            <span>Radius</span>
+          </div>
         </div>
       </div>
 

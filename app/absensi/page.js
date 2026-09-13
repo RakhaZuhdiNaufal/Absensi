@@ -656,12 +656,9 @@ export default function AbsensiPage() {
                             </div>
 
                             {/* Baris Status Radius Absensi */}
-                            <div className="p-3 flex items-start gap-2.5 bg-[#faf9f5]">
-                              <span className="text-xs leading-none shrink-0 mt-0.5">
-                                {isValidLocation ? '🟢' : '🔴'}
-                              </span>
+                            <div className="p-3 bg-[#faf9f5]">
                               <div className="leading-snug">
-                                <span className="font-medium text-[#57564F] block">
+                                <span className={`font-semibold block ${isValidLocation ? 'text-emerald-700' : 'text-rose-700'}`}>
                                   {isValidLocation
                                     ? 'Dalam radius — Absensi dapat dilakukan'
                                     : 'Di luar radius — Absensi tidak dapat dilakukan'}
