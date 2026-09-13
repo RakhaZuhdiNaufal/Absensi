@@ -7,13 +7,14 @@ import BottomNav from '@/components/BottomNav';
 import TopNavbar from '@/components/TopNavbar';
 import { Camera, FlipHorizontal } from 'lucide-react';
 import { getDeviceInfo } from '@/lib/device';
+import { calculateDistance, formatDistance } from '@/lib/distance';
 
 const RadiusMap = dynamic(() => import('@/components/RadiusMap'), {
   ssr: false,
   loading: () => (
     <div className="rounded-2xl border border-[#DDDAD0] h-48 w-full bg-[#f9f8f3] flex flex-col items-center justify-center gap-2">
       <div className="w-5 h-5 border-2 border-[#57564F] border-t-transparent rounded-full animate-spin" />
-      <span className="text-[11px] text-[#7A7A73]">Memuat peta radius 10 meter...</span>
+      <span className="text-[11px] text-[#7A7A73]">Memuat peta lokasi absensi...</span>
     </div>
   )
 });
@@ -59,6 +60,29 @@ export default function AbsensiPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccessMsg, setSubmitSuccessMsg] = useState('');
   const [submitErrorMsg, setSubmitErrorMsg] = useState('');
+
+  // Koordinat & Radius Alamat 1 (Lokasi PKL)
+  const targetLat = student?.target_lat !== undefined && student?.target_lat !== null ? Number(student.target_lat) : -6.384288;
+  const targetLng = student?.target_lng !== undefined && student?.target_lng !== null ? Number(student.target_lng) : 106.869938;
+  const radius1 = student?.radius_meters ? Number(student.radius_meters) : 50;
+
+  // Koordinat & Radius Alamat 2 (Lokasi Alternatif / Rumah)
+  const homeLat = student?.home_lat !== undefined && student?.home_lat !== null ? Number(student.home_lat) : -6.396742;
+  const homeLng = student?.home_lng !== undefined && student?.home_lng !== null ? Number(student.home_lng) : 106.839228;
+  const radius2 = student?.home_radius_meters ? Number(student.home_radius_meters) : (student?.radius_meters ? Number(student.radius_meters) : 50);
+
+  // Hitung jarak Haversine ke Alamat 1 dan Alamat 2
+  const distance1 = locationState.latitude !== null && locationState.longitude !== null
+    ? calculateDistance(locationState.latitude, locationState.longitude, targetLat, targetLng)
+    : null;
+
+  const distance2 = locationState.latitude !== null && locationState.longitude !== null
+    ? calculateDistance(locationState.latitude, locationState.longitude, homeLat, homeLng)
+    : null;
+
+  const isInside1 = distance1 !== null && distance1 <= radius1;
+  const isInside2 = distance2 !== null && distance2 <= radius2;
+  const isValidLocation = isInside1 || isInside2;
 
   useEffect(() => {
     const updateTime = () => {
@@ -295,6 +319,11 @@ export default function AbsensiPage() {
 
     if (!locationState.latitude || !locationState.longitude) {
       setSubmitErrorMsg('Lokasi diperlukan untuk melakukan absensi.');
+      return;
+    }
+
+    if (!isValidLocation) {
+      setSubmitErrorMsg('Lokasi Anda berada di luar area absensi. Silakan berada di lokasi PKL yang terdaftar pada profil.');
       return;
     }
 
@@ -563,12 +592,108 @@ export default function AbsensiPage() {
                         </button>
                       </div>
                     ) : (
-                      <RadiusMap
-                        latitude={locationState.latitude}
-                        longitude={locationState.longitude}
-                        radius={10}
-                        locationText={locationState.locationText}
-                      />
+                      <div className="space-y-3">
+                        <RadiusMap
+                          latitude={locationState.latitude}
+                          longitude={locationState.longitude}
+                          targetLat={targetLat}
+                          targetLng={targetLng}
+                          targetRadius={radius1}
+                          targetLabel="Alamat 1 (PKL)"
+                          homeLat={homeLat}
+                          homeLng={homeLng}
+                          homeRadius={radius2}
+                          homeLabel="Alamat 2 (Alternatif)"
+                          isInside1={isInside1}
+                          isInside2={isInside2}
+                          locationText={locationState.locationText}
+                        />
+
+                        {/* Rincian Lokasi Anda & Jarak Radius */}
+                        <div className="bg-[#f9f8f3] rounded-2xl p-3 border border-[#DDDAD0] space-y-2.5">
+                          <div className="flex items-center justify-between border-b border-[#DDDAD0] pb-2">
+                            <span className="text-xs font-bold text-[#57564F]">Lokasi Anda</span>
+                            <span className="text-[11px] text-[#7A7A73] font-mono">
+                              {Number(locationState.latitude).toFixed(5)}, {Number(locationState.longitude).toFixed(5)}
+                            </span>
+                          </div>
+
+                          <div className="space-y-1.5 text-xs">
+                            {/* Alamat 1 */}
+                            <div className={`p-2.5 rounded-xl border flex items-center justify-between transition-colors ${
+                              isInside1 ? 'bg-emerald-50 border-emerald-300 text-emerald-900' : 'bg-white border-[#DDDAD0] text-[#57564F]'
+                            }`}>
+                              <div className="min-w-0 pr-2">
+                                <div className="flex items-center gap-1.5 font-medium text-xs">
+                                  <span className="w-2 h-2 rounded-full bg-blue-500 shrink-0"></span>
+                                  <span className="truncate font-semibold">Alamat 1: {student?.tempat_pkl || 'Lokasi PKL'}</span>
+                                </div>
+                                <p className="text-[10px] text-[#7A7A73] truncate mt-0.5" title={student?.alamat_pkl || 'SMK Taruna Bhakti'}>
+                                  {student?.alamat_pkl || 'SMK Taruna Bhakti, Depok'}
+                                </p>
+                              </div>
+                              <div className="text-right shrink-0">
+                                <div className="font-bold text-xs">
+                                  {distance1 !== null ? formatDistance(distance1) : '-'}
+                                </div>
+                                <span className={`text-[10px] px-1.5 py-0.5 rounded font-semibold inline-block mt-0.5 ${
+                                  isInside1 ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-[#7A7A73]'
+                                }`}>
+                                  {isInside1 ? '✓ Dalam Radius' : `Radius: ${radius1}m`}
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Alamat 2 */}
+                            <div className={`p-2.5 rounded-xl border flex items-center justify-between transition-colors ${
+                              isInside2 ? 'bg-emerald-50 border-emerald-300 text-emerald-900' : 'bg-white border-[#DDDAD0] text-[#57564F]'
+                            }`}>
+                              <div className="min-w-0 pr-2">
+                                <div className="flex items-center gap-1.5 font-medium text-xs">
+                                  <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0"></span>
+                                  <span className="truncate font-semibold">Alamat 2: Lokasi Alternatif</span>
+                                </div>
+                                <p className="text-[10px] text-[#7A7A73] truncate mt-0.5" title={student?.alamat_rumah || 'Alamat Rumah'}>
+                                  {student?.alamat_rumah || 'Alamat Rumah'}
+                                </p>
+                              </div>
+                              <div className="text-right shrink-0">
+                                <div className="font-bold text-xs">
+                                  {distance2 !== null ? formatDistance(distance2) : '-'}
+                                </div>
+                                <span className={`text-[10px] px-1.5 py-0.5 rounded font-semibold inline-block mt-0.5 ${
+                                  isInside2 ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-[#7A7A73]'
+                                }`}>
+                                  {isInside2 ? '✓ Dalam Radius' : `Radius: ${radius2}m`}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Indikator Status Radius */}
+                          <div className={`p-2.5 rounded-xl border text-xs flex items-start gap-2 ${
+                            isValidLocation
+                              ? 'bg-emerald-50 border-emerald-300 text-emerald-900'
+                              : 'bg-rose-50 border-rose-300 text-rose-900'
+                          }`}>
+                            <span className="text-sm leading-none shrink-0 mt-0.5">
+                              {isValidLocation ? '🟢' : '🔴'}
+                            </span>
+                            <div className="leading-snug">
+                              <span className="font-bold block text-xs">
+                                {isValidLocation
+                                  ? 'Dalam radius — Absensi dapat dilakukan'
+                                  : 'Di luar radius — Absensi tidak dapat dilakukan'}
+                              </span>
+                              {!isValidLocation && (
+                                <p className="text-[11px] text-rose-700 mt-1 leading-normal">
+                                  Lokasi Anda berada di luar area absensi. Silakan berada di lokasi PKL yang terdaftar pada profil.
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     )}
                   </div>
 
@@ -708,7 +833,16 @@ export default function AbsensiPage() {
 
                   <button
                     type="submit"
-                    disabled={isSubmitting || !isPhotoConfirmed || !locationState.latitude}
+                    disabled={isSubmitting || !isPhotoConfirmed || !locationState.latitude || !isValidLocation}
+                    title={
+                      !locationState.latitude
+                        ? 'Lokasi GPS diperlukan untuk melakukan absensi'
+                        : !isValidLocation
+                        ? 'Lokasi Anda di luar radius yang diizinkan'
+                        : !capturedPhoto || !isPhotoConfirmed
+                        ? 'Foto kehadiran belum disetujui'
+                        : 'Absen Sekarang'
+                    }
                     className="w-full bg-[#57564F] hover:bg-[#474640] text-[#F8F3CE] font-bold py-3.5 px-4 rounded-xl shadow-md transition-all duration-200 ease-out active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-xs cursor-pointer select-none"
                   >
                     {isSubmitting ? (

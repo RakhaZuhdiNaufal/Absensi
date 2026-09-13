@@ -24,7 +24,29 @@ export async function POST(request) {
     }
 
     const body = await request.json();
-    const { name, username, email, status, tempat_pkl, pembimbing_name, bio, jabatan, instansi, siswa_bimbingan, alamat_rumah, alamat_pkl, class: studentClass, nis, major } = body;
+    const {
+      name,
+      username,
+      email,
+      status,
+      tempat_pkl,
+      pembimbing_name,
+      bio,
+      jabatan,
+      instansi,
+      siswa_bimbingan,
+      alamat_rumah,
+      alamat_pkl,
+      class: studentClass,
+      nis,
+      major,
+      target_lat,
+      target_lng,
+      radius_meters,
+      home_lat,
+      home_lng,
+      home_radius_meters
+    } = body;
 
     await updateStudentProfile(user.id, {
       name,
@@ -41,7 +63,13 @@ export async function POST(request) {
       alamat_pkl,
       class: studentClass,
       nis,
-      major
+      major,
+      target_lat,
+      target_lng,
+      radius_meters,
+      home_lat,
+      home_lng,
+      home_radius_meters
     });
 
     return NextResponse.json({

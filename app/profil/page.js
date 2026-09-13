@@ -454,13 +454,17 @@ export default function ProfilPage() {
             </div>
 
             <div className="flex justify-between items-center pb-2 border-b border-[#DDDAD0]">
-              <span className="text-[#7A7A73]">Alamat Rumah</span>
-              <span className="font-normal text-[#57564F] text-right max-w-[60%] truncate" title={alamatRumah}>{alamatRumah || 'Belum diatur'}</span>
+              <span className="text-[#7A7A73]">Alamat 1 (PKL)</span>
+              <span className="font-normal text-[#57564F] text-right max-w-[60%] truncate" title={alamatPkl}>
+                {alamatPkl || 'Belum diatur'} ({student?.radius_meters || 50}m)
+              </span>
             </div>
 
             <div className="flex justify-between items-center pb-2 border-b border-[#DDDAD0]">
-              <span className="text-[#7A7A73]">Alamat PKL</span>
-              <span className="font-normal text-[#57564F] text-right max-w-[60%] truncate" title={alamatPkl}>{alamatPkl || 'Belum diatur'}</span>
+              <span className="text-[#7A7A73]">Alamat 2 (Alternatif)</span>
+              <span className="font-normal text-[#57564F] text-right max-w-[60%] truncate" title={alamatRumah}>
+                {alamatRumah || 'Belum diatur'} ({student?.home_radius_meters || student?.radius_meters || 50}m)
+              </span>
             </div>
           </div>
 
@@ -674,21 +678,41 @@ export default function ProfilPage() {
                 </div>
 
                 <div className="col-span-1 sm:col-span-2 pt-3 border-t border-[#DDDAD0]">
-                  <div className="flex items-center justify-center mb-2">
-                    <label className="block text-center text-xs font-semibold text-[#57564F]">Alamat</label>
+                  <div className="flex items-center justify-center mb-2.5">
+                    <label className="block text-center text-xs font-semibold text-[#57564F]">Alamat Valid Presensi (2 Lokasi)</label>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <div className="w-full bg-white border border-[#DDDAD0] rounded-xl px-3.5 py-2.5 text-xs text-[#57564F] shadow-sm text-left leading-relaxed">
-                        {alamatRumah || 'Belum diatur'}
+                    <div className="bg-white border border-[#DDDAD0] rounded-xl p-3.5 space-y-1.5 text-xs shadow-sm">
+                      <div className="flex items-center justify-between pb-1.5 border-b border-[#DDDAD0]">
+                        <span className="font-bold text-[#57564F] flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                          Alamat 1 (Lokasi PKL)
+                        </span>
+                        <span className="text-[10px] bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-semibold">
+                          Radius: {student?.radius_meters || 50}m
+                        </span>
                       </div>
+                      <p className="text-[#57564F] leading-relaxed pt-0.5">{alamatPkl || student?.alamat_pkl || 'Belum diatur'}</p>
+                      <p className="text-[11px] text-[#7A7A73] font-mono pt-1">
+                        Titik: {Number(student?.target_lat || -6.384288).toFixed(5)}, {Number(student?.target_lng || 106.869938).toFixed(5)}
+                      </p>
                     </div>
 
-                    <div>
-                      <div className="w-full bg-white border border-[#DDDAD0] rounded-xl px-3.5 py-2.5 text-xs text-[#57564F] shadow-sm text-left leading-relaxed">
-                        {alamatPkl || 'Belum diatur'}
+                    <div className="bg-white border border-[#DDDAD0] rounded-xl p-3.5 space-y-1.5 text-xs shadow-sm">
+                      <div className="flex items-center justify-between pb-1.5 border-b border-[#DDDAD0]">
+                        <span className="font-bold text-[#57564F] flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+                          Alamat 2 (Alternatif / Rumah)
+                        </span>
+                        <span className="text-[10px] bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full font-semibold">
+                          Radius: {student?.home_radius_meters || student?.radius_meters || 50}m
+                        </span>
                       </div>
+                      <p className="text-[#57564F] leading-relaxed pt-0.5">{alamatRumah || student?.alamat_rumah || 'Belum diatur'}</p>
+                      <p className="text-[11px] text-[#7A7A73] font-mono pt-1">
+                        Titik: {Number(student?.home_lat || -6.396742).toFixed(5)}, {Number(student?.home_lng || 106.839228).toFixed(5)}
+                      </p>
                     </div>
                   </div>
                 </div>

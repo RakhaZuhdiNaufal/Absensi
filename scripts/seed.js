@@ -51,7 +51,8 @@ async function seedDatabase() {
         \`target_lng\` DECIMAL(11, 8) DEFAULT 106.869938,
         \`home_lat\` DECIMAL(10, 8) DEFAULT NULL,
         \`home_lng\` DECIMAL(11, 8) DEFAULT NULL,
-        \`radius_meters\` INT DEFAULT 10,
+        \`radius_meters\` INT DEFAULT 50,
+        \`home_radius_meters\` INT DEFAULT 50,
         \`pembimbing_id\` INT DEFAULT NULL,
         \`periode_mulai\` DATE NOT NULL,
         \`periode_selesai\` DATE NOT NULL,
@@ -150,8 +151,8 @@ async function seedDatabase() {
         tempat: 'PT Teknologi Nusantara',
         alamat_rumah: 'Cipanas 1 no 18 RT 01 RT 01 kelurahan bakti jaya, kecamatan Sukmajaya, kota Depok - 16418',
         alamat_pkl: 'SMK Taruna Bhakti, Jalan Kampung Baru, Curug, Depok, Jawa Barat, 16416, Indonesia',
-        home_lat: null,
-        home_lng: null
+        home_lat: -6.396742,
+        home_lng: 106.839228
       },
       {
         nipd: '242510090',
@@ -160,8 +161,8 @@ async function seedDatabase() {
         tempat: 'PT Solusi Data Utama',
         alamat_rumah: 'Cipanas 1 no 18 RT 01 RT 01 kelurahan bakti jaya, kecamatan Sukmajaya, kota Depok - 16418',
         alamat_pkl: 'SMK Taruna Bhakti, Jalan Kampung Baru, Curug, Depok, Jawa Barat, 16416, Indonesia',
-        home_lat: null,
-        home_lng: null
+        home_lat: -6.396742,
+        home_lng: 106.839228
       },
       {
         nipd: '242510095',
@@ -170,8 +171,8 @@ async function seedDatabase() {
         tempat: 'PT Media Kreatif Sentosa',
         alamat_rumah: 'Cipanas 1 no 18 RT 01 RT 01 kelurahan bakti jaya, kecamatan Sukmajaya, kota Depok - 16418',
         alamat_pkl: 'SMK Taruna Bhakti, Jalan Kampung Baru, Curug, Depok, Jawa Barat, 16416, Indonesia',
-        home_lat: null,
-        home_lng: null
+        home_lat: -6.396742,
+        home_lng: 106.839228
       },
     ];
 
@@ -187,9 +188,9 @@ async function seedDatabase() {
 
       if (userId) {
         await connection.query(`
-          INSERT INTO students (user_id, nis, class, major, tempat_pkl, alamat_rumah, alamat_pkl, target_lat, target_lng, home_lat, home_lng, radius_meters, pembimbing_id, periode_mulai, periode_selesai)
-          VALUES (?, ?, ?, ?, ?, ?, ?, -6.384288, 106.869938, ?, ?, 10, ?, ?, ?)
-          ON DUPLICATE KEY UPDATE tempat_pkl=VALUES(tempat_pkl), alamat_rumah=VALUES(alamat_rumah), alamat_pkl=VALUES(alamat_pkl), target_lat=VALUES(target_lat), target_lng=VALUES(target_lng), home_lat=VALUES(home_lat), home_lng=VALUES(home_lng), radius_meters=VALUES(radius_meters);
+          INSERT INTO students (user_id, nis, class, major, tempat_pkl, alamat_rumah, alamat_pkl, target_lat, target_lng, home_lat, home_lng, radius_meters, home_radius_meters, pembimbing_id, periode_mulai, periode_selesai)
+          VALUES (?, ?, ?, ?, ?, ?, ?, -6.384288, 106.869938, ?, ?, 50, 50, ?, ?, ?)
+          ON DUPLICATE KEY UPDATE tempat_pkl=VALUES(tempat_pkl), alamat_rumah=VALUES(alamat_rumah), alamat_pkl=VALUES(alamat_pkl), target_lat=VALUES(target_lat), target_lng=VALUES(target_lng), home_lat=VALUES(home_lat), home_lng=VALUES(home_lng), radius_meters=VALUES(radius_meters), home_radius_meters=VALUES(home_radius_meters);
         `, [userId, st.nipd, 'XII RPL 1', 'Rekayasa Perangkat Lunak', st.tempat, st.alamat_rumah, st.alamat_pkl, st.home_lat || null, st.home_lng || null, pembimbingId, '2026-07-01', '2026-12-31']);
       }
     }

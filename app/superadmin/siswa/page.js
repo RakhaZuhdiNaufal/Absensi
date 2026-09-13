@@ -63,7 +63,12 @@ export default function SuperAdminSiswaPage() {
     alamat_rumah: '',
     alamat_pkl: '',
     pembimbing_id: '',
-    radius_meters: 50
+    radius_meters: 50,
+    target_lat: -6.384288,
+    target_lng: 106.869938,
+    home_lat: -6.396742,
+    home_lng: 106.839228,
+    home_radius_meters: 50
   });
 
   const [formError, setFormError] = useState('');
@@ -119,7 +124,12 @@ export default function SuperAdminSiswaPage() {
       alamat_rumah: '',
       alamat_pkl: '',
       pembimbing_id: mentors.length > 0 ? mentors[0].id : '',
-      radius_meters: 50
+      radius_meters: 50,
+      target_lat: -6.384288,
+      target_lng: 106.869938,
+      home_lat: -6.396742,
+      home_lng: 106.839228,
+      home_radius_meters: 50
     });
     setFormError('');
     setFormSuccess('');
@@ -140,7 +150,12 @@ export default function SuperAdminSiswaPage() {
       alamat_rumah: student.alamat_rumah || '',
       alamat_pkl: student.alamat_pkl || '',
       pembimbing_id: student.pembimbing_id || (mentors.length > 0 ? mentors[0].id : ''),
-      radius_meters: student.radius_meters || 50
+      radius_meters: student.radius_meters || 50,
+      target_lat: student.target_lat !== undefined && student.target_lat !== null ? student.target_lat : -6.384288,
+      target_lng: student.target_lng !== undefined && student.target_lng !== null ? student.target_lng : 106.869938,
+      home_lat: student.home_lat !== undefined && student.home_lat !== null ? student.home_lat : -6.396742,
+      home_lng: student.home_lng !== undefined && student.home_lng !== null ? student.home_lng : 106.839228,
+      home_radius_meters: student.home_radius_meters || student.radius_meters || 50
     });
     setFormError('');
     setFormSuccess('');
@@ -591,6 +606,84 @@ export default function SuperAdminSiswaPage() {
                 />
               </div>
 
+              {/* Pengaturan Radius & Koordinat Alamat 1 (PKL) */}
+              <div className="bg-[#f9f8f3] p-3 rounded-2xl border border-[#DDDAD0] space-y-2">
+                <span className="block text-xs font-bold text-[#57564F]">Titik & Radius Alamat 1 (Lokasi PKL)</span>
+                <div className="grid grid-cols-3 gap-2 text-xs">
+                  <div>
+                    <label className="block text-[11px] text-[#7A7A73] mb-0.5">Latitude</label>
+                    <input
+                      type="number"
+                      step="any"
+                      value={formData.target_lat}
+                      onChange={(e) => setFormData({ ...formData, target_lat: e.target.value })}
+                      placeholder="-6.384288"
+                      className="w-full bg-white border border-[#DDDAD0] rounded-xl px-2.5 py-1.5 text-xs text-[#57564F]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] text-[#7A7A73] mb-0.5">Longitude</label>
+                    <input
+                      type="number"
+                      step="any"
+                      value={formData.target_lng}
+                      onChange={(e) => setFormData({ ...formData, target_lng: e.target.value })}
+                      placeholder="106.869938"
+                      className="w-full bg-white border border-[#DDDAD0] rounded-xl px-2.5 py-1.5 text-xs text-[#57564F]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] text-[#7A7A73] mb-0.5">Radius (m)</label>
+                    <input
+                      type="number"
+                      value={formData.radius_meters}
+                      onChange={(e) => setFormData({ ...formData, radius_meters: e.target.value })}
+                      placeholder="50"
+                      className="w-full bg-white border border-[#DDDAD0] rounded-xl px-2.5 py-1.5 text-xs text-[#57564F]"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Pengaturan Radius & Koordinat Alamat 2 (Alternatif/Rumah) */}
+              <div className="bg-[#f9f8f3] p-3 rounded-2xl border border-[#DDDAD0] space-y-2">
+                <span className="block text-xs font-bold text-[#57564F]">Titik & Radius Alamat 2 (Lokasi Alternatif)</span>
+                <div className="grid grid-cols-3 gap-2 text-xs">
+                  <div>
+                    <label className="block text-[11px] text-[#7A7A73] mb-0.5">Latitude</label>
+                    <input
+                      type="number"
+                      step="any"
+                      value={formData.home_lat}
+                      onChange={(e) => setFormData({ ...formData, home_lat: e.target.value })}
+                      placeholder="-6.396742"
+                      className="w-full bg-white border border-[#DDDAD0] rounded-xl px-2.5 py-1.5 text-xs text-[#57564F]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] text-[#7A7A73] mb-0.5">Longitude</label>
+                    <input
+                      type="number"
+                      step="any"
+                      value={formData.home_lng}
+                      onChange={(e) => setFormData({ ...formData, home_lng: e.target.value })}
+                      placeholder="106.839228"
+                      className="w-full bg-white border border-[#DDDAD0] rounded-xl px-2.5 py-1.5 text-xs text-[#57564F]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] text-[#7A7A73] mb-0.5">Radius (m)</label>
+                    <input
+                      type="number"
+                      value={formData.home_radius_meters}
+                      onChange={(e) => setFormData({ ...formData, home_radius_meters: e.target.value })}
+                      placeholder="50"
+                      className="w-full bg-white border border-[#DDDAD0] rounded-xl px-2.5 py-1.5 text-xs text-[#57564F]"
+                    />
+                  </div>
+                </div>
+              </div>
+
               <div className="pt-2 flex items-center justify-end gap-2">
                 <button
                   type="button"
@@ -754,6 +847,84 @@ export default function SuperAdminSiswaPage() {
                   onChange={(e) => setFormData({ ...formData, alamat_rumah: e.target.value })}
                   className="w-full bg-[#f9f8f3] border border-[#DDDAD0] rounded-xl p-2.5 text-xs text-[#57564F] focus:outline-none focus:border-[#57564F]"
                 />
+              </div>
+
+              {/* Pengaturan Radius & Koordinat Alamat 1 (PKL) */}
+              <div className="bg-[#f9f8f3] p-3 rounded-2xl border border-[#DDDAD0] space-y-2">
+                <span className="block text-xs font-bold text-[#57564F]">Titik & Radius Alamat 1 (Lokasi PKL)</span>
+                <div className="grid grid-cols-3 gap-2 text-xs">
+                  <div>
+                    <label className="block text-[11px] text-[#7A7A73] mb-0.5">Latitude</label>
+                    <input
+                      type="number"
+                      step="any"
+                      value={formData.target_lat}
+                      onChange={(e) => setFormData({ ...formData, target_lat: e.target.value })}
+                      placeholder="-6.384288"
+                      className="w-full bg-white border border-[#DDDAD0] rounded-xl px-2.5 py-1.5 text-xs text-[#57564F]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] text-[#7A7A73] mb-0.5">Longitude</label>
+                    <input
+                      type="number"
+                      step="any"
+                      value={formData.target_lng}
+                      onChange={(e) => setFormData({ ...formData, target_lng: e.target.value })}
+                      placeholder="106.869938"
+                      className="w-full bg-white border border-[#DDDAD0] rounded-xl px-2.5 py-1.5 text-xs text-[#57564F]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] text-[#7A7A73] mb-0.5">Radius (m)</label>
+                    <input
+                      type="number"
+                      value={formData.radius_meters}
+                      onChange={(e) => setFormData({ ...formData, radius_meters: e.target.value })}
+                      placeholder="50"
+                      className="w-full bg-white border border-[#DDDAD0] rounded-xl px-2.5 py-1.5 text-xs text-[#57564F]"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Pengaturan Radius & Koordinat Alamat 2 (Alternatif/Rumah) */}
+              <div className="bg-[#f9f8f3] p-3 rounded-2xl border border-[#DDDAD0] space-y-2">
+                <span className="block text-xs font-bold text-[#57564F]">Titik & Radius Alamat 2 (Lokasi Alternatif)</span>
+                <div className="grid grid-cols-3 gap-2 text-xs">
+                  <div>
+                    <label className="block text-[11px] text-[#7A7A73] mb-0.5">Latitude</label>
+                    <input
+                      type="number"
+                      step="any"
+                      value={formData.home_lat}
+                      onChange={(e) => setFormData({ ...formData, home_lat: e.target.value })}
+                      placeholder="-6.396742"
+                      className="w-full bg-white border border-[#DDDAD0] rounded-xl px-2.5 py-1.5 text-xs text-[#57564F]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] text-[#7A7A73] mb-0.5">Longitude</label>
+                    <input
+                      type="number"
+                      step="any"
+                      value={formData.home_lng}
+                      onChange={(e) => setFormData({ ...formData, home_lng: e.target.value })}
+                      placeholder="106.839228"
+                      className="w-full bg-white border border-[#DDDAD0] rounded-xl px-2.5 py-1.5 text-xs text-[#57564F]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] text-[#7A7A73] mb-0.5">Radius (m)</label>
+                    <input
+                      type="number"
+                      value={formData.home_radius_meters}
+                      onChange={(e) => setFormData({ ...formData, home_radius_meters: e.target.value })}
+                      placeholder="50"
+                      className="w-full bg-white border border-[#DDDAD0] rounded-xl px-2.5 py-1.5 text-xs text-[#57564F]"
+                    />
+                  </div>
+                </div>
               </div>
 
               <div className="pt-2 flex items-center justify-end gap-2">

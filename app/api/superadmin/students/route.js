@@ -60,7 +60,10 @@ export async function POST(request) {
       pembimbing_id,
       target_lat,
       target_lng,
-      radius_meters
+      radius_meters,
+      home_lat,
+      home_lng,
+      home_radius_meters
     } = body;
 
     if (!name || !username || !email) {
@@ -80,7 +83,10 @@ export async function POST(request) {
       pembimbing_id: pembimbing_id || null,
       target_lat: target_lat ? Number(target_lat) : -6.384288,
       target_lng: target_lng ? Number(target_lng) : 106.869938,
-      radius_meters: radius_meters ? Number(radius_meters) : 50
+      radius_meters: radius_meters ? Number(radius_meters) : 50,
+      home_lat: home_lat ? Number(home_lat) : -6.396742,
+      home_lng: home_lng ? Number(home_lng) : 106.839228,
+      home_radius_meters: home_radius_meters ? Number(home_radius_meters) : 50
     });
 
     return NextResponse.json({
@@ -115,7 +121,10 @@ export async function PUT(request) {
       pembimbing_id,
       target_lat,
       target_lng,
-      radius_meters
+      radius_meters,
+      home_lat,
+      home_lng,
+      home_radius_meters
     } = body;
 
     if (!studentId) {
@@ -133,9 +142,12 @@ export async function PUT(request) {
       alamat_rumah,
       alamat_pkl,
       pembimbing_id,
-      target_lat: target_lat ? Number(target_lat) : undefined,
-      target_lng: target_lng ? Number(target_lng) : undefined,
-      radius_meters: radius_meters ? Number(radius_meters) : undefined
+      target_lat: target_lat !== undefined && target_lat !== '' ? Number(target_lat) : undefined,
+      target_lng: target_lng !== undefined && target_lng !== '' ? Number(target_lng) : undefined,
+      radius_meters: radius_meters !== undefined && radius_meters !== '' ? Number(radius_meters) : undefined,
+      home_lat: home_lat !== undefined && home_lat !== '' ? Number(home_lat) : undefined,
+      home_lng: home_lng !== undefined && home_lng !== '' ? Number(home_lng) : undefined,
+      home_radius_meters: home_radius_meters !== undefined && home_radius_meters !== '' ? Number(home_radius_meters) : undefined
     });
 
     return NextResponse.json({

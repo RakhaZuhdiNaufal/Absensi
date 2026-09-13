@@ -90,9 +90,40 @@ export async function POST(request) {
       );
     }
 
-    if (latitude === undefined || longitude === undefined || latitude === null || longitude === null) {
+    if (latitude === undefined || longitude === undefined || latitude === null || longitude === null || isNaN(Number(latitude)) || isNaN(Number(longitude))) {
       return NextResponse.json(
-        { success: false, message: 'Lokasi diperlukan untuk melakukan absensi.' },
+        { success: false, message: 'Lokasi GPS valid diperlukan untuk melakukan absensi.' },
+        { status: 400 }
+      );
+    }
+
+    const userLat = Number(latitude);
+    const userLng = Number(longitude);
+
+    // Alamat 1 (Lokasi PKL)
+    const targetLat = student.target_lat !== null && student.target_lat !== undefined ? Number(student.target_lat) : -6.384288;
+    const targetLng = student.target_lng !== null && student.target_lng !== undefined ? Number(student.target_lng) : 106.869938;
+    const radius1 = student.radius_meters ? Number(student.radius_meters) : 50;
+    const distance1 = calculateDistance(userLat, userLng, targetLat, targetLng);
+    const isInside1 = distance1 !== null && distance1 <= radius1;
+
+    // Alamat 2 (Lokasi Alternatif / Rumah)
+    const homeLat = student.home_lat !== null && student.home_lat !== undefined ? Number(student.home_lat) : -6.396742;
+    const homeLng = student.home_lng !== null && student.home_lng !== undefined ? Number(student.home_lng) : 106.839228;
+    const radius2 = student.home_radius_meters ? Number(student.home_radius_meters) : (student.radius_meters ? Number(student.radius_meters) : 50);
+    const distance2 = calculateDistance(userLat, userLng, homeLat, homeLng);
+    const isInside2 = distance2 !== null && distance2 <= radius2;
+
+    // Jika posisi siswa berada di luar radius kedua alamat
+    if (!isInside1 && !isInside2) {
+      const dist1Str = distance1 !== null ? `${distance1} meter (Radius: ${radius1}m)` : 'tidak valid';
+      const dist2Str = distance2 !== null ? `${distance2} meter (Radius: ${radius2}m)` : 'tidak valid';
+      return NextResponse.json(
+        {
+          success: false,
+          outsideRadius: true,
+          message: `Lokasi Anda berada di luar area absensi. Silakan berada di lokasi PKL yang terdaftar pada profil. (Jarak Alamat 1: ${dist1Str}, Jarak Alamat 2: ${dist2Str})`
+        },
         { status: 400 }
       );
     }
