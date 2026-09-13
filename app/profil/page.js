@@ -680,9 +680,9 @@ export default function ProfilPage() {
                 <div className="col-span-1 sm:col-span-2 pt-3 border-t border-[#DDDAD0]">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold text-[#57564F] mb-1.5">Alamat WFO</label>
+                      <label className="block text-xs font-semibold text-[#57564F] mb-1.5">Alamat Sekolah</label>
                       <div className="w-full bg-white border border-[#DDDAD0] rounded-xl px-3.5 py-2.5 text-xs text-[#57564F] leading-relaxed shadow-sm min-h-[58px]">
-                        {alamatPkl || student?.alamat_pkl || 'Belum diatur'}
+                        SMK Taruna Bhakti, Jalan Kampung Baru, Curug, Depok, Jawa Barat, 16416, Indonesia
                       </div>
                     </div>
 
@@ -974,14 +974,10 @@ export default function ProfilPage() {
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-semibold text-[#57564F] mb-1.5">Alamat WFO</label>
-                  <textarea
-                    rows={2}
-                    value={tempAlamatPkl}
-                    onChange={(e) => setTempAlamatPkl(e.target.value)}
-                    placeholder="Alamat PKL..."
-                    className="w-full bg-white border border-[#DDDAD0] rounded-xl px-3.5 py-2 text-xs text-[#57564F] focus:outline-none focus:border-[#57564F] shadow-sm transition-colors resize-none"
-                  />
+                  <label className="block text-xs font-semibold text-[#57564F] mb-1.5">Alamat Sekolah</label>
+                  <div className="w-full bg-[#f9f8f3] border border-[#DDDAD0] rounded-xl px-3.5 py-2 text-xs text-[#57564F] leading-relaxed shadow-sm min-h-[46px]">
+                    SMK Taruna Bhakti, Jalan Kampung Baru, Curug, Depok, Jawa Barat, 16416, Indonesia
+                  </div>
                 </div>
               </div>
 
