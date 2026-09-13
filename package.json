@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "node scripts/seed.js && next start",
     "lint": "next lint",
-    "seed": "node scripts/seed.js"
+    "seed": "node scripts/seed.js",
+    "db:fresh": "node scripts/fresh.js",
+    "db:reset": "node scripts/fresh.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
