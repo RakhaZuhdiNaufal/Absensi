@@ -111,6 +111,7 @@ async function freshDatabase() {
         \`note\` TEXT DEFAULT NULL,
         \`status\` ENUM('hadir', 'izin', 'sakit') NOT NULL DEFAULT 'hadir',
         \`work_mode\` VARCHAR(20) DEFAULT 'wfo',
+        \`device_id\` VARCHAR(100) DEFAULT NULL,
         \`created_at\` DATETIME DEFAULT CURRENT_TIMESTAMP,
         CONSTRAINT \`fk_attendance_student\` FOREIGN KEY (\`student_id\`) REFERENCES \`students\` (\`id\`) ON DELETE CASCADE,
         UNIQUE KEY \`unique_student_date\` (\`student_id\`, \`attendance_date\`)
