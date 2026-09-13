@@ -11,7 +11,7 @@ Dokumen ini berisi daftar seluruh akun pengguna (Siswa, Pembimbing / Admin, dan 
 | No | Nama Siswa | NIPD / Username | Email | Kelas | Perusahaan Tempat PKL | Alamat Rumah |
 | :---: | :--- | :---: | :--- | :---: | :--- | :--- |
 | **1** | Narendra Bintang Ramadan | `242510072` | `narendra@sekolah.sch.id` | XII RPL 1 | PT Naikmarketing | Jl. Pringgondani VII No. 29, kelurahan Sukatani, kecamatan Tapos, kota Depok - 16454 |
-| **2** | Rakha Zuhdi Naufal | `242510078` | `rakha@sekolah.sch.id` | XII RPL 1 | PT Digital Inovasi Asia | Cipanas 1 no 18 RT 01 RT 01 kelurahan bakti jaya, kecamatan Sukmajaya, kota Depok - 16418 |
+| **2** | Rakha Zuhdi Naufal | `242510078` | `rakha@sekolah.sch.id` | XII RPL 1 | Sekolah | Cipanas 1 no 18 RT 01 RT 01 kelurahan bakti jaya, kecamatan Sukmajaya, kota Depok - 16418 |
 | **3** | Satria Arief Wibowo | `242510082` | `satria@sekolah.sch.id` | XII RPL 1 | PT Cyber Media Solusindo | Jl. Arrahman V No. 191, kelurahan Sukatani, kecamatan Tapos, kota Depok - 16464 |
 | **4** | Nisa Amalia | `242510085` | `nisa@sekolah.sch.id` | XII RPL 1 | PT Teknologi Nusantara | Cipanas 1 no 18 RT 01 RT 01 kelurahan bakti jaya, kecamatan Sukmajaya, kota Depok - 16418 |
 | **5** | Muhammad Farhan | `242510090` | `farhan@sekolah.sch.id` | XII RPL 2 | PT Solusi Data Utama | Cipanas 1 no 18 RT 01 RT 01 kelurahan bakti jaya, kecamatan Sukmajaya, kota Depok - 16418 |

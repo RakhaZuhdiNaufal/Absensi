@@ -115,24 +115,20 @@ export async function POST(request) {
     const isInside2 = distance2 !== null && distance2 <= radius2;
 
     const isWfhMode = work_mode === 'wfh';
-    const isValidLocation = isWfhMode ? (isInside1 || isInside2) : isInside1;
 
-    // Jika posisi siswa berada di luar radius alamat yang ditentukan
-    if (!isValidLocation) {
-      const dist1Str = distance1 !== null ? `${distance1}m (Radius: ${radius1}m)` : 'tidak valid';
-      const dist2Str = distance2 !== null ? `${distance2}m (Radius: ${radius2}m)` : 'tidak valid';
-      const detailMsg = isWfhMode
-        ? `Lokasi Anda berada di luar area absensi. Silakan berada di lokasi WFH atau PKL yang terdaftar pada profil.`
-        : `Lokasi Anda berada di luar area absensi. Silakan berada di lokasi PKL yang terdaftar pada profil.`;
-
-      return NextResponse.json(
-        {
-          success: false,
-          outsideRadius: true,
-          message: detailMsg
-        },
-        { status: 400 }
-      );
+    // Validasi radius alamat hanya dilakukan jika mode WFH
+    if (isWfhMode) {
+      const isValidLocation = isInside1 || isInside2;
+      if (!isValidLocation) {
+        return NextResponse.json(
+          {
+            success: false,
+            outsideRadius: true,
+            message: `Lokasi Anda berada di luar area absensi. Silakan berada di lokasi WFH atau Sekolah yang terdaftar pada profil.`
+          },
+          { status: 400 }
+        );
+      }
     }
 
     const attendance_date = getJakartaDateStr();

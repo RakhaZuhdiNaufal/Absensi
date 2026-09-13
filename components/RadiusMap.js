@@ -9,7 +9,7 @@ export default function RadiusMap({
   targetLat,
   targetLng,
   targetRadius = 50,
-  targetLabel = 'Lokasi PKL',
+  targetLabel = 'Sekolah',
   homeLat,
   homeLng,
   homeRadius = 50,
@@ -23,6 +23,7 @@ export default function RadiusMap({
   const mapInstanceRef = useRef(null);
   const layersRef = useRef({
     userMarker: null,
+    userCircle: null,
     circle1: null,
     marker1: null,
     circle2: null,
@@ -53,12 +54,12 @@ export default function RadiusMap({
       const hRad = Number(homeRadius) || 50;
 
       // Custom icon generators
-      const createUserIcon = (isValid) => L.divIcon({
+      const createUserIcon = () => L.divIcon({
         className: 'custom-user-marker',
         html: `
           <div style="position: relative; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;">
-            <div style="position: absolute; width: 22px; height: 22px; border-radius: 9999px; background-color: ${isValid ? '#10b981' : '#ef4444'}; opacity: 0.35; animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;"></div>
-            <div style="width: 14px; height: 14px; border-radius: 9999px; background-color: ${isValid ? '#059669' : '#dc2626'}; border: 2.5px solid #ffffff; box-shadow: 0 2px 6px rgba(0,0,0,0.35);"></div>
+            <div style="position: absolute; width: 22px; height: 22px; border-radius: 9999px; background-color: #3b82f6; opacity: 0.35; animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;"></div>
+            <div style="width: 14px; height: 14px; border-radius: 9999px; background-color: #2563eb; border: 2.5px solid #ffffff; box-shadow: 0 2px 6px rgba(0,0,0,0.35); position: relative; z-index: 2;"></div>
           </div>
         `,
         iconSize: [22, 22],
@@ -99,23 +100,36 @@ export default function RadiusMap({
       const map = mapInstanceRef.current;
       const boundsPoints = [[uLat, uLng]];
 
-      // 1. User Marker
-      if (layersRef.current.userMarker) {
-        layersRef.current.userMarker.setLatLng([uLat, uLng]);
-        layersRef.current.userMarker.setIcon(createUserIcon(isInsideAny));
+      // 1. User Radius Circle & Marker (Lingkaran Bulet Biru Posisi Anda)
+      if (layersRef.current.userCircle) {
+        layersRef.current.userCircle.setLatLng([uLat, uLng]);
       } else {
-        layersRef.current.userMarker = L.marker([uLat, uLng], {
-          icon: createUserIcon(isInsideAny),
-          zIndexOffset: 1000
+        layersRef.current.userCircle = L.circle([uLat, uLng], {
+          radius: 15,
+          stroke: true,
+          color: '#2563eb',
+          weight: 1.5,
+          fillColor: '#3b82f6',
+          fillOpacity: 0.22,
         }).addTo(map);
-        layersRef.current.userMarker.bindPopup(`<b>Lokasi Anda</b><br/>${isInsideAny ? '🟢 Dalam Radius' : '🔴 Di Luar Radius'}`);
       }
 
-      // 2. Alamat 1 (PKL)
-      if (tLat !== null && tLng !== null && !isNaN(tLat) && !isNaN(tLng)) {
+      if (layersRef.current.userMarker) {
+        layersRef.current.userMarker.setLatLng([uLat, uLng]);
+        layersRef.current.userMarker.setIcon(createUserIcon());
+      } else {
+        layersRef.current.userMarker = L.marker([uLat, uLng], {
+          icon: createUserIcon(),
+          zIndexOffset: 1000
+        }).addTo(map);
+        layersRef.current.userMarker.bindPopup(`<b>Lokasi Anda</b><br/>${Number(uLat).toFixed(6)}, ${Number(uLng).toFixed(6)}`);
+      }
+
+      // 2. Lokasi PKL (Hanya digambar saat mode WFH / showHome)
+      if (showHome && tLat !== null && tLng !== null && !isNaN(tLat) && !isNaN(tLng)) {
         boundsPoints.push([tLat, tLng]);
-        const color1 = isInside1 ? '#10b981' : '#2563eb';
-        const fill1 = isInside1 ? '#10b981' : '#3b82f6';
+        const color1 = isInside1 ? '#10b981' : '#57564F';
+        const fill1 = isInside1 ? '#10b981' : '#7A7A73';
 
         if (layersRef.current.circle1) {
           layersRef.current.circle1.setLatLng([tLat, tLng]);
@@ -138,11 +152,20 @@ export default function RadiusMap({
 
         if (layersRef.current.marker1) {
           layersRef.current.marker1.setLatLng([tLat, tLng]);
-          layersRef.current.marker1.setIcon(createTargetIcon(color1, 'PKL (1)'));
+          layersRef.current.marker1.setIcon(createTargetIcon(color1, 'Sekolah'));
         } else {
           layersRef.current.marker1 = L.marker([tLat, tLng], {
-            icon: createTargetIcon(color1, 'PKL (1)')
+            icon: createTargetIcon(color1, 'Sekolah')
           }).addTo(map);
+        }
+      } else {
+        if (layersRef.current.circle1) {
+          map.removeLayer(layersRef.current.circle1);
+          layersRef.current.circle1 = null;
+        }
+        if (layersRef.current.marker1) {
+          map.removeLayer(layersRef.current.marker1);
+          layersRef.current.marker1 = null;
         }
       }
 
@@ -257,18 +280,20 @@ export default function RadiusMap({
         {/* Floating Map Legend */}
         <div className="absolute bottom-2.5 left-2.5 z-[10] bg-white/90 backdrop-blur-sm px-2.5 py-1.5 rounded-xl border border-[#DDDAD0] shadow-sm flex items-center gap-3 text-[10px] text-[#57564F] select-none">
           <div className="flex items-center gap-1">
-            <span className={`w-2.5 h-2.5 rounded-full ${isInsideActive ? 'bg-emerald-500' : 'bg-rose-500'}`}></span>
+            <span className="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
             <span>Anda</span>
           </div>
-          <div className="flex items-center gap-1">
-            <span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
-            <span>PKL</span>
-          </div>
           {showHome && (
-            <div className="flex items-center gap-1">
-              <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
-              <span>WFH</span>
-            </div>
+            <>
+              <div className="flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#57564F]"></span>
+                <span>Sekolah</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                <span>WFH</span>
+              </div>
+            </>
           )}
         </div>
       </div>

@@ -128,7 +128,7 @@ async function seedDatabase() {
         nipd: '242510078',
         name: 'Rakha Zuhdi Naufal',
         email: 'rakha@sekolah.sch.id',
-        tempat: 'PT Digital Inovasi Asia',
+        tempat: 'Sekolah',
         alamat_rumah: 'Cipanas 1 no 18 RT 01 RT 01 kelurahan bakti jaya, kecamatan Sukmajaya, kota Depok - 16418',
         alamat_pkl: 'SMK Taruna Bhakti, Jalan Kampung Baru, Curug, Depok, Jawa Barat, 16416, Indonesia',
         home_lat: -6.396742,
