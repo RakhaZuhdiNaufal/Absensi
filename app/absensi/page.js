@@ -82,7 +82,8 @@ export default function AbsensiPage() {
 
   const isInside1 = distance1 !== null && distance1 <= radius1;
   const isInside2 = distance2 !== null && distance2 <= radius2;
-  const isValidLocation = isInside1 || isInside2;
+  const isWfh = status === 'hadir' && workMode === 'wfh';
+  const isValidLocation = isWfh ? (isInside2 || isInside1) : (status === 'hadir' ? isInside1 : (isInside1 || isInside2));
 
   useEffect(() => {
     const updateTime = () => {
@@ -599,95 +600,75 @@ export default function AbsensiPage() {
                           targetLat={targetLat}
                           targetLng={targetLng}
                           targetRadius={radius1}
-                          targetLabel="Alamat 1 (PKL)"
+                          targetLabel="Lokasi PKL"
                           homeLat={homeLat}
                           homeLng={homeLng}
                           homeRadius={radius2}
-                          homeLabel="Alamat 2 (Alternatif)"
+                          homeLabel="Lokasi WFH"
                           isInside1={isInside1}
                           isInside2={isInside2}
                           locationText={locationState.locationText}
+                          showHome={isWfh}
                         />
 
-                        {/* Rincian Lokasi Anda & Jarak Radius */}
-                        <div className="bg-[#f9f8f3] rounded-2xl p-3 border border-[#DDDAD0] space-y-2.5">
-                          <div className="flex items-center justify-between border-b border-[#DDDAD0] pb-2">
-                            <span className="text-xs font-bold text-[#57564F]">Lokasi Anda</span>
-                            <span className="text-[11px] text-[#7A7A73] font-mono">
-                              {Number(locationState.latitude).toFixed(5)}, {Number(locationState.longitude).toFixed(5)}
-                            </span>
+                        {/* Rincian Lokasi & Validasi Radius (Single Unified Section) */}
+                        <div className="bg-white rounded-2xl border border-[#DDDAD0]/70 overflow-hidden divide-y divide-[#DDDAD0]/50 text-xs">
+                          {/* Baris Lokasi PKL */}
+                          <div className="p-3 flex items-start justify-between gap-3">
+                            <div className="min-w-0 flex-1">
+                              <div className="font-medium text-[#57564F] truncate">
+                                {student?.tempat_pkl || 'Lokasi PKL'}
+                              </div>
+                              <p className="text-[11px] text-[#7A7A73] truncate mt-0.5" title={student?.alamat_pkl || 'SMK Taruna Bhakti, Depok'}>
+                                {student?.alamat_pkl || 'SMK Taruna Bhakti, Depok'}
+                              </p>
+                            </div>
+                            <div className="text-right shrink-0">
+                              <div className="font-medium text-[#57564F] text-xs">
+                                {distance1 !== null ? formatDistance(distance1) : '-'}
+                              </div>
+                              <span className="text-[10px] text-[#7A7A73] block mt-0.5">
+                                Radius: {radius1}m
+                              </span>
+                            </div>
                           </div>
 
-                          <div className="space-y-1.5 text-xs">
-                            {/* Alamat 1 */}
-                            <div className={`p-2.5 rounded-xl border flex items-center justify-between transition-colors ${
-                              isInside1 ? 'bg-emerald-50 border-emerald-300 text-emerald-900' : 'bg-white border-[#DDDAD0] text-[#57564F]'
-                            }`}>
-                              <div className="min-w-0 pr-2">
-                                <div className="flex items-center gap-1.5 font-medium text-xs">
-                                  <span className="w-2 h-2 rounded-full bg-blue-500 shrink-0"></span>
-                                  <span className="truncate font-semibold">Alamat 1: {student?.tempat_pkl || 'Lokasi PKL'}</span>
+                          {/* Baris Lokasi WFH (Hanya tampil ketika WFH) */}
+                          {isWfh && (
+                            <div className="p-3 flex items-start justify-between gap-3 bg-[#faf9f6]/50">
+                              <div className="min-w-0 flex-1">
+                                <div className="font-medium text-[#57564F] truncate">
+                                  Lokasi WFH
                                 </div>
-                                <p className="text-[10px] text-[#7A7A73] truncate mt-0.5" title={student?.alamat_pkl || 'SMK Taruna Bhakti'}>
-                                  {student?.alamat_pkl || 'SMK Taruna Bhakti, Depok'}
+                                <p className="text-[11px] text-[#7A7A73] truncate mt-0.5" title={student?.alamat_rumah || 'Alamat Rumah'}>
+                                  {student?.alamat_rumah || 'Alamat Rumah Siswa'}
                                 </p>
                               </div>
                               <div className="text-right shrink-0">
-                                <div className="font-bold text-xs">
-                                  {distance1 !== null ? formatDistance(distance1) : '-'}
-                                </div>
-                                <span className={`text-[10px] px-1.5 py-0.5 rounded font-semibold inline-block mt-0.5 ${
-                                  isInside1 ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-[#7A7A73]'
-                                }`}>
-                                  {isInside1 ? '✓ Dalam Radius' : `Radius: ${radius1}m`}
-                                </span>
-                              </div>
-                            </div>
-
-                            {/* Alamat 2 */}
-                            <div className={`p-2.5 rounded-xl border flex items-center justify-between transition-colors ${
-                              isInside2 ? 'bg-emerald-50 border-emerald-300 text-emerald-900' : 'bg-white border-[#DDDAD0] text-[#57564F]'
-                            }`}>
-                              <div className="min-w-0 pr-2">
-                                <div className="flex items-center gap-1.5 font-medium text-xs">
-                                  <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0"></span>
-                                  <span className="truncate font-semibold">Alamat 2: Lokasi Alternatif</span>
-                                </div>
-                                <p className="text-[10px] text-[#7A7A73] truncate mt-0.5" title={student?.alamat_rumah || 'Alamat Rumah'}>
-                                  {student?.alamat_rumah || 'Alamat Rumah'}
-                                </p>
-                              </div>
-                              <div className="text-right shrink-0">
-                                <div className="font-bold text-xs">
+                                <div className="font-medium text-[#57564F] text-xs">
                                   {distance2 !== null ? formatDistance(distance2) : '-'}
                                 </div>
-                                <span className={`text-[10px] px-1.5 py-0.5 rounded font-semibold inline-block mt-0.5 ${
-                                  isInside2 ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-[#7A7A73]'
-                                }`}>
-                                  {isInside2 ? '✓ Dalam Radius' : `Radius: ${radius2}m`}
+                                <span className="text-[10px] text-[#7A7A73] block mt-0.5">
+                                  Radius: {radius2}m
                                 </span>
                               </div>
                             </div>
-                          </div>
+                          )}
 
-                          {/* Indikator Status Radius */}
-                          <div className={`p-2.5 rounded-xl border text-xs flex items-start gap-2 ${
-                            isValidLocation
-                              ? 'bg-emerald-50 border-emerald-300 text-emerald-900'
-                              : 'bg-rose-50 border-rose-300 text-rose-900'
-                          }`}>
-                            <span className="text-sm leading-none shrink-0 mt-0.5">
+                          {/* Baris Status Radius Absensi */}
+                          <div className="p-3 flex items-start gap-2.5 bg-[#faf9f5]">
+                            <span className="text-xs leading-none shrink-0 mt-0.5">
                               {isValidLocation ? '🟢' : '🔴'}
                             </span>
                             <div className="leading-snug">
-                              <span className="font-bold block text-xs">
+                              <span className="font-medium text-[#57564F] block">
                                 {isValidLocation
                                   ? 'Dalam radius — Absensi dapat dilakukan'
                                   : 'Di luar radius — Absensi tidak dapat dilakukan'}
                               </span>
                               {!isValidLocation && (
-                                <p className="text-[11px] text-rose-700 mt-1 leading-normal">
-                                  Lokasi Anda berada di luar area absensi. Silakan berada di lokasi PKL yang terdaftar pada profil.
+                                <p className="text-[11px] text-[#7A7A73] mt-1 leading-normal">
+                                  Lokasi Anda berada di luar area absensi. Silakan berada di {isWfh ? 'lokasi WFH atau PKL' : 'lokasi PKL'} yang terdaftar pada profil.
                                 </p>
                               )}
                             </div>

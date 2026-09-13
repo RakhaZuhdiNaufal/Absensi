@@ -114,15 +114,22 @@ export async function POST(request) {
     const distance2 = calculateDistance(userLat, userLng, homeLat, homeLng);
     const isInside2 = distance2 !== null && distance2 <= radius2;
 
-    // Jika posisi siswa berada di luar radius kedua alamat
-    if (!isInside1 && !isInside2) {
-      const dist1Str = distance1 !== null ? `${distance1} meter (Radius: ${radius1}m)` : 'tidak valid';
-      const dist2Str = distance2 !== null ? `${distance2} meter (Radius: ${radius2}m)` : 'tidak valid';
+    const isWfhMode = work_mode === 'wfh';
+    const isValidLocation = isWfhMode ? (isInside1 || isInside2) : isInside1;
+
+    // Jika posisi siswa berada di luar radius alamat yang ditentukan
+    if (!isValidLocation) {
+      const dist1Str = distance1 !== null ? `${distance1}m (Radius: ${radius1}m)` : 'tidak valid';
+      const dist2Str = distance2 !== null ? `${distance2}m (Radius: ${radius2}m)` : 'tidak valid';
+      const detailMsg = isWfhMode
+        ? `Lokasi Anda berada di luar area absensi. Silakan berada di lokasi WFH atau PKL yang terdaftar pada profil.`
+        : `Lokasi Anda berada di luar area absensi. Silakan berada di lokasi PKL yang terdaftar pada profil.`;
+
       return NextResponse.json(
         {
           success: false,
           outsideRadius: true,
-          message: `Lokasi Anda berada di luar area absensi. Silakan berada di lokasi PKL yang terdaftar pada profil. (Jarak Alamat 1: ${dist1Str}, Jarak Alamat 2: ${dist2Str})`
+          message: detailMsg
         },
         { status: 400 }
       );

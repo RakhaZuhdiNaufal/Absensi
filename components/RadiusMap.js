@@ -9,14 +9,15 @@ export default function RadiusMap({
   targetLat,
   targetLng,
   targetRadius = 50,
-  targetLabel = 'Alamat 1 (PKL)',
+  targetLabel = 'Lokasi PKL',
   homeLat,
   homeLng,
   homeRadius = 50,
-  homeLabel = 'Alamat 2 (Alternatif)',
+  homeLabel = 'Lokasi WFH',
   isInside1 = false,
   isInside2 = false,
-  locationText = ''
+  locationText = '',
+  showHome = true
 }) {
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
@@ -28,7 +29,7 @@ export default function RadiusMap({
     marker2: null
   });
 
-  const isInsideAny = isInside1 || isInside2;
+  const isInsideActive = showHome ? (isInside1 || isInside2) : isInside1;
 
   useEffect(() => {
     if (!mapContainerRef.current || latitude === null || longitude === null) return;
@@ -145,8 +146,8 @@ export default function RadiusMap({
         }
       }
 
-      // 3. Alamat 2 (Alternatif / Rumah)
-      if (hLat !== null && hLng !== null && !isNaN(hLat) && !isNaN(hLng)) {
+      // 3. Alamat 2 (Alternatif / Rumah) - Hanya jika showHome aktif (WFH)
+      if (showHome && hLat !== null && hLng !== null && !isNaN(hLat) && !isNaN(hLng)) {
         boundsPoints.push([hLat, hLng]);
         const color2 = isInside2 ? '#10b981' : '#d97706';
         const fill2 = isInside2 ? '#10b981' : '#f59e0b';
@@ -172,18 +173,28 @@ export default function RadiusMap({
 
         if (layersRef.current.marker2) {
           layersRef.current.marker2.setLatLng([hLat, hLng]);
-          layersRef.current.marker2.setIcon(createTargetIcon(color2, 'Alternatif (2)'));
+          layersRef.current.marker2.setIcon(createTargetIcon(color2, 'WFH'));
         } else {
           layersRef.current.marker2 = L.marker([hLat, hLng], {
-            icon: createTargetIcon(color2, 'Alternatif (2)')
+            icon: createTargetIcon(color2, 'WFH')
           }).addTo(map);
+        }
+      } else {
+        // Remove circle2 and marker2 if not showHome
+        if (layersRef.current.circle2) {
+          map.removeLayer(layersRef.current.circle2);
+          layersRef.current.circle2 = null;
+        }
+        if (layersRef.current.marker2) {
+          map.removeLayer(layersRef.current.marker2);
+          layersRef.current.marker2 = null;
         }
       }
 
       // Smoothly fit bounds to active/nearest points
       if (isInside1 && tLat && tLng) {
         map.setView([tLat, tLng], 19);
-      } else if (isInside2 && hLat && hLng) {
+      } else if (showHome && isInside2 && hLat && hLng) {
         map.setView([hLat, hLng], 19);
       } else if (boundsPoints.length > 1) {
         // Find closest target to user to fit nicely without zooming out worldwide
@@ -193,7 +204,7 @@ export default function RadiusMap({
           const diff = Math.hypot(uLat - tLat, uLng - tLng);
           if (diff < minDiff) { minDiff = diff; closestTarget = [tLat, tLng]; }
         }
-        if (hLat && hLng) {
+        if (showHome && hLat && hLng) {
           const diff = Math.hypot(uLat - hLat, uLng - hLng);
           if (diff < minDiff) { minDiff = diff; closestTarget = [hLat, hLng]; }
         }
@@ -213,7 +224,7 @@ export default function RadiusMap({
     return () => {
       isMounted = false;
     };
-  }, [latitude, longitude, targetLat, targetLng, targetRadius, homeLat, homeLng, homeRadius, isInside1, isInside2, isInsideAny]);
+  }, [latitude, longitude, targetLat, targetLng, targetRadius, homeLat, homeLng, homeRadius, isInside1, isInside2, isInsideActive, showHome]);
 
   // Clean up on component unmount
   useEffect(() => {
@@ -246,17 +257,19 @@ export default function RadiusMap({
         {/* Floating Map Legend */}
         <div className="absolute bottom-2.5 left-2.5 z-[10] bg-white/90 backdrop-blur-sm px-2.5 py-1.5 rounded-xl border border-[#DDDAD0] shadow-sm flex items-center gap-3 text-[10px] text-[#57564F] select-none">
           <div className="flex items-center gap-1">
-            <span className={`w-2.5 h-2.5 rounded-full ${isInsideAny ? 'bg-emerald-500' : 'bg-rose-500'}`}></span>
+            <span className={`w-2.5 h-2.5 rounded-full ${isInsideActive ? 'bg-emerald-500' : 'bg-rose-500'}`}></span>
             <span>Anda</span>
           </div>
           <div className="flex items-center gap-1">
             <span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
-            <span>Alamat 1</span>
+            <span>PKL</span>
           </div>
-          <div className="flex items-center gap-1">
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
-            <span>Alamat 2</span>
-          </div>
+          {showHome && (
+            <div className="flex items-center gap-1">
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+              <span>WFH</span>
+            </div>
+          )}
         </div>
       </div>
 
