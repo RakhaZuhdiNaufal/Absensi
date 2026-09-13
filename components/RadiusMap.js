@@ -13,9 +13,14 @@ export default function RadiusMap({
   homeLat,
   homeLng,
   homeRadius = 50,
-  homeLabel = 'WFH',
+  homeLabel = 'Rumah',
+  schoolLat = -6.384288,
+  schoolLng = 106.869938,
+  schoolRadius = 50,
+  schoolLabel = 'Sekolah',
   isInside1 = false,
   isInside2 = false,
+  isInsideSchool = false,
   locationText = '',
   workMode = 'wfo',
   showHome = false
@@ -28,11 +33,13 @@ export default function RadiusMap({
     circle1: null,
     marker1: null,
     circle2: null,
-    marker2: null
+    marker2: null,
+    circle3: null,
+    marker3: null
   });
 
   const isWfh = workMode === 'wfh' || showHome === true;
-  const isInsideActive = isWfh ? isInside2 : isInside1;
+  const isInsideActive = isWfh ? (isInside2 || isInsideSchool) : isInside1;
 
   useEffect(() => {
     if (!mapContainerRef.current || latitude === null || longitude === null) return;
@@ -54,6 +61,10 @@ export default function RadiusMap({
       const hLat = homeLat !== undefined && homeLat !== null ? Number(homeLat) : null;
       const hLng = homeLng !== undefined && homeLng !== null ? Number(homeLng) : null;
       const hRad = Number(homeRadius) || 50;
+
+      const sLat = schoolLat !== undefined && schoolLat !== null ? Number(schoolLat) : -6.384288;
+      const sLng = schoolLng !== undefined && schoolLng !== null ? Number(schoolLng) : 106.869938;
+      const sRad = Number(schoolRadius) || 50;
 
       // Custom icon generators
       const createUserIcon = () => L.divIcon({
@@ -155,7 +166,7 @@ export default function RadiusMap({
         }
       }
 
-      // 3. Lokasi WFH (Rumah) - Tampil saat mode WFH
+      // 3. Lokasi WFH 1 (Rumah) - Tampil saat mode WFH
       if (isWfh && hLat !== null && hLng !== null && !isNaN(hLat) && !isNaN(hLng)) {
         boundsPoints.push([hLat, hLng]);
 
@@ -174,10 +185,10 @@ export default function RadiusMap({
 
         if (layersRef.current.marker2) {
           layersRef.current.marker2.setLatLng([hLat, hLng]);
-          layersRef.current.marker2.setIcon(createTargetIcon(homeLabel || 'WFH'));
+          layersRef.current.marker2.setIcon(createTargetIcon(homeLabel || 'Rumah'));
         } else {
           layersRef.current.marker2 = L.marker([hLat, hLng], {
-            icon: createTargetIcon(homeLabel || 'WFH')
+            icon: createTargetIcon(homeLabel || 'Rumah')
           }).addTo(map);
         }
       } else {
@@ -191,28 +202,73 @@ export default function RadiusMap({
         }
       }
 
-      // Smoothly fit bounds to active point
-      const activeLat = isWfh ? hLat : tLat;
-      const activeLng = isWfh ? hLng : tLng;
-      const isInside = isWfh ? isInside2 : isInside1;
+      // 4. Lokasi WFH 2 (Sekolah: SMK Taruna Bhakti) - Tampil saat mode WFH
+      if (isWfh && sLat !== null && sLng !== null && !isNaN(sLat) && !isNaN(sLng)) {
+        boundsPoints.push([sLat, sLng]);
 
-      if (isInside && activeLat && activeLng) {
-        map.setView([activeLat, activeLng], 19);
-      } else if (boundsPoints.length > 1) {
-        let closestTarget = null;
-        let minDiff = Infinity;
-        if (activeLat && activeLng) {
-          const diff = Math.hypot(uLat - activeLat, uLng - activeLng);
-          if (diff < minDiff) { minDiff = diff; closestTarget = [activeLat, activeLng]; }
+        if (layersRef.current.circle3) {
+          layersRef.current.circle3.setLatLng([sLat, sLng]);
+          layersRef.current.circle3.setRadius(sRad);
+        } else {
+          layersRef.current.circle3 = L.circle([sLat, sLng], {
+            radius: sRad,
+            stroke: false,
+            fillColor: '#2563eb',
+            fillOpacity: 0.18,
+          }).addTo(map);
+          layersRef.current.circle3.bindPopup(`<b>${schoolLabel}</b><br/>Radius: ${sRad} meter`);
         }
 
-        if (closestTarget && minDiff < 0.05) {
-          map.fitBounds([[uLat, uLng], closestTarget], { padding: [40, 40], maxZoom: 18 });
+        if (layersRef.current.marker3) {
+          layersRef.current.marker3.setLatLng([sLat, sLng]);
+          layersRef.current.marker3.setIcon(createTargetIcon(schoolLabel || 'Sekolah'));
+        } else {
+          layersRef.current.marker3 = L.marker([sLat, sLng], {
+            icon: createTargetIcon(schoolLabel || 'Sekolah')
+          }).addTo(map);
+        }
+      } else {
+        if (layersRef.current.circle3) {
+          map.removeLayer(layersRef.current.circle3);
+          layersRef.current.circle3 = null;
+        }
+        if (layersRef.current.marker3) {
+          map.removeLayer(layersRef.current.marker3);
+          layersRef.current.marker3 = null;
+        }
+      }
+
+      // Smoothly fit bounds to active point
+      if (isWfh) {
+        if (isInside2 && hLat && hLng) {
+          map.setView([hLat, hLng], 19);
+        } else if (isInsideSchool && sLat && sLng) {
+          map.setView([sLat, sLng], 19);
+        } else {
+          // Cari target WFH terdekat (Rumah atau Sekolah)
+          let closest = [sLat, sLng];
+          let minD = Math.hypot(uLat - sLat, uLng - sLng);
+          if (hLat && hLng) {
+            const dHome = Math.hypot(uLat - hLat, uLng - hLng);
+            if (dHome < minD) {
+              minD = dHome;
+              closest = [hLat, hLng];
+            }
+          }
+          if (minD < 0.05) {
+            map.fitBounds([[uLat, uLng], closest], { padding: [40, 40], maxZoom: 18 });
+          } else {
+            map.setView([uLat, uLng], 17);
+          }
+        }
+      } else {
+        if (isInside1 && tLat && tLng) {
+          map.setView([tLat, tLng], 19);
+        } else if (tLat && tLng && Math.hypot(uLat - tLat, uLng - tLng) < 0.05) {
+          map.fitBounds([[uLat, uLng], [tLat, tLng]], { padding: [40, 40], maxZoom: 18 });
         } else {
           map.setView([uLat, uLng], 17);
         }
-      } else {
-        map.setView([uLat, uLng], 18);
       }
     }
 
@@ -221,7 +277,7 @@ export default function RadiusMap({
     return () => {
       isMounted = false;
     };
-  }, [latitude, longitude, targetLat, targetLng, targetRadius, targetLabel, homeLat, homeLng, homeRadius, homeLabel, isInside1, isInside2, isInsideActive, workMode, showHome, isWfh]);
+  }, [latitude, longitude, targetLat, targetLng, targetRadius, targetLabel, homeLat, homeLng, homeRadius, homeLabel, schoolLat, schoolLng, schoolRadius, schoolLabel, isInside1, isInside2, isInsideSchool, isInsideActive, workMode, showHome, isWfh]);
 
   // Clean up on component unmount
   useEffect(() => {

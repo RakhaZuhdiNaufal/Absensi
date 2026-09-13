@@ -66,12 +66,17 @@ export default function AbsensiPage() {
   const targetLng = student?.target_lng !== undefined && student?.target_lng !== null ? Number(student.target_lng) : 106.791996;
   const radius1 = student?.radius_meters ? Number(student.radius_meters) : 50;
 
-  // Koordinat & Radius Alamat 2 (Lokasi WFH - Rumah)
+  // Koordinat & Radius Alamat WFH 1 (Rumah)
   const homeLat = student?.home_lat !== undefined && student?.home_lat !== null ? Number(student.home_lat) : -6.388280;
   const homeLng = student?.home_lng !== undefined && student?.home_lng !== null ? Number(student.home_lng) : 106.854367;
   const radius2 = student?.home_radius_meters ? Number(student.home_radius_meters) : (student?.radius_meters ? Number(student.radius_meters) : 50);
 
-  // Hitung jarak Haversine ke Alamat 1 (WFO) dan Alamat 2 (WFH)
+  // Koordinat & Radius Alamat WFH 2 (Sekolah: SMK Taruna Bhakti)
+  const schoolLat = -6.384288;
+  const schoolLng = 106.869938;
+  const radiusSchool = 50;
+
+  // Hitung jarak Haversine ke Alamat 1 (WFO), Alamat 2 (WFH Rumah), dan Alamat 3 (WFH Sekolah)
   const distance1 = locationState.latitude !== null && locationState.longitude !== null
     ? calculateDistance(locationState.latitude, locationState.longitude, targetLat, targetLng)
     : null;
@@ -80,12 +85,17 @@ export default function AbsensiPage() {
     ? calculateDistance(locationState.latitude, locationState.longitude, homeLat, homeLng)
     : null;
 
+  const distanceSchool = locationState.latitude !== null && locationState.longitude !== null
+    ? calculateDistance(locationState.latitude, locationState.longitude, schoolLat, schoolLng)
+    : null;
+
   const isInside1 = distance1 !== null && distance1 <= radius1;
   const isInside2 = distance2 !== null && distance2 <= radius2;
+  const isInsideSchool = distanceSchool !== null && distanceSchool <= radiusSchool;
   const isWfo = status === 'hadir' && workMode === 'wfo';
   const isWfh = status === 'hadir' && workMode === 'wfh';
-  // Jika WFO validasi ke kantor WFO (50m), jika WFH validasi ke rumah (50m) atau kantor WFO
-  const isValidLocation = status !== 'hadir' ? true : (isWfo ? isInside1 : (isInside2 || isInside1));
+  // Jika WFO validasi ke kantor WFO (50m), jika WFH validasi ke Rumah (50m) ATAU Sekolah (50m)
+  const isValidLocation = status !== 'hadir' ? true : (isWfo ? isInside1 : (isInside2 || isInsideSchool || isInside1));
 
   useEffect(() => {
     const updateTime = () => {
@@ -329,7 +339,7 @@ export default function AbsensiPage() {
       setSubmitErrorMsg(
         workMode === 'wfo'
           ? `Lokasi Anda berada di luar area kantor WFO. Silakan berada di area kantor PT Naikmarketing (radius ${radius1}m).`
-          : `Lokasi Anda berada di luar area WFH. Silakan berada di lokasi rumah yang terdaftar pada profil (radius ${radius2}m).`
+          : `Lokasi Anda berada di luar area WFH. Silakan berada di area Rumah atau Sekolah (radius 50m).`
       );
       return;
     }
@@ -610,9 +620,14 @@ export default function AbsensiPage() {
                           homeLat={homeLat}
                           homeLng={homeLng}
                           homeRadius={radius2}
-                          homeLabel="Lokasi WFH"
+                          homeLabel="Rumah"
+                          schoolLat={schoolLat}
+                          schoolLng={schoolLng}
+                          schoolRadius={radiusSchool}
+                          schoolLabel="Sekolah"
                           isInside1={isInside1}
                           isInside2={isInside2}
+                          isInsideSchool={isInsideSchool}
                           locationText={locationState.locationText}
                           workMode={workMode}
                         />
@@ -641,25 +656,49 @@ export default function AbsensiPage() {
                                 </div>
                               </div>
                             ) : (
-                              /* Baris Lokasi WFH (Rumah) */
-                              <div className="p-3 flex items-start justify-between gap-3 bg-[#faf9f6]/50">
-                                <div className="min-w-0 flex-1">
-                                  <div className="font-medium text-[#57564F] truncate">
-                                    Lokasi WFH (Rumah)
+                              <>
+                                {/* Baris Lokasi WFH 1 (Rumah) */}
+                                <div className="p-3 flex items-start justify-between gap-3 bg-[#faf9f6]/50">
+                                  <div className="min-w-0 flex-1">
+                                    <div className="font-medium text-[#57564F] flex items-center gap-1.5 truncate">
+                                      Lokasi Rumah
+                                      {isInside2 && <span className="text-[10px] text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded font-normal">Terdeteksi</span>}
+                                    </div>
+                                    <p className="text-[11px] text-[#7A7A73] truncate mt-0.5" title={student?.alamat_rumah || 'Alamat Rumah Siswa'}>
+                                      {student?.alamat_rumah || 'Alamat Rumah Siswa'}
+                                    </p>
                                   </div>
-                                  <p className="text-[11px] text-[#7A7A73] truncate mt-0.5" title={student?.alamat_rumah || 'Alamat Rumah'}>
-                                    {student?.alamat_rumah || 'Alamat Rumah Siswa'}
-                                  </p>
-                                </div>
-                                <div className="text-right shrink-0">
-                                  <div className="font-medium text-[#57564F] text-xs">
-                                    {distance2 !== null ? formatDistance(distance2) : '-'}
+                                  <div className="text-right shrink-0">
+                                    <div className="font-medium text-[#57564F] text-xs">
+                                      {distance2 !== null ? formatDistance(distance2) : '-'}
+                                    </div>
+                                    <span className="text-[10px] text-[#7A7A73] block mt-0.5">
+                                      Radius: {radius2}m
+                                    </span>
                                   </div>
-                                  <span className="text-[10px] text-[#7A7A73] block mt-0.5">
-                                    Radius: {radius2}m
-                                  </span>
                                 </div>
-                              </div>
+
+                                {/* Baris Lokasi WFH 2 (Sekolah) */}
+                                <div className="p-3 flex items-start justify-between gap-3 bg-[#faf9f6]/50">
+                                  <div className="min-w-0 flex-1">
+                                    <div className="font-medium text-[#57564F] flex items-center gap-1.5 truncate">
+                                      Lokasi Sekolah (SMK Taruna Bhakti)
+                                      {isInsideSchool && <span className="text-[10px] text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded font-normal">Terdeteksi</span>}
+                                    </div>
+                                    <p className="text-[11px] text-[#7A7A73] truncate mt-0.5" title="SMK Taruna Bhakti, Jalan Kampung Baru, Curug, Depok, Jawa Barat, 16416, Indonesia">
+                                      SMK Taruna Bhakti, Jalan Kampung Baru, Curug, Depok, Jawa Barat, 16416, Indonesia
+                                    </p>
+                                  </div>
+                                  <div className="text-right shrink-0">
+                                    <div className="font-medium text-[#57564F] text-xs">
+                                      {distanceSchool !== null ? formatDistance(distanceSchool) : '-'}
+                                    </div>
+                                    <span className="text-[10px] text-[#7A7A73] block mt-0.5">
+                                      Radius: {radiusSchool}m
+                                    </span>
+                                  </div>
+                                </div>
+                              </>
                             )}
 
                             {/* Baris Status Radius Absensi */}
@@ -667,14 +706,20 @@ export default function AbsensiPage() {
                               <div className="leading-snug">
                                 <span className={`font-semibold block ${isValidLocation ? 'text-emerald-700' : 'text-rose-700'}`}>
                                   {isValidLocation
-                                    ? 'Dalam radius — Absensi dapat dilakukan'
+                                    ? (isWfh
+                                        ? (isInside2
+                                            ? 'Dalam radius (Area Rumah) — Absensi dapat dilakukan'
+                                            : (isInsideSchool
+                                                ? 'Dalam radius (Area Sekolah) — Absensi dapat dilakukan'
+                                                : 'Dalam radius — Absensi dapat dilakukan'))
+                                        : 'Dalam radius — Absensi dapat dilakukan')
                                     : 'Di luar radius — Absensi tidak dapat dilakukan'}
                                 </span>
                                 {!isValidLocation && (
                                   <p className="text-[11px] text-[#7A7A73] mt-1 leading-normal">
                                     {workMode === 'wfo'
                                       ? `Lokasi Anda berada di luar area kantor WFO. Silakan berada di area kantor PT Naikmarketing (radius ${radius1}m).`
-                                      : `Lokasi Anda berada di luar area WFH. Silakan berada di lokasi rumah yang terdaftar pada profil (radius ${radius2}m).`}
+                                      : `Lokasi Anda berada di luar area WFH. Silakan berada di area Rumah atau Sekolah (radius 50m).`}
                                   </p>
                                 )}
                               </div>

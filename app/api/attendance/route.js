@@ -107,25 +107,32 @@ export async function POST(request) {
     const distance1 = calculateDistance(userLat, userLng, targetLat, targetLng);
     const isInside1 = distance1 !== null && distance1 <= radius1;
 
-    // Alamat 2 (Lokasi WFH - Rumah)
+    // Alamat 2 (Lokasi WFH 1 - Rumah)
     const homeLat = student.home_lat !== null && student.home_lat !== undefined ? Number(student.home_lat) : -6.388280;
     const homeLng = student.home_lng !== null && student.home_lng !== undefined ? Number(student.home_lng) : 106.854367;
     const radius2 = student.home_radius_meters ? Number(student.home_radius_meters) : (student.radius_meters ? Number(student.radius_meters) : 50);
     const distance2 = calculateDistance(userLat, userLng, homeLat, homeLng);
     const isInside2 = distance2 !== null && distance2 <= radius2;
 
+    // Alamat 3 (Lokasi WFH 2 - Sekolah: SMK Taruna Bhakti)
+    const schoolLat = -6.384288;
+    const schoolLng = 106.869938;
+    const radiusSchool = 50;
+    const distanceSchool = calculateDistance(userLat, userLng, schoolLat, schoolLng);
+    const isInsideSchool = distanceSchool !== null && distanceSchool <= radiusSchool;
+
     const isWfhMode = work_mode === 'wfh';
 
-    // Validasi radius saat hadir: WFO ke kantor PT Naikmarketing, WFH ke rumah
+    // Validasi radius saat hadir: WFO ke kantor PT Naikmarketing, WFH ke Rumah atau Sekolah
     if (status === 'hadir') {
       if (isWfhMode) {
-        const isValidLocation = isInside2 || isInside1;
+        const isValidLocation = isInside2 || isInsideSchool || isInside1;
         if (!isValidLocation) {
           return NextResponse.json(
             {
               success: false,
               outsideRadius: true,
-              message: `Lokasi Anda berada di luar area WFH (${radius2}m). Silakan berada di lokasi rumah yang terdaftar pada profil.`
+              message: `Lokasi Anda berada di luar area WFH (50m). Silakan berada di lokasi Rumah atau Sekolah yang terdaftar.`
             },
             { status: 400 }
           );
