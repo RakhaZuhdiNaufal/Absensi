@@ -133,7 +133,7 @@ async function seedDatabase() {
         alamat_pkl: 'SMK Taruna Bhakti, Jalan Kampung Baru, Curug, Depok, Jawa Barat, 16416, Indonesia',
         home_lat: -6.388280,
         home_lng: 106.854367,
-        home_radius_meters: 100
+        home_radius_meters: 50
       },
       {
         nipd: '242510082',
