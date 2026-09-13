@@ -58,59 +58,65 @@ async function resetAttendanceAndSync() {
         email: 'narendra@sekolah.sch.id',
         tempat: 'PT Naikmarketing',
         alamat_rumah: 'Jl. Pringgondani VII No. 29, kelurahan Sukatani, kecamatan Tapos, kota Depok - 16454',
-        alamat_pkl: 'SMK Taruna Bhakti, Jalan Kampung Baru, Curug, Depok, Jawa Barat, 16416, Indonesia',
+        alamat_pkl: 'Jasa Pembuatan Website, Agensi Pemasaran Digital - Naikmarketing, Rangkapan Jaya, Pancoran Mas, Kota Depok, Jawa Barat 16435',
         home_lat: -6.383542,
-        home_lng: 106.899722
+        home_lng: 106.899722,
+        home_radius_meters: 50
       },
       {
         nipd: '242510078',
         name: 'Rakha Zuhdi Naufal',
         email: 'rakha@sekolah.sch.id',
-        tempat: 'Sekolah',
+        tempat: 'PT Naikmarketing',
         alamat_rumah: 'Cipanas 1 no 18 RT 01 RT 01 kelurahan bakti jaya, kecamatan Sukmajaya, kota Depok - 16418',
-        alamat_pkl: 'SMK Taruna Bhakti, Jalan Kampung Baru, Curug, Depok, Jawa Barat, 16416, Indonesia',
+        alamat_pkl: 'Jasa Pembuatan Website, Agensi Pemasaran Digital - Naikmarketing, Rangkapan Jaya, Pancoran Mas, Kota Depok, Jawa Barat 16435',
         home_lat: -6.388280,
-        home_lng: 106.854367
+        home_lng: 106.854367,
+        home_radius_meters: 50
       },
       {
         nipd: '242510082',
         name: 'Satria Arief Wibowo',
         email: 'satria@sekolah.sch.id',
-        tempat: 'PT Cyber Media Solusindo',
+        tempat: 'PT Naikmarketing',
         alamat_rumah: 'Jl. Arrahman V No. 191, kelurahan Sukatani, kecamatan Tapos, kota Depok - 16464',
-        alamat_pkl: 'SMK Taruna Bhakti, Jalan Kampung Baru, Curug, Depok, Jawa Barat, 16416, Indonesia',
+        alamat_pkl: 'Jasa Pembuatan Website, Agensi Pemasaran Digital - Naikmarketing, Rangkapan Jaya, Pancoran Mas, Kota Depok, Jawa Barat 16435',
         home_lat: -6.391689,
-        home_lng: 106.880611
+        home_lng: 106.880611,
+        home_radius_meters: 50
       },
       {
         nipd: '242510085',
         name: 'Nisa Amalia',
         email: 'nisa@sekolah.sch.id',
-        tempat: 'PT Teknologi Nusantara',
+        tempat: 'PT Naikmarketing',
         alamat_rumah: 'Cipanas 1 no 18 RT 01 RT 01 kelurahan bakti jaya, kecamatan Sukmajaya, kota Depok - 16418',
-        alamat_pkl: 'SMK Taruna Bhakti, Jalan Kampung Baru, Curug, Depok, Jawa Barat, 16416, Indonesia',
-        home_lat: null,
-        home_lng: null
+        alamat_pkl: 'Jasa Pembuatan Website, Agensi Pemasaran Digital - Naikmarketing, Rangkapan Jaya, Pancoran Mas, Kota Depok, Jawa Barat 16435',
+        home_lat: -6.396742,
+        home_lng: 106.839228,
+        home_radius_meters: 50
       },
       {
         nipd: '242510090',
         name: 'Muhammad Farhan',
         email: 'farhan@sekolah.sch.id',
-        tempat: 'PT Solusi Data Utama',
+        tempat: 'PT Naikmarketing',
         alamat_rumah: 'Cipanas 1 no 18 RT 01 RT 01 kelurahan bakti jaya, kecamatan Sukmajaya, kota Depok - 16418',
-        alamat_pkl: 'SMK Taruna Bhakti, Jalan Kampung Baru, Curug, Depok, Jawa Barat, 16416, Indonesia',
-        home_lat: null,
-        home_lng: null
+        alamat_pkl: 'Jasa Pembuatan Website, Agensi Pemasaran Digital - Naikmarketing, Rangkapan Jaya, Pancoran Mas, Kota Depok, Jawa Barat 16435',
+        home_lat: -6.396742,
+        home_lng: 106.839228,
+        home_radius_meters: 50
       },
       {
         nipd: '242510095',
         name: 'Aulia Putri',
         email: 'aulia@sekolah.sch.id',
-        tempat: 'PT Media Kreatif Sentosa',
+        tempat: 'PT Naikmarketing',
         alamat_rumah: 'Cipanas 1 no 18 RT 01 RT 01 kelurahan bakti jaya, kecamatan Sukmajaya, kota Depok - 16418',
-        alamat_pkl: 'SMK Taruna Bhakti, Jalan Kampung Baru, Curug, Depok, Jawa Barat, 16416, Indonesia',
-        home_lat: null,
-        home_lng: null
+        alamat_pkl: 'Jasa Pembuatan Website, Agensi Pemasaran Digital - Naikmarketing, Rangkapan Jaya, Pancoran Mas, Kota Depok, Jawa Barat 16435',
+        home_lat: -6.396742,
+        home_lng: 106.839228,
+        home_radius_meters: 50
       },
     ];
 
@@ -126,10 +132,10 @@ async function resetAttendanceAndSync() {
 
       if (userId) {
         await conn.query(`
-          INSERT INTO students (user_id, nis, class, major, tempat_pkl, alamat_rumah, alamat_pkl, target_lat, target_lng, home_lat, home_lng, radius_meters, pembimbing_id, periode_mulai, periode_selesai)
-          VALUES (?, ?, 'XII RPL 1', 'Rekayasa Perangkat Lunak', ?, ?, ?, -6.384288, 106.869938, ?, ?, 10, ?, '2026-07-01', '2026-12-31')
-          ON DUPLICATE KEY UPDATE tempat_pkl=VALUES(tempat_pkl), alamat_rumah=VALUES(alamat_rumah), alamat_pkl=VALUES(alamat_pkl), pembimbing_id=VALUES(pembimbing_id);
-        `, [userId, st.nipd, st.tempat, st.alamat_rumah, st.alamat_pkl, st.home_lat, st.home_lng, pembimbingId]);
+          INSERT INTO students (user_id, nis, class, major, tempat_pkl, alamat_rumah, alamat_pkl, target_lat, target_lng, home_lat, home_lng, radius_meters, home_radius_meters, pembimbing_id, periode_mulai, periode_selesai)
+          VALUES (?, ?, 'XII RPL 1', 'Rekayasa Perangkat Lunak', ?, ?, ?, -6.404419, 106.791996, ?, ?, 50, ?, ?, '2026-07-01', '2026-12-31')
+          ON DUPLICATE KEY UPDATE tempat_pkl=VALUES(tempat_pkl), alamat_rumah=VALUES(alamat_rumah), alamat_pkl=VALUES(alamat_pkl), target_lat=VALUES(target_lat), target_lng=VALUES(target_lng), home_lat=VALUES(home_lat), home_lng=VALUES(home_lng), radius_meters=VALUES(radius_meters), home_radius_meters=VALUES(home_radius_meters), pembimbing_id=VALUES(pembimbing_id);
+        `, [userId, st.nipd, st.tempat, st.alamat_rumah, st.alamat_pkl, st.home_lat, st.home_lng, st.home_radius_meters || 50, pembimbingId]);
       }
     }
     console.log('✅ 6 Akun Siswa resmi dan pembimbing sinkron sepenuhnya.');

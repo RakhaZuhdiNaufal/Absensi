@@ -61,17 +61,17 @@ export default function AbsensiPage() {
   const [submitSuccessMsg, setSubmitSuccessMsg] = useState('');
   const [submitErrorMsg, setSubmitErrorMsg] = useState('');
 
-  // Koordinat & Radius Alamat 1 (Lokasi PKL)
-  const targetLat = student?.target_lat !== undefined && student?.target_lat !== null ? Number(student.target_lat) : -6.384288;
-  const targetLng = student?.target_lng !== undefined && student?.target_lng !== null ? Number(student.target_lng) : 106.869938;
+  // Koordinat & Radius Alamat 1 (Lokasi WFO - PT Naikmarketing)
+  const targetLat = student?.target_lat !== undefined && student?.target_lat !== null ? Number(student.target_lat) : -6.404419;
+  const targetLng = student?.target_lng !== undefined && student?.target_lng !== null ? Number(student.target_lng) : 106.791996;
   const radius1 = student?.radius_meters ? Number(student.radius_meters) : 50;
 
-  // Koordinat & Radius Alamat 2 (Lokasi Alternatif / Rumah)
-  const homeLat = student?.home_lat !== undefined && student?.home_lat !== null ? Number(student.home_lat) : -6.396742;
-  const homeLng = student?.home_lng !== undefined && student?.home_lng !== null ? Number(student.home_lng) : 106.839228;
+  // Koordinat & Radius Alamat 2 (Lokasi WFH - Rumah)
+  const homeLat = student?.home_lat !== undefined && student?.home_lat !== null ? Number(student.home_lat) : -6.388280;
+  const homeLng = student?.home_lng !== undefined && student?.home_lng !== null ? Number(student.home_lng) : 106.854367;
   const radius2 = student?.home_radius_meters ? Number(student.home_radius_meters) : (student?.radius_meters ? Number(student.radius_meters) : 50);
 
-  // Hitung jarak Haversine ke Alamat 1 dan Alamat 2
+  // Hitung jarak Haversine ke Alamat 1 (WFO) dan Alamat 2 (WFH)
   const distance1 = locationState.latitude !== null && locationState.longitude !== null
     ? calculateDistance(locationState.latitude, locationState.longitude, targetLat, targetLng)
     : null;
@@ -82,9 +82,10 @@ export default function AbsensiPage() {
 
   const isInside1 = distance1 !== null && distance1 <= radius1;
   const isInside2 = distance2 !== null && distance2 <= radius2;
+  const isWfo = status === 'hadir' && workMode === 'wfo';
   const isWfh = status === 'hadir' && workMode === 'wfh';
-  // Jika WFO, langsung tanpa validasi radius alamat. Validasi alamat/radius hanya saat WFH.
-  const isValidLocation = isWfh ? (isInside2 || isInside1) : true;
+  // Jika WFO validasi ke kantor WFO (50m), jika WFH validasi ke rumah (50m) atau kantor WFO
+  const isValidLocation = status !== 'hadir' ? true : (isWfo ? isInside1 : (isInside2 || isInside1));
 
   useEffect(() => {
     const updateTime = () => {
@@ -601,7 +602,7 @@ export default function AbsensiPage() {
                           targetLat={targetLat}
                           targetLng={targetLng}
                           targetRadius={radius1}
-                          targetLabel="Sekolah"
+                          targetLabel="PT Naikmarketing"
                           homeLat={homeLat}
                           homeLng={homeLng}
                           homeRadius={radius2}
@@ -609,51 +610,53 @@ export default function AbsensiPage() {
                           isInside1={isInside1}
                           isInside2={isInside2}
                           locationText={locationState.locationText}
-                          showHome={isWfh}
+                          workMode={workMode}
                         />
 
-                        {/* Rincian Alamat & Validasi Radius: Hanya tampil saat WFH */}
-                        {isWfh && (
+                        {/* Rincian Alamat & Validasi Radius */}
+                        {status === 'hadir' && (
                           <div className="bg-white rounded-2xl border border-[#DDDAD0]/70 overflow-hidden divide-y divide-[#DDDAD0]/50 text-xs">
-                            {/* Baris Lokasi Sekolah */}
-                            <div className="p-3 flex items-start justify-between gap-3">
-                              <div className="min-w-0 flex-1">
-                                <div className="font-medium text-[#57564F] truncate">
-                                  {student?.tempat_pkl || 'Sekolah'}
+                            {workMode === 'wfo' ? (
+                              /* Baris Lokasi WFO (PT Naikmarketing) */
+                              <div className="p-3 flex items-start justify-between gap-3">
+                                <div className="min-w-0 flex-1">
+                                  <div className="font-medium text-[#57564F] truncate">
+                                    {student?.tempat_pkl || 'PT Naikmarketing'}
+                                  </div>
+                                  <p className="text-[11px] text-[#7A7A73] truncate mt-0.5" title={student?.alamat_pkl || 'Jasa Pembuatan Website, Agensi Pemasaran Digital - Naikmarketing, Rangkapan Jaya, Pancoran Mas, Kota Depok, Jawa Barat 16435'}>
+                                    {student?.alamat_pkl || 'Jasa Pembuatan Website, Agensi Pemasaran Digital - Naikmarketing, Rangkapan Jaya, Pancoran Mas, Kota Depok, Jawa Barat 16435'}
+                                  </p>
                                 </div>
-                                <p className="text-[11px] text-[#7A7A73] truncate mt-0.5" title={student?.alamat_pkl || 'SMK Taruna Bhakti, Depok'}>
-                                  {student?.alamat_pkl || 'SMK Taruna Bhakti, Depok'}
-                                </p>
-                              </div>
-                              <div className="text-right shrink-0">
-                                <div className="font-medium text-[#57564F] text-xs">
-                                  {distance1 !== null ? formatDistance(distance1) : '-'}
+                                <div className="text-right shrink-0">
+                                  <div className="font-medium text-[#57564F] text-xs">
+                                    {distance1 !== null ? formatDistance(distance1) : '-'}
+                                  </div>
+                                  <span className="text-[10px] text-[#7A7A73] block mt-0.5">
+                                    Radius: {radius1}m
+                                  </span>
                                 </div>
-                                <span className="text-[10px] text-[#7A7A73] block mt-0.5">
-                                  Radius: {radius1}m
-                                </span>
                               </div>
-                            </div>
-
-                            {/* Baris Lokasi WFH */}
-                            <div className="p-3 flex items-start justify-between gap-3 bg-[#faf9f6]/50">
-                              <div className="min-w-0 flex-1">
-                                <div className="font-medium text-[#57564F] truncate">
-                                  Lokasi WFH
+                            ) : (
+                              /* Baris Lokasi WFH (Rumah) */
+                              <div className="p-3 flex items-start justify-between gap-3 bg-[#faf9f6]/50">
+                                <div className="min-w-0 flex-1">
+                                  <div className="font-medium text-[#57564F] truncate">
+                                    Lokasi WFH (Rumah)
+                                  </div>
+                                  <p className="text-[11px] text-[#7A7A73] truncate mt-0.5" title={student?.alamat_rumah || 'Alamat Rumah'}>
+                                    {student?.alamat_rumah || 'Alamat Rumah Siswa'}
+                                  </p>
                                 </div>
-                                <p className="text-[11px] text-[#7A7A73] truncate mt-0.5" title={student?.alamat_rumah || 'Alamat Rumah'}>
-                                  {student?.alamat_rumah || 'Alamat Rumah Siswa'}
-                                </p>
-                              </div>
-                              <div className="text-right shrink-0">
-                                <div className="font-medium text-[#57564F] text-xs">
-                                  {distance2 !== null ? formatDistance(distance2) : '-'}
+                                <div className="text-right shrink-0">
+                                  <div className="font-medium text-[#57564F] text-xs">
+                                    {distance2 !== null ? formatDistance(distance2) : '-'}
+                                  </div>
+                                  <span className="text-[10px] text-[#7A7A73] block mt-0.5">
+                                    Radius: {radius2}m
+                                  </span>
                                 </div>
-                                <span className="text-[10px] text-[#7A7A73] block mt-0.5">
-                                  Radius: {radius2}m
-                                </span>
                               </div>
-                            </div>
+                            )}
 
                             {/* Baris Status Radius Absensi */}
                             <div className="p-3 bg-[#faf9f5]">
@@ -665,7 +668,9 @@ export default function AbsensiPage() {
                                 </span>
                                 {!isValidLocation && (
                                   <p className="text-[11px] text-[#7A7A73] mt-1 leading-normal">
-                                    Lokasi Anda berada di luar area absensi. Silakan berada di lokasi WFH atau Sekolah yang terdaftar pada profil.
+                                    {workMode === 'wfo'
+                                      ? `Lokasi Anda berada di luar area kantor WFO. Silakan berada di area kantor PT Naikmarketing (radius ${radius1}m).`
+                                      : `Lokasi Anda berada di luar area WFH. Silakan berada di lokasi rumah yang terdaftar pada profil (radius ${radius2}m).`}
                                   </p>
                                 )}
                               </div>

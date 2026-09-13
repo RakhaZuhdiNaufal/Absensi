@@ -9,15 +9,16 @@ export default function RadiusMap({
   targetLat,
   targetLng,
   targetRadius = 50,
-  targetLabel = 'Sekolah',
+  targetLabel = 'WFO',
   homeLat,
   homeLng,
   homeRadius = 50,
-  homeLabel = 'Lokasi WFH',
+  homeLabel = 'WFH',
   isInside1 = false,
   isInside2 = false,
   locationText = '',
-  showHome = true
+  workMode = 'wfo',
+  showHome = false
 }) {
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
@@ -30,7 +31,8 @@ export default function RadiusMap({
     marker2: null
   });
 
-  const isInsideActive = showHome ? (isInside1 || isInside2) : isInside1;
+  const isWfh = workMode === 'wfh' || showHome === true;
+  const isInsideActive = isWfh ? isInside2 : isInside1;
 
   useEffect(() => {
     if (!mapContainerRef.current || latitude === null || longitude === null) return;
@@ -117,8 +119,8 @@ export default function RadiusMap({
         layersRef.current.userMarker.bindPopup(`<b>Lokasi Anda</b><br/>${Number(uLat).toFixed(6)}, ${Number(uLng).toFixed(6)}`);
       }
 
-      // 2. Lokasi PKL / Sekolah (Hanya digambar saat mode WFH / showHome)
-      if (showHome && tLat !== null && tLng !== null && !isNaN(tLat) && !isNaN(tLng)) {
+      // 2. Lokasi WFO (PT Naikmarketing) - Tampil saat mode WFO
+      if (!isWfh && tLat !== null && tLng !== null && !isNaN(tLat) && !isNaN(tLng)) {
         boundsPoints.push([tLat, tLng]);
 
         if (layersRef.current.circle1) {
@@ -136,10 +138,10 @@ export default function RadiusMap({
 
         if (layersRef.current.marker1) {
           layersRef.current.marker1.setLatLng([tLat, tLng]);
-          layersRef.current.marker1.setIcon(createTargetIcon('Sekolah'));
+          layersRef.current.marker1.setIcon(createTargetIcon(targetLabel || 'WFO'));
         } else {
           layersRef.current.marker1 = L.marker([tLat, tLng], {
-            icon: createTargetIcon('Sekolah')
+            icon: createTargetIcon(targetLabel || 'WFO')
           }).addTo(map);
         }
       } else {
@@ -153,8 +155,8 @@ export default function RadiusMap({
         }
       }
 
-      // 3. Alamat 2 (Rumah / WFH) - Hanya jika showHome aktif (WFH)
-      if (showHome && hLat !== null && hLng !== null && !isNaN(hLat) && !isNaN(hLng)) {
+      // 3. Lokasi WFH (Rumah) - Tampil saat mode WFH
+      if (isWfh && hLat !== null && hLng !== null && !isNaN(hLat) && !isNaN(hLng)) {
         boundsPoints.push([hLat, hLng]);
 
         if (layersRef.current.circle2) {
@@ -172,14 +174,13 @@ export default function RadiusMap({
 
         if (layersRef.current.marker2) {
           layersRef.current.marker2.setLatLng([hLat, hLng]);
-          layersRef.current.marker2.setIcon(createTargetIcon('WFH'));
+          layersRef.current.marker2.setIcon(createTargetIcon(homeLabel || 'WFH'));
         } else {
           layersRef.current.marker2 = L.marker([hLat, hLng], {
-            icon: createTargetIcon('WFH')
+            icon: createTargetIcon(homeLabel || 'WFH')
           }).addTo(map);
         }
       } else {
-        // Remove circle2 and marker2 if not showHome
         if (layersRef.current.circle2) {
           map.removeLayer(layersRef.current.circle2);
           layersRef.current.circle2 = null;
@@ -190,25 +191,22 @@ export default function RadiusMap({
         }
       }
 
-      // Smoothly fit bounds to active/nearest points
-      if (isInside1 && tLat && tLng) {
-        map.setView([tLat, tLng], 19);
-      } else if (showHome && isInside2 && hLat && hLng) {
-        map.setView([hLat, hLng], 19);
+      // Smoothly fit bounds to active point
+      const activeLat = isWfh ? hLat : tLat;
+      const activeLng = isWfh ? hLng : tLng;
+      const isInside = isWfh ? isInside2 : isInside1;
+
+      if (isInside && activeLat && activeLng) {
+        map.setView([activeLat, activeLng], 19);
       } else if (boundsPoints.length > 1) {
-        // Find closest target to user to fit nicely without zooming out worldwide
         let closestTarget = null;
         let minDiff = Infinity;
-        if (tLat && tLng) {
-          const diff = Math.hypot(uLat - tLat, uLng - tLng);
-          if (diff < minDiff) { minDiff = diff; closestTarget = [tLat, tLng]; }
-        }
-        if (showHome && hLat && hLng) {
-          const diff = Math.hypot(uLat - hLat, uLng - hLng);
-          if (diff < minDiff) { minDiff = diff; closestTarget = [hLat, hLng]; }
+        if (activeLat && activeLng) {
+          const diff = Math.hypot(uLat - activeLat, uLng - activeLng);
+          if (diff < minDiff) { minDiff = diff; closestTarget = [activeLat, activeLng]; }
         }
 
-        if (closestTarget && minDiff < 0.05) { // If within ~5km, fit user + nearest target
+        if (closestTarget && minDiff < 0.05) {
           map.fitBounds([[uLat, uLng], closestTarget], { padding: [40, 40], maxZoom: 18 });
         } else {
           map.setView([uLat, uLng], 17);
@@ -223,7 +221,7 @@ export default function RadiusMap({
     return () => {
       isMounted = false;
     };
-  }, [latitude, longitude, targetLat, targetLng, targetRadius, homeLat, homeLng, homeRadius, isInside1, isInside2, isInsideActive, showHome]);
+  }, [latitude, longitude, targetLat, targetLng, targetRadius, targetLabel, homeLat, homeLng, homeRadius, homeLabel, isInside1, isInside2, isInsideActive, workMode, showHome, isWfh]);
 
   // Clean up on component unmount
   useEffect(() => {

@@ -81,11 +81,11 @@ export async function POST(request) {
       alamat_rumah: alamat_rumah || '',
       alamat_pkl: alamat_pkl || '',
       pembimbing_id: pembimbing_id || null,
-      target_lat: target_lat ? Number(target_lat) : -6.384288,
-      target_lng: target_lng ? Number(target_lng) : 106.869938,
+      target_lat: target_lat ? Number(target_lat) : -6.404419,
+      target_lng: target_lng ? Number(target_lng) : 106.791996,
       radius_meters: radius_meters ? Number(radius_meters) : 50,
-      home_lat: home_lat ? Number(home_lat) : -6.396742,
-      home_lng: home_lng ? Number(home_lng) : 106.839228,
+      home_lat: home_lat ? Number(home_lat) : -6.388280,
+      home_lng: home_lng ? Number(home_lng) : 106.854367,
       home_radius_meters: home_radius_meters ? Number(home_radius_meters) : 50
     });
 

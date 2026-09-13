@@ -64,10 +64,10 @@ export default function SuperAdminSiswaPage() {
     alamat_pkl: '',
     pembimbing_id: '',
     radius_meters: 50,
-    target_lat: -6.384288,
-    target_lng: 106.869938,
-    home_lat: -6.396742,
-    home_lng: 106.839228,
+    target_lat: -6.404419,
+    target_lng: 106.791996,
+    home_lat: -6.388280,
+    home_lng: 106.854367,
     home_radius_meters: 50
   });
 
@@ -125,10 +125,10 @@ export default function SuperAdminSiswaPage() {
       alamat_pkl: '',
       pembimbing_id: mentors.length > 0 ? mentors[0].id : '',
       radius_meters: 50,
-      target_lat: -6.384288,
-      target_lng: 106.869938,
-      home_lat: -6.396742,
-      home_lng: 106.839228,
+      target_lat: -6.404419,
+      target_lng: 106.791996,
+      home_lat: -6.388280,
+      home_lng: 106.854367,
       home_radius_meters: 50
     });
     setFormError('');
@@ -151,10 +151,10 @@ export default function SuperAdminSiswaPage() {
       alamat_pkl: student.alamat_pkl || '',
       pembimbing_id: student.pembimbing_id || (mentors.length > 0 ? mentors[0].id : ''),
       radius_meters: student.radius_meters || 50,
-      target_lat: student.target_lat !== undefined && student.target_lat !== null ? student.target_lat : -6.384288,
-      target_lng: student.target_lng !== undefined && student.target_lng !== null ? student.target_lng : 106.869938,
-      home_lat: student.home_lat !== undefined && student.home_lat !== null ? student.home_lat : -6.396742,
-      home_lng: student.home_lng !== undefined && student.home_lng !== null ? student.home_lng : 106.839228,
+      target_lat: student.target_lat !== undefined && student.target_lat !== null ? student.target_lat : -6.404419,
+      target_lng: student.target_lng !== undefined && student.target_lng !== null ? student.target_lng : 106.791996,
+      home_lat: student.home_lat !== undefined && student.home_lat !== null ? student.home_lat : -6.388280,
+      home_lng: student.home_lng !== undefined && student.home_lng !== null ? student.home_lng : 106.854367,
       home_radius_meters: student.home_radius_meters || student.radius_meters || 50
     });
     setFormError('');
@@ -617,7 +617,7 @@ export default function SuperAdminSiswaPage() {
                       step="any"
                       value={formData.target_lat}
                       onChange={(e) => setFormData({ ...formData, target_lat: e.target.value })}
-                      placeholder="-6.384288"
+                      placeholder="-6.404419"
                       className="w-full bg-white border border-[#DDDAD0] rounded-xl px-2.5 py-1.5 text-xs text-[#57564F]"
                     />
                   </div>
@@ -628,7 +628,7 @@ export default function SuperAdminSiswaPage() {
                       step="any"
                       value={formData.target_lng}
                       onChange={(e) => setFormData({ ...formData, target_lng: e.target.value })}
-                      placeholder="106.869938"
+                      placeholder="106.791996"
                       className="w-full bg-white border border-[#DDDAD0] rounded-xl px-2.5 py-1.5 text-xs text-[#57564F]"
                     />
                   </div>
@@ -860,7 +860,7 @@ export default function SuperAdminSiswaPage() {
                       step="any"
                       value={formData.target_lat}
                       onChange={(e) => setFormData({ ...formData, target_lat: e.target.value })}
-                      placeholder="-6.384288"
+                      placeholder="-6.404419"
                       className="w-full bg-white border border-[#DDDAD0] rounded-xl px-2.5 py-1.5 text-xs text-[#57564F]"
                     />
                   </div>
@@ -871,7 +871,7 @@ export default function SuperAdminSiswaPage() {
                       step="any"
                       value={formData.target_lng}
                       onChange={(e) => setFormData({ ...formData, target_lng: e.target.value })}
-                      placeholder="106.869938"
+                      placeholder="106.791996"
                       className="w-full bg-white border border-[#DDDAD0] rounded-xl px-2.5 py-1.5 text-xs text-[#57564F]"
                     />
                   </div>
