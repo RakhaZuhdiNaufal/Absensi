@@ -69,8 +69,8 @@ async function resetAttendanceAndSync() {
         tempat: 'Sekolah',
         alamat_rumah: 'Cipanas 1 no 18 RT 01 RT 01 kelurahan bakti jaya, kecamatan Sukmajaya, kota Depok - 16418',
         alamat_pkl: 'SMK Taruna Bhakti, Jalan Kampung Baru, Curug, Depok, Jawa Barat, 16416, Indonesia',
-        home_lat: -6.396742,
-        home_lng: 106.839228
+        home_lat: -6.388280,
+        home_lng: 106.854367
       },
       {
         nipd: '242510082',
