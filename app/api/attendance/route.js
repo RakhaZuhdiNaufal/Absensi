@@ -43,7 +43,7 @@ export async function POST(request) {
     }
 
     const body = await request.json();
-    const { photo, latitude, longitude, location, reason, note, status, work_mode, device_id, device_name, device_type } = body;
+    const { photo, latitude, longitude, location, reason, note, status, work_mode, device_id, device_name, device_type, accuracy } = body;
 
     const normalizedType = device_type === 'mobile' ? 'mobile' : 'web';
     if (device_id) {
@@ -105,21 +105,29 @@ export async function POST(request) {
     const targetLng = student.target_lng !== null && student.target_lng !== undefined ? Number(student.target_lng) : 106.791996;
     const radius1 = student.radius_meters ? Number(student.radius_meters) : 50;
     const distance1 = calculateDistance(userLat, userLng, targetLat, targetLng);
-    const isInside1 = distance1 !== null && distance1 <= radius1;
 
     // Alamat 2 (Lokasi WFH 1 - Rumah)
     const homeLat = student.home_lat !== null && student.home_lat !== undefined ? Number(student.home_lat) : -6.388280;
     const homeLng = student.home_lng !== null && student.home_lng !== undefined ? Number(student.home_lng) : 106.854367;
     const radius2 = student.home_radius_meters ? Number(student.home_radius_meters) : (student.radius_meters ? Number(student.radius_meters) : 50);
     const distance2 = calculateDistance(userLat, userLng, homeLat, homeLng);
-    const isInside2 = distance2 !== null && distance2 <= radius2;
 
     // Alamat 3 (Lokasi WFH 2 - Sekolah: SMK Taruna Bhakti)
     const schoolLat = -6.384288;
     const schoolLng = 106.869938;
     const radiusSchool = 50;
     const distanceSchool = calculateDistance(userLat, userLng, schoolLat, schoolLng);
-    const isInsideSchool = distanceSchool !== null && distanceSchool <= radiusSchool;
+
+    // Toleransi margin akurasi GPS / jaringan seluler / Wi-Fi laptop (maksimum toleransi 10km)
+    const accuracyNum = Number(accuracy) || 0;
+    const accuracyTolerance = Math.min(accuracyNum, 10000);
+    const effectiveRadius1 = Math.max(radius1, radius1 + accuracyTolerance);
+    const effectiveRadius2 = Math.max(radius2, radius2 + accuracyTolerance);
+    const effectiveRadiusSchool = Math.max(radiusSchool, radiusSchool + accuracyTolerance);
+
+    const isInside1 = distance1 !== null && distance1 <= effectiveRadius1;
+    const isInside2 = distance2 !== null && distance2 <= effectiveRadius2;
+    const isInsideSchool = distanceSchool !== null && distanceSchool <= effectiveRadiusSchool;
 
     const isWfhMode = work_mode === 'wfh';
 

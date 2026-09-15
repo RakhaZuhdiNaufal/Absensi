@@ -20,7 +20,7 @@ CREATE TABLE `users` (
   `username` VARCHAR(50) NOT NULL UNIQUE,
   `email` VARCHAR(100) NOT NULL UNIQUE,
   `password` VARCHAR(255) NOT NULL,
-  `role` ENUM('super_admin', 'admin', 'siswa') NOT NULL DEFAULT 'siswa',
+  `role` ENUM('admin', 'siswa') NOT NULL DEFAULT 'siswa',
   `photo` TEXT DEFAULT NULL,
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -124,7 +124,6 @@ CREATE TABLE `password_resets` (
 -- ============================================================
 
 INSERT INTO `users` (`id`, `name`, `username`, `email`, `password`, `role`, `photo`) VALUES
-(1, 'Super Administrator', 'superadmin', 'superadmin@sekolah.sch.id', '$2b$10$ydZC0thaeaSFpzWJbduaQOikHP0IXtsHVULVXlHCoFZVDb6kFGbC.', 'super_admin', '/default-avatar.png'),
 (2, 'Pak Ridwan', 'pak ridwan', 'pembimbing@sekolah.sch.id', '$2b$10$ydZC0thaeaSFpzWJbduaQOikHP0IXtsHVULVXlHCoFZVDb6kFGbC.', 'admin', '/default-avatar.png'),
 (3, 'Narendra Bintang Ramadan', '242510072', 'narendra@sekolah.sch.id', '$2b$10$8xfNWV2RAvFh6d2z8z5vTOP5w2DDQDSjpXTCgLf8aibZ1IUe68jMK', 'siswa', '/default-avatar.png'),
 (4, 'Rakha Zuhdi Naufal', '242510078', 'rakha@sekolah.sch.id', '$2b$10$8xfNWV2RAvFh6d2z8z5vTOP5w2DDQDSjpXTCgLf8aibZ1IUe68jMK', 'siswa', '/default-avatar.png'),

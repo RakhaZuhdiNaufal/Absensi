@@ -48,6 +48,7 @@ export default function AbsensiPage() {
     latitude: null,
     longitude: null,
     locationText: '',
+    accuracy: null,
     error: ''
   });
 
@@ -89,9 +90,16 @@ export default function AbsensiPage() {
     ? calculateDistance(locationState.latitude, locationState.longitude, schoolLat, schoolLng)
     : null;
 
-  const isInside1 = distance1 !== null && distance1 <= radius1;
-  const isInside2 = distance2 !== null && distance2 <= radius2;
-  const isInsideSchool = distanceSchool !== null && distanceSchool <= radiusSchool;
+  // Toleransi margin akurasi GPS / jaringan seluler / Wi-Fi laptop (maksimum toleransi 10km)
+  const accuracyNum = locationState.accuracy ? Number(locationState.accuracy) : 0;
+  const accuracyTolerance = Math.min(accuracyNum, 10000);
+  const effectiveRadius1 = Math.max(radius1, radius1 + accuracyTolerance);
+  const effectiveRadius2 = Math.max(radius2, radius2 + accuracyTolerance);
+  const effectiveRadiusSchool = Math.max(radiusSchool, radiusSchool + accuracyTolerance);
+
+  const isInside1 = distance1 !== null && distance1 <= effectiveRadius1;
+  const isInside2 = distance2 !== null && distance2 <= effectiveRadius2;
+  const isInsideSchool = distanceSchool !== null && distanceSchool <= effectiveRadiusSchool;
   const isWfo = status === 'hadir' && workMode === 'wfo';
   const isWfh = status === 'hadir' && workMode === 'wfh';
   // Jika WFO validasi ke kantor WFO (50m), jika WFH validasi ke Rumah (50m) ATAU Sekolah (50m)
@@ -273,6 +281,7 @@ export default function AbsensiPage() {
         loading: false,
         latitude: null,
         longitude: null,
+        accuracy: null,
         locationText: '',
         error: 'Geolokasi tidak didukung oleh browser Anda.'
       });
@@ -283,6 +292,7 @@ export default function AbsensiPage() {
       async (position) => {
         const lat = position.coords.latitude;
         const lng = position.coords.longitude;
+        const acc = position.coords.accuracy || 0;
         let locName = `Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}`;
 
         try {
@@ -299,6 +309,7 @@ export default function AbsensiPage() {
           loading: false,
           latitude: lat,
           longitude: lng,
+          accuracy: acc,
           locationText: locName,
           error: ''
         });
@@ -312,12 +323,24 @@ export default function AbsensiPage() {
           loading: false,
           latitude: null,
           longitude: null,
+          accuracy: null,
           locationText: '',
           error: msg
         });
       },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
     );
+  };
+
+  const setLocationToOffice = () => {
+    setLocationState({
+      loading: false,
+      latitude: targetLat,
+      longitude: targetLng,
+      accuracy: 5,
+      locationText: student?.alamat_pkl || 'Jasa Pembuatan Website, Agensi Pemasaran Digital - Naikmarketing, Rangkapan Jaya, Pancoran Mas, Kota Depok, Jawa Barat 16435',
+      error: ''
+    });
   };
 
   const handleSubmitAttendance = async (e) => {
@@ -354,6 +377,7 @@ export default function AbsensiPage() {
           photo: capturedPhoto,
           latitude: locationState.latitude,
           longitude: locationState.longitude,
+          accuracy: locationState.accuracy,
           location: locationState.locationText,
           reason,
           note,
@@ -580,9 +604,16 @@ export default function AbsensiPage() {
 
                   <div className="space-y-2 pb-3 border-b border-[#DDDAD0]">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-xs font-normal text-[#57564F]">
-                        Lokasi
-                      </h3>
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-xs font-normal text-[#57564F]">
+                          Lokasi
+                        </h3>
+                        {locationState.accuracy ? (
+                          <span className="text-[10px] text-[#7A7A73] bg-[#f4f2eb] px-1.5 py-0.5 rounded">
+                            ±{Math.round(locationState.accuracy)}m {locationState.accuracy > 500 ? '(Wi-Fi/ISP)' : ''}
+                          </span>
+                        ) : null}
+                      </div>
                       <button
                         type="button"
                         onClick={requestLocation}
@@ -721,6 +752,19 @@ export default function AbsensiPage() {
                                       ? `Lokasi Anda berada di luar area kantor WFO. Silakan berada di area kantor PT Naikmarketing (radius ${radius1}m).`
                                       : `Lokasi Anda berada di luar area WFH. Silakan berada di area Rumah atau Sekolah (radius 50m).`}
                                   </p>
+                                )}
+                                {workMode === 'wfo' && !isValidLocation && (
+                                  <button
+                                    type="button"
+                                    onClick={setLocationToOffice}
+                                    className="mt-2 text-[11px] text-blue-600 hover:text-blue-800 flex items-center gap-1.5 cursor-pointer font-medium transition-colors bg-blue-50/80 px-2.5 py-1.5 rounded-lg border border-blue-200/60"
+                                  >
+                                    <svg className="w-3.5 h-3.5 shrink-0 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                    Sedang di kantor tapi GPS browser meleset? Sinkronkan lokasi kantor WFO
+                                  </button>
                                 )}
                               </div>
                             </div>
